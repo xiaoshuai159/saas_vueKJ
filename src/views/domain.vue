@@ -405,22 +405,22 @@ export default {
           { value: 1, label: "已处置" },
         ],
         model_typeData: [
-          { value: "DK", label: "贷款代办信用卡类" },
-          { value: "SD", label: "刷单返利类" },
-          { value: "GJF", label: "冒充公检法及政府机关类" },
-          { value: "LC", label: "投资理财" },
+          { value: "DK", label: "贷款" },
+          { value: "SD", label: "刷单" },
+          { value: "GJF", label: "仿冒公检法" },
+          { value: "LC", label: "理财" },
           { value: "GW", label: "网络购物" },
           { value: "QT", label: "其他类型" },
-          { value: "KF", label: "冒充电商客服类" },
+        
           { value: "JJGW", label: "冒充军警购物诈骗" },
           { value: "SZP", label: "杀猪盘" },
-          { value: "DS", label: "虚假购物、服务类" },
-          { value: "JY", label: "网络婚恋、交友类（非杀猪盘类）" },
+          { value: "DS", label: "虚假购物/服务类" },
+          { value: "JY", label: "网络婚恋/交友类" },
           { value: "ZX", label: "虚假征信类" },
-          { value: "MC", label: "冒充领导、熟人类" },
+          { value: "MC", label: "冒充领导/熟人类" },
           { value: "YX", label: "网络游戏产品虚假交易类" },
-          { value: "APP_FF", label: "分发平台(APP签名分发)" },
-          { value: "XZYM", label: "下载页面(带二维码的下载链接)" },
+          { value: "APP", label: "分发平台" },
+          { value: "XZYM", label: "下载页面" },
           { value: "OTHER", label: "其他类型诈骗" },
         ],
         authorize: [
@@ -1182,39 +1182,35 @@ export default {
     //诈骗
     zP(val) {
       if (val == "DK") {
-        return "贷款代办信用卡类";
+        return "贷款";
       } else if (val == "SD") {
-        return "刷单返利类";
+        return "刷单";
       } else if (val == "GJF") {
-        return "冒充公检法及政府机关类";
+        return "仿冒公检法";
       } else if (val == "LC") {
         return "投资理财";
       } else if (val == "GW") {
         return "网络购物";
       } else if (val == "QT") {
-        return "其他";
-      } else if (val == "KF") {
-        return "冒充电商客服类";
+        return "其他类型诈骗";
       } else if (val == "JJGW") {
         return "冒充军警购物诈骗";
       } else if (val == "SZP") {
         return "杀猪盘";
       } else if (val == "DS") {
-        return "虚假购物、服务类";
+        return "虚假购物/服务类";
       } else if (val == "JY") {
-        return "网络婚恋、交友类（非杀猪盘类）";
+        return "网络婚恋/交友类";
       } else if (val == "ZX") {
         return "虚假征信类";
       } else if (val == "MC") {
-        return "冒充领导、熟人类";
+        return "冒充领导/熟人类";
       } else if (val == "YX") {
         return "网络游戏产品虚假交易类";
-      } else if (val == "OTHER") {
-        return "其他类型诈骗";
-      } else if (val == "APP_FF") {
-        return "APP签名分发";
+      } else if (val == "APP") {
+        return "分发平台";
       } else if (val == "XZYM") {
-        return "带二维码的下载链接";
+        return "下载页面";
       }
     },
     //处置时间去零

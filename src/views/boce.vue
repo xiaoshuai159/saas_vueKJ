@@ -106,7 +106,11 @@
       <!-- <el-table-column type="selection" min-widt="5%"> </el-table-column> -->
       <el-table-column prop="handletime" label="处置时间"> </el-table-column>
       <el-table-column prop="url" label="URL"> </el-table-column>
-      <el-table-column prop="type" label="域名类型" show-overflow-tooltip> </el-table-column>
+      <el-table-column  label="域名类型" prop="type" show-overflow-tooltip>
+        <!-- <template slot-scope="scope">
+          {{zP(scope.row.type)}}
+        </template> -->
+         </el-table-column>
       <el-table-column prop="dialingTime" label="最后一次拨测时间">
       </el-table-column>
       <el-table-column prop="completeTotal" label="检测次数(次)">
@@ -159,7 +163,7 @@
       <div class="gailan">
         <h3>概览信息</h3>
         <div class="gailanson">
-          <span>URL:&nbsp;&nbsp;{{ this.gailan.url }}</span>
+          <span >URL:&nbsp;&nbsp;{{ this.gailan.url }}</span>
           <span>诈骗类型:&nbsp;&nbsp;{{ zP(this.gailan.type) }}</span>
           <span>客户端总数：&nbsp;&nbsp;{{ this.gailan.kehuduan }}</span>
           <span>拨测次数：&nbsp;&nbsp;{{ this.gailan.boceci }}</span>
@@ -222,7 +226,7 @@
           ref="multipleTable"
           :data="tableData1"
           style="width: 100%"
-          max-height="600px"
+          max-height="220px"
           size="mini"
           class="tableStyle"
         >
@@ -300,22 +304,22 @@ export default {
 {value:"SY",label:'沈阳处置'}
         ],
         sourceTypeData: [
-          { value: "dk", label: "贷款代办信用卡类" },
+          { value: "dk", label: "贷款" },
           { value: "lc", label: "理财" },
-          { value: "kf", label: "客服" },
+      
           { value: "szp", label: "杀猪盘" },
-          { value: "gjf", label: "冒充公检法及政府机关类" },
-          { value: "sd", label: "刷单返利类" },
-           { value: "KF", label: "冒充电商客服类" },
-          { value: "JJGW", label: "冒充军警购物诈骗" },       
-          { value: "DS", label: "虚假购物、服务类" },
-          { value: "JY", label: "网络婚恋、交友类（非杀猪盘类）" },
-          { value: "ZX", label: "虚假征信类" },
-          { value: "MC", label: "冒充领导、熟人类" },
-          { value: "YX", label: "网络游戏产品虚假交易类" },
-          { value: "APP_FF", label: "分发平台(APP签名分发)" },
-          { value: "XZYM", label: "下载页面(带二维码的下载链接)" },
-          { value: "OTHER", label: "其他类型诈骗" },
+          { value: "gjf", label: "仿冒公检法" },
+          { value: "sd", label: "刷单" },
+           { value: "gw", label: "网络购物" },
+          { value: "jjgw", label: "冒充军警购物诈骗" },       
+          { value: "ds", label: "虚假购物/服务类" },
+          { value: "jy", label: "网络婚恋/交友类" },
+          { value: "zx", label: "虚假征信类" },
+          { value: "mc", label: "冒充领导/熟人类" },
+          { value: "yx", label: "网络游戏产品虚假交易类" },
+          { value: "app", label: "分发平台" },
+          { value: "xzym", label: "下载页面" },
+          { value: "qt", label: "其他类型诈骗" },
         ],
 
         state: [
@@ -788,37 +792,37 @@ export default {
       this.mypageable1.pageNum1 = val;
       this.bocexiangqing();
     },
-    zP(val) {
-      if (val == "dk") {
-        return "贷款代办信用卡类";
-      } else if (val == "sd") {
-        return "刷单返利类";
-      } else if (val == "gjf") {
-        return "冒充公检法及政府机关类";
-      } else if (val == "lc") {
-        return "理财";
-      } else if (val == "kf") {
-        return "冒充电商客服类";
-      } else if (val == "szp") {
-        return "杀猪盘";
-      }else if (val == "JJGW") {
-        return "冒充军警购物诈骗";
-      } else if (val == "DS") {
-        return "虚假购物、服务类";
-      } else if (val == "JY") {
-        return "网络婚恋、交友类（非杀猪盘类）";
-      } else if (val == "ZX") {
-        return "虚假征信类";
-      } else if (val == "MC") {
-        return "冒充领导、熟人类";
-      } else if (val == "YX") {
-        return "网络游戏产品虚假交易类";
-      } else if (val == "OTHER") {
-        return "其他类型诈骗";
-      } else if (val == "APP_FF") {
-        return "APP签名分发";
-      } else if (val == "XZYM") {
-        return "带二维码的下载链接";
+  zP(val) {
+      if (val == 'dk') {
+        return '贷款'
+      } else if (val == 'sd') {
+        return '刷单'
+      } else if (val == 'gjf') {
+        return '仿冒公检法'
+      } else if (val == 'gw') {
+        return '网络购物'
+      } else if (val == 'qt') {
+        return '其他类型诈骗'
+      } else if (val == 'gw') {
+        return '网络购物'
+      } else if (val == 'jjgw') {
+        return '冒充军警购物诈骗'
+      } else if (val == 'szp') {
+        return '杀猪盘'
+      } else if (val == 'ds') {
+        return '虚假购物/服务类'
+      } else if (val == 'jy') {
+        return '网络婚恋/交友类'
+      } else if (val == 'zx') {
+        return '虚假征信类'
+      } else if (val == 'mc') {
+        return '冒充领导/熟人类'
+      } else if (val == 'yx') {
+        return '网络游戏产品虚假交易类'
+      } else if (val == 'app') {
+        return '分发平台'
+      } else if (val == 'xzym') {
+        return '下载页面'
       }
     },
     ly(val){
@@ -878,7 +882,7 @@ export default {
 .gailanson {
   width: 100%;
   border: 1px solid;
-  height: 40px;
+  // height: 40px;
   border-radius: 10px;
   display: flex;
   margin-bottom: 20px;
