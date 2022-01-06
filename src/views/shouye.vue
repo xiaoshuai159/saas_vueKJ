@@ -160,7 +160,7 @@ export default {
         },
         title: {
           x:'center',
-          text: "反制数据统计(按日期)", //xin
+          text: "域名访问量", //xin
           textStyle: {
             //xin
             fontSize: 20,
@@ -177,17 +177,17 @@ export default {
         },
         color: [" #fac858", "#EE6666"], //绿色  橙色
         legend: {
-          left: "80%", //xin
+          left: "87%", //xin
           orient: "vertical", //xin  horizontal
           data: [
             {
-              name: "处置域名数",
+              name: "长安",
               textStyle: {
                 color: ["#fac858"],
               },
             },
             {
-              name: "域名访问量",
+              name: "沈阳",
               textStyle: {
                 color: ["#EE6666"],
               },
@@ -235,14 +235,14 @@ export default {
         },
         series: [
           {
-            name: "处置域名数",
+            name: "长安",
             type: "line",
 
             data: this.qutest1,
             smooth: true,
           },
           {
-            name: "域名访问量",
+            name: "沈阳",
             type: "line",
 
             data: this.qutest2,
@@ -314,7 +314,7 @@ export default {
           },
         },
         grid: {
-          x: 60,
+          x: 70,
           y: 60,
           x2: 40,
           y2: 40,
@@ -410,7 +410,7 @@ export default {
         },
         title: {
           x:'center',
-          text: "预警数据统计(按日期)", //xin
+          text: "处置域名数量", //xin
           textStyle: {
             //xin
             fontSize: 20,
@@ -433,38 +433,28 @@ export default {
           orient: "vertical", //xin horizontal
           data: [
             {
-              name: "高",
+              name: "长安",
               
               textStyle: {
                 color: ["#fac858"],
               },
             },
             {
-              name: "中",
+              name: "沈阳",
               textStyle: {
                 color: ["#EE6666"],
               },
               //  ["处置域名数", "域名访问量"]
             },
-            {
-              name: "低",
-              textStyle: {
-                color: ["#91cc75"],
-              },
-              //  ["处置域名数", "域名访问量"]
-            },
+          
           ],
         },
-        grid: {
-        
-          y2: 140,
-         
-        },
+     
 
         xAxis: {
           type: "category",
           boundaryGap: false,
-          data: this.newqutest,
+          data: ["2021-01-01","2021-01-02","2021-01-03","2021-01-04","2021-01-05","2021-01-06","2021-01-07"],
 
           axisLabel: {
             // rotate: -20,
@@ -498,26 +488,20 @@ export default {
         },
         series: [
           {
-            name: "高",
+            name: "长安",
             type: "line",
 
-            data: this.newqutest1,
+            data: [4000,6000,40000,10000,50000,31020,12345,70000],
             smooth: true,
           },
           {
-            name: "中",
+            name: "沈阳",
             type: "line",
 
-            data: this.newqutest2,
+            data: [40000,7000,5000,10000,20020,22020,123450,1000],
             smooth: true,
           },
-          {
-            name: "低",
-            type: "line",
-
-            data: this.newqutest3,
-            smooth: true,
-          },
+       
         ],
 
         grid: {
@@ -576,7 +560,7 @@ export default {
         },
         title: {
           x:'center',
-          text: "预警数据统计(按类型)", //xin
+          text: "处置成功率数据", //xin
           textStyle: {
             //xin
             fontSize: 20,
@@ -592,33 +576,28 @@ export default {
         },
         color: ["#fac858", "#EE6666", "#91cc75"], //绿色  橙色
         legend: {
-          left: "87%", //xin
+          left: "80%", //xin
           orient: "vertical", //xin horizontal
           data: [
             {
-              name: "高",
+              name: "长安成功率",
               textStyle: {
                 color: ["#fac858"],
               },
             },
             {
-              name: "中",
+              name: "沈阳成功率",
               textStyle: {
                 color: ["#EE6666"],
               },
             },
-            {
-              name: "低",
-              textStyle: {
-                color: ["#91cc75"],
-              },
-            },
+          
           ],
         },
         xAxis: {
           type: "category",
           // data:this.zhutest2,
-          data: this.newzhutest1,
+          data:  ["2021-01-01","2021-01-02","2021-01-03","2021-01-04","2021-01-05","2021-01-06","2021-01-07"],
 
           axisLabel: {
             // rotate: -30,
@@ -651,26 +630,24 @@ export default {
         },
         series: [
           {
-            data: this.newzhutest2,
+            data: ["20","30","40","50","60","70","80"],
             type: "bar",
             color: "#fac858",
             barWidth: 20,
-            name: "高",
+            name: "长安成功率",
+    
           },
+         
           {
-            data: this.newzhutest3,
+            data: ["80","70","60","50","40","30","20"],
             type: "bar",
             barWidth: 20,
-            name: "中",
+            name: "沈阳成功率",
             color: "#EE6666",
+           
           },
-          {
-            data: this.newzhutest4,
-            type: "bar",
-            barWidth: 20,
-            name: "低",
-            color: "#91cc75",
-          },
+         
+        
         ],
       };
       return option;
