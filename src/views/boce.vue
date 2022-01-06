@@ -328,7 +328,7 @@ export default {
           { value: 2, label: "已失效" },
         ],
       },
-      tableData: [{ url: "http://dnank.com" }],
+      tableData: [],
       gailan: {
         url: "www.https.cpn",
         type: "szp",
