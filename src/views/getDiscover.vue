@@ -21,7 +21,33 @@
             >
             </el-date-picker>
           </el-form-item>
+             <!-- 有无备案 -->
+          <el-form-item label="有无备案">
+         <el-select
+            v-model="newdomainSimpleVo.record"
+              placeholder="有无备案"
+              clearable
+              @clear="sourceType_record(newdomainSimpleVo.record)"
+         >
+              <el-option
+                v-for="item in selectData.recordlist"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+         </el-select>
+          </el-form-item>
+          <!-- 境内外Ip -->
+          <el-form-item label="境内外IP">
+            <el-input
+              v-model="newdomainSimpleVo.ip"
+              placeholder="请输入IP"
+              @clear="modelType1_ip(newdomainSimpleVo.ip)"
+            ></el-input>
+          </el-form-item>
           <!-- 域名 -->
+
           <el-form-item label="域名">
             <el-input
               v-model="newdomainSimpleVo.domain"
@@ -74,9 +100,12 @@
         </template>
       </el-table-column>
       <!-- <el-table-column label="类型" prop=""> </el-table-column> -->
-      <el-table-column label="域名" prop="url" min-width="65%">
+      <el-table-column label="域名" prop="url" min-width="30%">
       </el-table-column>
-
+      <el-table-column label="境内外IP" prop="" min-width="30%">
+      </el-table-column>
+      <el-table-column label="有无备案" prop="" min-width="5%">
+      </el-table-column>
       <el-table-column
         label="访问量"
         min-width="10%"
@@ -207,6 +236,8 @@ export default {
         dateValue_find: null, //发现日期
         domain: null, //域名
         visits: null, //部署
+        ip: null, //境内外ip
+        record:null //备案
       },
 
       domainFeedbackVo: {
@@ -228,6 +259,10 @@ export default {
       totalPages1: "",
       //下拉框的选项数据
       selectData: {
+        recordlist:[
+          {value: "有备案", label: "有备案"},
+          { value: "无备案", label: "无备案"}
+        ],
         protocolData: [
           { value: "HTTP", label: "HTTP" },
           { value: "HTTPS", label: "HTTPS" },
@@ -307,10 +342,10 @@ export default {
         startDiscoverDate: this.whiteSearchList.startCreateTime,
         endDiscoverDate: this.whiteSearchList.endCreateTime,
         // mypageable: this.mypageable,
-           mypageable: {
-        pageNum: 1,
-        pageSize: this.mypageable.pageSize,
-      },
+        mypageable: {
+          pageNum: 1,
+          pageSize: this.mypageable.pageSize,
+        },
         url: this.newdomainSimpleVo.domain,
         visits: this.newdomainSimpleVo.visits,
       };
@@ -474,6 +509,21 @@ export default {
         this.whiteSearchList.endCreateTime = null;
       }
     },
+    modelType1_ip(val) {
+      if (val == "") {
+        this.newdomainSimpleVo.ip = null;
+      }
+    },
+    modelType1_perple(val) {
+      if (val == "") {
+        this.newdomainSimpleVo.domain = null;
+      }
+    },
+    sourceType_record(val){
+       if (val == "") {
+        this.newdomainSimpleVo.record = null;
+      }
+    },
     handleClose(done) {
       this.mypageable1.pageNum1 = 1;
       this.arr = [];
@@ -485,7 +535,7 @@ export default {
     getRowKeys(row) {
       return row.id;
     },
-     zP(val) {
+    zP(val) {
       if (val == "DK") {
         return "贷款代办信用卡类";
       } else if (val == "SD") {

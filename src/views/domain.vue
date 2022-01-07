@@ -216,7 +216,7 @@
       </el-table-column>
       <!--  -->
       <!-- ----------------- -->
-      <el-table-column label="URL" min-width="35%" v-if="getlist1('url')">
+      <el-table-column label="URL" min-width="35%" v-if="getlist1('url')" show-overflow-tooltip>
         <template slot-scope="scope">
           <el-popconfirm
             v-if="getRole1('getUrl')"
