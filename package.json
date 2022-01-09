@@ -10,6 +10,7 @@
   "dependencies": {
     "@jiaminghi/data-view": "^2.10.0",
     "axios": "^0.21.0",
+    "chokidar": "^3.0.0",
     "core-js": "^3.6.5",
     "dayjs": "^1.10.6",
     "echarts": "4.8.0",

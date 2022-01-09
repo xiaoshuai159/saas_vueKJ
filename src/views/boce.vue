@@ -52,7 +52,41 @@
               </el-option>
             </el-select>
           </el-form-item>
-        <!-- 数据来源 -->
+          <!-- 运营商 -->
+          <el-form-item label="运营商">
+            <el-select
+              v-model="newdomainSimpleVo.Operator"
+              placeholder="运营商"
+              clearable
+              @clear="sourceType_Operator(newdomainSimpleVo.Operator)"
+            >
+              <el-option
+                v-for="item in selectData.OperatorList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <!-- 网络环境 -->
+          <el-form-item label="网络环境">
+            <el-select
+              v-model="newdomainSimpleVo.environment"
+              placeholder="网络环境"
+              clearable
+              @clear="sourceType_environment(newdomainSimpleVo.environment)"
+            >
+              <el-option
+                v-for="item in selectData.environmentList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <!-- 数据来源 -->
           <el-form-item label="数据来源">
             <el-select
               v-model="newdomainSimpleVo.form"
@@ -69,8 +103,12 @@
               </el-option>
             </el-select>
           </el-form-item>
-            <el-form-item label="URL">
-           <el-input v-model="newdomainSimpleVo.url" placeholder="url"   @clear="state_clearurl(newdomainSimpleVo.url)"></el-input>
+          <el-form-item label="URL">
+            <el-input
+              v-model="newdomainSimpleVo.url"
+              placeholder="url"
+              @clear="state_clearurl(newdomainSimpleVo.url)"
+            ></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" size="mini" @click.native="resetFun"
@@ -86,6 +124,7 @@
               :loading="loadingbut"
               >{{ loadingbuttext }}</el-button
             >
+            <el-button type="primary" size="mini">添加</el-button>
             <!-- :loading="isLoading" -->
 
             <!-- </template> -->
@@ -93,7 +132,11 @@
         </el-form>
       </template>
     </div>
-
+    <div class="wentitle">
+      <span class="wen1">处置成功数：{{ this.chuzhinum }}</span>
+      <span class="wen1">处置总数：{{ this.chuzhisuccess }}</span>
+      <span class="wen1"></span>
+    </div>
     <el-table
       ref="multipleTable"
       :data="tableData"
@@ -106,27 +149,33 @@
       <!-- <el-table-column type="selection" min-widt="5%"> </el-table-column> -->
       <el-table-column prop="handletime" label="处置时间"> </el-table-column>
       <el-table-column prop="url" label="URL"> </el-table-column>
-      <el-table-column  label="域名类型" prop="type" show-overflow-tooltip>
+      <el-table-column label="域名类型" prop="type" show-overflow-tooltip>
         <!-- <template slot-scope="scope">
           {{zP(scope.row.type)}}
         </template> -->
-         </el-table-column>
+      </el-table-column>
       <el-table-column prop="dialingTime" label="最后一次拨测时间">
       </el-table-column>
       <el-table-column prop="completeTotal" label="检测次数(次)">
-      </el-table-column >
-        <el-table-column  label="数据来源">
-          <template slot-scope="scope">
-{{ly(scope.row.dataSource)}}
-          </template>
+      </el-table-column>
+      <el-table-column label="数据来源">
+        <template slot-scope="scope">
+          {{ ly(scope.row.dataSource) }}
+        </template>
       </el-table-column>
       <el-table-column prop="bcState" label="处置状态"> </el-table-column>
+      <el-table-column prop="isp" label="运营商"> </el-table-column>
+      <el-table-column prop="netWork" label="网络环境"> </el-table-column>
 
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="mini" @click="add(scope.row.url)"
             >查看</el-button
           >
+          <el-button type="text" size="mini">开始</el-button>
+          <el-button type="text" size="mini">暂停</el-button>
+          <el-button type="text" size="mini">结束</el-button>
+          <el-button type="text" size="mini">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -163,7 +212,7 @@
       <div class="gailan">
         <h3>概览信息</h3>
         <div class="gailanson">
-          <span >URL:&nbsp;&nbsp;{{ this.gailan.url }}</span>
+          <span>URL:&nbsp;&nbsp;{{ this.gailan.url }}</span>
           <span>诈骗类型:&nbsp;&nbsp;{{ zP(this.gailan.type) }}</span>
           <span>客户端总数：&nbsp;&nbsp;{{ this.gailan.kehuduan }}</span>
           <span>拨测次数：&nbsp;&nbsp;{{ this.gailan.boceci }}</span>
@@ -269,6 +318,8 @@ export default {
   name: "boce",
   data() {
     return {
+      chuzhinum: 0,
+      chuzhisuccess: 0,
       loadingbut: false,
       loadingbuttext: "下载",
       loadingbuttext1: "下载",
@@ -295,23 +346,35 @@ export default {
         dateValue_find: null, //处置时间
         sourceType: null, //域名类型
         state: null, //处置状态
-        url:null,//url
-        form:null,
+        url: null, //url
+        form: null, //来源
+        Operator: null, //运营商
+        environment: null, // 网络环境
       },
       selectData: {
-        formType:[
-{value:"CA",label:'长安处置'},
-{value:"SY",label:'沈阳处置'}
+        OperatorList: [
+          { value: "移动", label: "移动" },
+          { value: "联通", label: "联通" },
+          { value: "电信", label: "电信" },
+        ],
+        environmentList: [
+          { value: "固网", label: "固网" },
+          { value: "移动网", label: "移动网" },
+        ],
+        formType: [
+          { value: "CA", label: "长安处置" },
+          { value: "SY", label: "沈阳处置" },
+          { value: "上传账户名", label: "上传账户名" },
         ],
         sourceTypeData: [
           { value: "dk", label: "贷款" },
           { value: "lc", label: "理财" },
-      
+
           { value: "szp", label: "杀猪盘" },
           { value: "gjf", label: "仿冒公检法" },
           { value: "sd", label: "刷单" },
-           { value: "gw", label: "网络购物" },
-          { value: "jjgw", label: "冒充军警购物诈骗" },       
+          { value: "gw", label: "网络购物" },
+          { value: "jjgw", label: "冒充军警购物诈骗" },
           { value: "ds", label: "虚假购物/服务类" },
           { value: "jy", label: "网络婚恋/交友类" },
           { value: "zx", label: "虚假征信类" },
@@ -499,8 +562,10 @@ export default {
         type: this.newdomainSimpleVo.sourceType,
         startCreateTime: this.whiteSearchList.startCreateTime,
         endCreateTime: this.whiteSearchList.endCreateTime,
-        url:this.newdomainSimpleVo.url,
-        dataSource:this.newdomainSimpleVo.form,
+        url: this.newdomainSimpleVo.url,
+        dataSource: this.newdomainSimpleVo.form,
+        isp:this.newdomainSimpleVo.Operator,
+        netWork:this.newdomainSimpleVo.environment,
         mypageable: {
           pageNum: this.mypageable.pageNum,
           pageSize: this.mypageable.pageSize,
@@ -522,11 +587,13 @@ export default {
         type: this.newdomainSimpleVo.sourceType,
         startCreateTime: this.whiteSearchList.startCreateTime,
         endCreateTime: this.whiteSearchList.endCreateTime,
-           url:this.newdomainSimpleVo.url,
-        dataSource:this.newdomainSimpleVo.form,
+        url: this.newdomainSimpleVo.url,
+           isp:this.newdomainSimpleVo.Operator,
+        netWork:this.newdomainSimpleVo.environment,
+        dataSource: this.newdomainSimpleVo.form,
         mypageable: {
           // pageNum: this.mypageable.pageNum,
-          pageNum:1,
+          pageNum: 1,
           pageSize: this.mypageable.pageSize,
         },
       };
@@ -547,8 +614,10 @@ export default {
         type: this.newdomainSimpleVo.sourceType,
         startCreateTime: this.whiteSearchList.startCreateTime,
         endCreateTime: this.whiteSearchList.endCreateTime,
-        url:this.newdomainSimpleVo.url,
-        dataSource:this.newdomainSimpleVo.form,
+        url: this.newdomainSimpleVo.url,
+        //    isp:this.newdomainSimpleVo.Operator,
+        // netWork:this.newdomainSimpleVo.environment,
+        dataSource: this.newdomainSimpleVo.form,
       };
       const { data: res } = await this.$http.post(
         "/downloadBcTestList",
@@ -582,6 +651,10 @@ export default {
         dateValue_find: null, //处置时间
         sourceType: null, //域名类型
         state: null, //处置状态
+        Operator: null, //运营商
+        environment: null, // 网络环境
+           url: null, //url
+        form: null, //来源
       };
       this.newdomainSimpleVo.state = "";
       this.newdomainSimpleVo.sourceType = "";
@@ -641,7 +714,7 @@ export default {
     },
     async gailanxiazai() {
       this.loadingbuttext1 = "...加载中";
-      this.loadingbut=true
+      this.loadingbut = true;
       const bcTestVo = {
         url: this.url,
         startCreateTime: this.whiteSearchList1.startCreateTime1,
@@ -653,7 +726,7 @@ export default {
       );
       if (res.code == 200) {
         this.loadingbuttext1 = "下载";
-            this.loadingbut=false
+        this.loadingbut = false;
         let url = res.expandData.url;
         let eleLink = document.createElement("a");
         eleLink.download = name;
@@ -758,6 +831,16 @@ export default {
         this.newdomainSimpleVo.form = null;
       }
     },
+    sourceType_Operator(val) {
+      if (val == "") {
+        this.newdomainSimpleVo.Operator = null;
+      }
+    },
+    sourceType_environment(val) {
+      if (val == "") {
+        this.newdomainSimpleVo.environment = null;
+      }
+    },
     state_clearurl(val) {
       if (val == "") {
         this.newdomainSimpleVo.url = null;
@@ -780,7 +863,7 @@ export default {
       console.log(val);
 
       this.mypageable.pageNum = val;
-      
+
       this.boceclist();
       //   this.getTableData();
     },
@@ -792,46 +875,46 @@ export default {
       this.mypageable1.pageNum1 = val;
       this.bocexiangqing();
     },
-  zP(val) {
-      if (val == 'dk') {
-        return '贷款'
-      } else if (val == 'sd') {
-        return '刷单'
-      } else if (val == 'gjf') {
-        return '仿冒公检法'
-      } else if (val == 'gw') {
-        return '网络购物'
-      } else if (val == 'qt') {
-        return '其他类型诈骗'
-      } else if (val == 'gw') {
-        return '网络购物'
-      } else if (val == 'jjgw') {
-        return '冒充军警购物诈骗'
-      } else if (val == 'szp') {
-        return '杀猪盘'
-      } else if (val == 'ds') {
-        return '虚假购物/服务类'
-      } else if (val == 'jy') {
-        return '网络婚恋/交友类'
-      } else if (val == 'zx') {
-        return '虚假征信类'
-      } else if (val == 'mc') {
-        return '冒充领导/熟人类'
-      } else if (val == 'yx') {
-        return '网络游戏产品虚假交易类'
-      } else if (val == 'app') {
-        return '分发平台'
-      } else if (val == 'xzym') {
-        return '下载页面'
+    zP(val) {
+      if (val == "dk") {
+        return "贷款";
+      } else if (val == "sd") {
+        return "刷单";
+      } else if (val == "gjf") {
+        return "仿冒公检法";
+      } else if (val == "gw") {
+        return "网络购物";
+      } else if (val == "qt") {
+        return "其他类型诈骗";
+      } else if (val == "gw") {
+        return "网络购物";
+      } else if (val == "jjgw") {
+        return "冒充军警购物诈骗";
+      } else if (val == "szp") {
+        return "杀猪盘";
+      } else if (val == "ds") {
+        return "虚假购物/服务类";
+      } else if (val == "jy") {
+        return "网络婚恋/交友类";
+      } else if (val == "zx") {
+        return "虚假征信类";
+      } else if (val == "mc") {
+        return "冒充领导/熟人类";
+      } else if (val == "yx") {
+        return "网络游戏产品虚假交易类";
+      } else if (val == "app") {
+        return "分发平台";
+      } else if (val == "xzym") {
+        return "下载页面";
       }
     },
-    ly(val){
-      if(val=="CA"){
-        return "长安处置"
-      }else if(val=="SY"){
-        return "沈阳处置"
+    ly(val) {
+      if (val == "CA") {
+        return "长安处置";
+      } else if (val == "SY") {
+        return "沈阳处置";
       }
-    }
+    },
   },
 };
 </script>
@@ -911,5 +994,17 @@ export default {
 }
 .dialogInfo /deep/ .el-table__row {
   height: 35px !important;
+}
+.wentitle {
+  width: 100%;
+  height: 30px;
+  display: flex;
+  line-height: 30px;
+  margin-bottom: 15px;
+}
+.wen1 {
+  flex: 1;
+  font-size: 20px;
+  color: #fff;
 }
 </style>

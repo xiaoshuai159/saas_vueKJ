@@ -105,6 +105,25 @@
               </el-option>
             </el-select>
           </el-form-item>
+              <!-- 二级分类 -->
+          <el-form-item label="二级分类">
+            <el-select
+              v-model="newdomainSimpleVo.classification"
+              placeholder="二级分类"
+              clearable
+              @clear="
+                sourceType_classification(newdomainSimpleVo.classification)
+              "
+            >
+              <el-option
+                v-for="item in selectData.classificationlist"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
           <!-- 状态 -->
           <el-form-item label="状态">
             <el-select
@@ -260,7 +279,7 @@
         v-if="getlist1('protocol')"
       >
       </el-table-column>
-      <el-table-column label="状态" min-width="10%" v-if="getlist1('status')">
+      <el-table-column label="状态" min-width="7%" v-if="getlist1('status')">
         <template slot-scope="scope">
           {{ scope.row.status == 0 ? "处置中" : "已处置" }}
         </template>
@@ -274,6 +293,11 @@
           <span v-if="scope.row.treatmentTime">
             {{ ql(scope.row.treatmentTime) }}</span
           >
+        </template>
+      </el-table-column>
+          <el-table-column label="二级分类"    min-width="7%" prop="" show-overflow-tooltip> 
+        <template slot-scope="scope" >
+{{erji(scope.row.erjixxx)}}
         </template>
       </el-table-column>
       <el-table-column
@@ -294,7 +318,7 @@
       </el-table-column>
       <el-table-column
         label="是否授权"
-        min-width="10%"
+        min-width="7%"
         v-if="getlist1('authorize')"
       >
         <template slot-scope="scope">
@@ -371,6 +395,7 @@ export default {
         authorize: null, //是否授权
         state: null, //状态
         dateValue_find1: null, //图表时间
+        classification:null,//二级分类
       },
       dayliang: 0,
       dayliangchuzhi: 0,
@@ -388,6 +413,55 @@ export default {
       totalPages: "",
       //下拉框的选项数据
       selectData: {
+          classificationlist: [
+          { value: "kf_ds", label: "冒充电商客服" },
+          { value: "kf_wl", label: "冒充物流客服(物流快递)" },
+          { value: "kf_other", label: "其他冒充客服类" },
+          { value: "gif_mc", label: "冒充公检法" },
+          { value: "gif_ss", label: "工商平台类" },
+          { value: "gif_etc", label: "ETC通行卡" },
+          { value: "gif_other", label: "其他政府机关或单位组织" },
+          { value: "sd", label: "做任务赚钱" },
+          { value: "dk_xyz", label: "虚假代办信用卡" },
+          { value: "dk_te", label: "虚假提额套现" },
+          { value: "dk_dk", label: "虚假贷款" },
+          { value: "dk_other", label: "其他贷款代办信用卡类" },
+          { value: "jjgw", label: "冒充军警购物诈骗" },
+          { value: "szp_lc", label: "虚假投资理财(股票期货交易/数字币)" },
+          {
+            value: "szp_dubo",
+            label: "博彩彩票/娱乐城/购彩/投注押注/开奖/赛马会",
+          },
+          { value: "szp_ty", label: "体育直播/比分竞猜" },
+          { value: "szp_yx", label: "棋牌游戏" },
+          {
+            value: "ds_gw",
+            label:
+              "虚假购物(购买账号/发卡/自动下单/购物商城/领卷/卡密/刷单刷信誉/提升店铺流量/提升排名)",
+          },
+          { value: "ds_fw", label: "虚假服务" },
+          { value: "ds_other", label: "其他电商类诈骗" },
+          { value: "jy_jr", label: "冒充外国军人" },
+          { value: "jy_hl", label: "冒充婚恋" },
+          { value: "jy_jy", label: "网络教育/聊天交友(密聊/闲聊)" },
+          { value: "jy_other", label: "其他网络婚恋/交友类" },
+          { value: "zx_xyd", label: "消除校园贷记录" },
+          { value: "zx_bljl", label: "消除不良记录" },
+          { value: "zx_other", label: "其他虚假征信类" },
+          { value: "mc_ld", label: "冒充领导" },
+          { value: "mc_sr", label: "冒充熟人" },
+          { value: "mc_gz", label: "冒充公众人物" },
+          { value: "mc_other", label: "冒充其他身份" },
+          { value: "yx_card", label: "游戏币/游戏点卡诈骗" },
+          { value: "yx_zhzb", label: "游戏账号/游戏装备诈骗" },
+          { value: "yx_other", label: "其他游戏产品虚假交易" },
+          { value: "other_zj", label: "虚假中奖诈骗" },
+          { value: "other_zp", label: "虚假招聘" },
+          { value: "other_jp", label: "机票退改诈骗" },
+          { value: "other_tp", label: "ps图片诈骗" },
+          { value: "app_ff", label: "分发平台" },
+          { value: "xzym", label: "下载页面" },
+        ],
         protocolData: [
           { value: "HTTP", label: "HTTP" },
           { value: "HTTPS", label: "HTTPS" },
@@ -1163,7 +1237,11 @@ export default {
         this.newdomainSimpleVo.state = null;
       }
     },
-
+    sourceType_classification(val) {
+      if (val == "") {
+        this.newdomainSimpleVo.classification = null;
+      }
+    },
     modelType1_clearFun(val) {
       if (val == "") {
         this.newdomainSimpleVo.modelType1 = null;
@@ -1178,6 +1256,90 @@ export default {
       if (val == "") {
         this.newdomainSimpleVo.authorize = null;
       }
+    },
+      erji(val){
+      if(val=="kf_ds"){
+        return  "冒充电商客服"
+      }else if (val == "kf_wl") {
+        return "冒充物流客服(物流快递)";
+      }else if (val == "kf_other") {
+        return "其他冒充客服类";
+      }else if (val == "gif_mc") {
+        return "冒充公检法";
+      }else if (val == "gif_ss") {
+        return "工商平台类";
+      }else if (val == "gif_etc") {
+        return "ETC通行卡";
+      }else if (val == "gif_other") {
+        return "其他政府机关或单位组织";
+      }else if (val == "sd") {
+        return "做任务赚钱";
+      }else if (val == "dk_xyz") {
+        return "虚假代办信用卡";
+      }else if (val == "dk_te") {
+        return "虚假提额套现";
+      }else if (val == "dk_dk") {
+        return "虚假贷款";
+      }else if (val == "dk_other") {
+        return "其他贷款代办信用卡类";
+      }else if (val == "jjgw") {
+        return "冒充军警购物诈骗";
+      }else if (val == "szp_lc") {
+        return "虚假投资理财(股票期货交易/数字币)";
+      }else if (val == "szp_dubo") {
+        return "博彩彩票/娱乐城/购彩/投注押注/开奖/赛马会";
+      }else if (val == "szp_ty") {
+        return "体育直播/比分竞猜";
+      }else if (val == "szp_yx") {
+        return "棋牌游戏";
+      }else if (val == "ds_gw") {
+        return "虚假购物(购买账号/发卡/自动下单/购物商城/领卷/卡密/刷单刷信誉/提升店铺流量/提升排名)";
+      }else if (val == "ds_fw") {
+        return "虚假服务";
+      }else if (val == "ds_other") {
+        return "其他电商类诈骗";
+      }else if (val == "jy_jr") {
+        return "冒充外国军人";
+      }else if (val == "jy_hl") {
+        return "冒充婚恋";
+      }else if (val == "jy_jy") {
+        return "网络教育/聊天交友(密聊/闲聊)";
+      }else if (val == "jy_other") {
+        return "其他网络婚恋/交友类";
+      }else if (val == "zx_xyd") {
+        return "消除校园贷记录";
+      }else if (val == "zx_bljl") {
+        return "消除不良记录";
+      }else if (val == "zx_other") {
+        return "其他虚假征信类";
+      }else if (val == "mc_ld") {
+        return "冒充领导";
+      }else if (val == "mc_sr") {
+        return "冒充熟人";
+      }else if (val == "mc_gz") {
+        return "冒充公众人物";
+      }else if (val == "mc_other") {
+        return "冒充其他身份";
+      }else if (val == "yx_card") {
+        return "游戏币/游戏点卡诈骗";
+      }else if (val == "yx_zhzb") {
+        return "游戏账号/游戏装备诈骗";
+      }else if (val == "yx_other") {
+        return "其他游戏产品虚假交易";
+      }else if (val == "other_zj") {
+        return "虚假中奖诈骗";
+      }else if (val == "other_zp") {
+        return "虚假招聘";
+      }else if (val == "other_jp") {
+        return "机票退改诈骗";
+      }else if (val == "other_tp") {
+        return "ps图片诈骗";
+      }else if (val == "app_ff") {
+        return "分发平台";
+      }else if (val == "xzym") {
+        return "下载页面";
+      }
+
     },
     //诈骗
     zP(val) {

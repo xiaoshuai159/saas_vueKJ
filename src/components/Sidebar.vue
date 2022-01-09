@@ -149,9 +149,9 @@ export default {
     async qx() {
       const that = this;
       const { data: res } = await this.$http.post("/menu/queryUserMenuList");
-      console.log(res);
+      // console.log(res);
       if (res.code == 200) {
-        console.log(res.data);
+        // console.log(res.data);
         this.items = res.data;
 
         // =========================

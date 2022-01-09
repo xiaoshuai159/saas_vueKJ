@@ -5,6 +5,7 @@ module.exports = {
     proxy: {
       '': {
         target: 'http://10.8.3.100:8080/',
+        // target:'http://10.8.0.120:8022',
         // target:"http://localhost:8080",
         // target:'http://172.31.0.72:8080',  //mfy 
         // target:'http://10.8.0.101:8080',
