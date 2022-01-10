@@ -395,7 +395,7 @@ export default {
         endDiscoverDate: this.whiteSearchList.endCreateTime,
         mypageable: this.mypageable,
         ifForeign:this.newdomainSimpleVo.record,
-        ifRecord:newdomainSimpleVo.ip,
+        ifRecord:this.newdomainSimpleVo.ip,
         url: this.newdomainSimpleVo.domain,
         // 二级分类
         // xxx:this.newdomainSimpleVo.classification,

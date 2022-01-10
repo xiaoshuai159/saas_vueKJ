@@ -89,6 +89,11 @@
 .right_main_under .search_select_form .el-date-editor .el-range-input {
   color: #fdf6ec;
 }
+.right_main_under .tableStyle {
+  /* 选中某行时的背景色*/
+  /*鼠标移入某行时的背景色*/
+  /* table 加fix 鼠标移入某行时的背景色 */
+}
 .right_main_under .tableStyle th {
   background-color: #07293f;
 }
@@ -96,7 +101,7 @@
   border-bottom: 0;
 }
 .right_main_under .tableStyle tr {
-  background-color: #01162d;
+  background-color: #01162d !important;
   border-color: #2b3440;
   color: #909399;
   height: 40.8px;
@@ -173,6 +178,18 @@
 .right_main_under .tableStyle .el-table__expanded-cell {
   background-color: #01162d;
   text-align: left;
+}
+.right_main_under .tableStyle .el-table__body tr.current-row > td {
+  background-color: #03112359 !important;
+}
+.right_main_under .tableStyle .el-table--enable-row-hover .el-table__body tr:hover > td {
+  background-color: #03112359;
+}
+.right_main_under .tableStyle .el-table__body tr.hover-row.current-row > td,
+.right_main_under .tableStyle .el-table__body tr.hover-row.el-table__row--striped.current-row > td,
+.right_main_under .tableStyle .el-table__body tr.hover-row.el-table__row--striped > td,
+.right_main_under .tableStyle .el-table__body tr.hover-row > td {
+  background-color: #03112359;
 }
 .right_main_under .tableStyle .el-table--border::after,
 .right_main_under .tableStyle .el-table--group::after,

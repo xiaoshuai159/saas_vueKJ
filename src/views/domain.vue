@@ -295,9 +295,9 @@
           >
         </template>
       </el-table-column>
-          <el-table-column label="二级分类"    min-width="7%" prop="" show-overflow-tooltip> 
+          <el-table-column label="二级分类"    min-width="7%" prop="category" show-overflow-tooltip> 
         <template slot-scope="scope" >
-{{erji(scope.row.erjixxx)}}
+{{erji(scope.row.category)}}
         </template>
       </el-table-column>
       <el-table-column
@@ -994,6 +994,7 @@ export default {
           status: this.newdomainSimpleVo.state,
           protocol: this.newdomainSimpleVo.protocol,
           authorize: this.newdomainSimpleVo.authorize,
+          category:this.newdomainSimpleVo.classification,
         },
         domainTimeVo: {
           startTreatmentTime: this.whiteSearchList.startCreateTime,
@@ -1062,6 +1063,7 @@ export default {
         authorize: null, //是否授权
         state: null, //状态
         dateValue_find: null, //处置时间
+          classification:null,//二级分类
       };
       this.whiteSearchList = {
         startCreateTime: null,
@@ -1422,8 +1424,8 @@ export default {
 .el-table__fixed::before {
   background-color: #192d45;
 }
-/deep/.el-table--enable-row-hover .el-table__body tr:hover > td {
-  background-color: #03112359;
+/deep/ .el-table__body tr:hover > td {
+  background-color: #03112359 !important;
 }
 
 /deep/.el-table--border::after,

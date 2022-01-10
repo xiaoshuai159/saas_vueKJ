@@ -70,6 +70,10 @@ export default {
       yumingtestca: [],
       yumingtestsy: [],
       //  newrestest: [],
+      //处置成功率数据
+      czsuccessx:[],
+      czsuccessca:[],
+      czsuccesssy:[],
     };
   },
   created() {
@@ -81,6 +85,7 @@ export default {
     this.echartslist();
     this.echartslist1();
       this.chuzhiyumingshuecharts();
+      this.chuzhisuccess()
   },
   methods: {
     // 图表初次渲染
@@ -151,6 +156,21 @@ export default {
         }, 500);
       } else {
         alert("无数据");
+      }
+    },
+    // 处置成功率数据 
+    async chuzhisuccess(){
+      const {data:res}=await this.$http.get('/getCounterByDate')
+      if(res.code==200){
+        res.data.forEach(item=>{
+  this.czsuccessx.push(item.date)
+    this.czsuccessca.push(item.caSource)
+      this.czsuccesssy.push(item.sySource)
+      if(this.$refs.bar_zz1){
+        this.Columnar1()
+      }
+        })
+    
       }
     },
     // 处置域名数_echarts
@@ -280,6 +300,7 @@ export default {
 
             data: this.qutest2,
             smooth: true,
+               areaStyle: {},
           },
         ],
 
@@ -522,7 +543,7 @@ export default {
             data: this.yumingtestca,
             // data: [4000,6000,40000,10000,50000,31020,12345,70000],
             smooth: true,
-            areaStyle: {},
+           
           },
           {
             name: "沈阳",
@@ -530,7 +551,7 @@ export default {
             data: this.yumingtestsy,
             // data: [40000,7000,5000,10000,20020,22020,123450,1000],
             smooth: true,
-            areaStyle: {},
+         
           },
         ],
 
@@ -574,19 +595,14 @@ export default {
       // console.log(this.restest);
       let option = {
         //下载
-        toolbox: {
-          show: true,
-          // feature: {
-          //   mark: { show: true },
-          //   saveAsImage: { show: true },
-          // },
-        },
+   
         tooltip: {
           trigger: "axis",
           axisPointer: {
             // 坐标轴指示器，坐标轴触发有效
             type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
           },
+       
         },
         title: {
           x: "center",
@@ -604,7 +620,7 @@ export default {
           y2: 40,
           borderWidth: 1,
         },
-        color: ["#fac858", "#EE6666", "#91cc75"], //绿色  橙色
+        color: ["#fac858", "#EE6666", ], //绿色  橙色
         legend: {
           left: "80%", //xin
           orient: "vertical", //xin horizontal
@@ -625,16 +641,16 @@ export default {
         },
         xAxis: {
           type: "category",
-          // data:this.zhutest2,
-          data: [
-            "2021-01-01",
-            "2021-01-02",
-            "2021-01-03",
-            "2021-01-04",
-            "2021-01-05",
-            "2021-01-06",
-            "2021-01-07",
-          ],
+          data:this.czsuccessx,
+          // data: [
+          //   "2021-01-01",
+          //   "2021-01-02",
+          //   "2021-01-03",
+          //   "2021-01-04",
+          //   "2021-01-05",
+          //   "2021-01-06",
+          //   "2021-01-07",
+          // ],
 
           axisLabel: {
             // rotate: -30,
@@ -650,11 +666,15 @@ export default {
         },
         yAxis: {
           type: "value",
+              name: '百分比(%)',
           splitLine: {
             lineStyle: {
               color: ["#fff"],
             },
           },
+
+          max:100,
+          min:0,
           nameTextStyle: {
             color: ["#fff"],
           },
@@ -667,7 +687,8 @@ export default {
         },
         series: [
           {
-            data: ["20", "30", "40", "50", "60", "70", "80"],
+            // data: ["20", "30", "40", "50", "60", "70", "80"],
+            data:this.czsuccessca,
             type: "bar",
             color: "#fac858",
             barWidth: 20,
@@ -675,7 +696,8 @@ export default {
           },
 
           {
-            data: ["80", "70", "60", "50", "40", "30", "20"],
+            // data: ["80", "70", "60", "50", "40", "30", "20"],
+                 data:this.czsuccesssy,
             type: "bar",
             barWidth: 20,
             name: "沈阳成功率",

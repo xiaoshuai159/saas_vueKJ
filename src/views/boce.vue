@@ -133,8 +133,8 @@
       </template>
     </div>
     <div class="wentitle">
-      <span class="wen1">处置成功数：{{ this.chuzhinum }}</span>
-      <span class="wen1">处置总数：{{ this.chuzhisuccess }}</span>
+      <span class="wen1">处置成功率：{{ this.chuzhinum + "%" }}</span>
+      <span class="wen1"></span>
       <span class="wen1"></span>
     </div>
     <el-table
@@ -148,7 +148,8 @@
     >
       <!-- <el-table-column type="selection" min-widt="5%"> </el-table-column> -->
       <el-table-column prop="handletime" label="处置时间"> </el-table-column>
-      <el-table-column prop="url" label="URL"> </el-table-column>
+      <el-table-column prop="url" label="URL" show-overflow-tooltip width="200">
+      </el-table-column>
       <el-table-column label="域名类型" prop="type" show-overflow-tooltip>
         <!-- <template slot-scope="scope">
           {{zP(scope.row.type)}}
@@ -167,7 +168,7 @@
       <el-table-column prop="isp" label="运营商"> </el-table-column>
       <el-table-column prop="netWork" label="网络环境"> </el-table-column>
 
-      <el-table-column label="操作">
+      <el-table-column label="操作" fixed="right" width="200">
         <template slot-scope="scope">
           <el-button type="text" size="mini" @click="add(scope.row.url)"
             >查看</el-button
@@ -427,10 +428,11 @@ export default {
   },
   mounted() {
     // this.drawLine()
-    this.boceclist();
   },
   created() {
     // this.boceclist();
+    this.zongnum();
+    this.boceclist();
   },
   methods: {
     //柱状
@@ -564,8 +566,8 @@ export default {
         endCreateTime: this.whiteSearchList.endCreateTime,
         url: this.newdomainSimpleVo.url,
         dataSource: this.newdomainSimpleVo.form,
-        isp:this.newdomainSimpleVo.Operator,
-        netWork:this.newdomainSimpleVo.environment,
+        isp: this.newdomainSimpleVo.Operator,
+        netWork: this.newdomainSimpleVo.environment,
         mypageable: {
           pageNum: this.mypageable.pageNum,
           pageSize: this.mypageable.pageSize,
@@ -580,6 +582,23 @@ export default {
         this.totalPages = res.data.totalPages;
       }
     },
+    async zongnum() {
+      const list = {
+        bcState: this.newdomainSimpleVo.state,
+        type: this.newdomainSimpleVo.sourceType,
+        startCreateTime: this.whiteSearchList.startCreateTime,
+        endCreateTime: this.whiteSearchList.endCreateTime,
+        url: this.newdomainSimpleVo.url,
+        dataSource: this.newdomainSimpleVo.form,
+        isp: this.newdomainSimpleVo.Operator,
+        netWork: this.newdomainSimpleVo.environment,
+      };
+      const { data: res } = await this.$http.post("/getSuccessRate", list);
+      if (res.code == 200) {
+        // console.log(res.data);
+        this.chuzhinum = res.data;
+      }
+    },
     //查讯
     async search() {
       let bcListVo = {
@@ -588,8 +607,8 @@ export default {
         startCreateTime: this.whiteSearchList.startCreateTime,
         endCreateTime: this.whiteSearchList.endCreateTime,
         url: this.newdomainSimpleVo.url,
-           isp:this.newdomainSimpleVo.Operator,
-        netWork:this.newdomainSimpleVo.environment,
+        isp: this.newdomainSimpleVo.Operator,
+        netWork: this.newdomainSimpleVo.environment,
         dataSource: this.newdomainSimpleVo.form,
         mypageable: {
           // pageNum: this.mypageable.pageNum,
@@ -603,6 +622,7 @@ export default {
         this.tableData = res.data.content;
         this.total = res.data.totalElements;
         this.totalPages = res.data.totalPages;
+        this.zongnum()
       }
     },
     //下载
@@ -615,8 +635,8 @@ export default {
         startCreateTime: this.whiteSearchList.startCreateTime,
         endCreateTime: this.whiteSearchList.endCreateTime,
         url: this.newdomainSimpleVo.url,
-        //    isp:this.newdomainSimpleVo.Operator,
-        // netWork:this.newdomainSimpleVo.environment,
+        isp: this.newdomainSimpleVo.Operator,
+        netWork: this.newdomainSimpleVo.environment,
         dataSource: this.newdomainSimpleVo.form,
       };
       const { data: res } = await this.$http.post(
@@ -653,7 +673,7 @@ export default {
         state: null, //处置状态
         Operator: null, //运营商
         environment: null, // 网络环境
-           url: null, //url
+        url: null, //url
         form: null, //来源
       };
       this.newdomainSimpleVo.state = "";
@@ -662,7 +682,9 @@ export default {
       this.whiteSearchList.endCreateTime = null;
       this.mypageable.pageNum = 1;
       this.mypageable.pageSize = 10;
-      this.boceclist();
+      this.search()
+      // this.boceclist();
+      // this.zongnum()
     },
     // =======================
     //弹窗概况
@@ -923,8 +945,11 @@ export default {
 .el-table::before {
   height: 0px;
 }
-/deep/.el-table--enable-row-hover .el-table__body tr:hover > td {
-  background-color: #03112359;
+// .el-table td, .el-table tr{
+//   background-color: transparent !important;
+// }
+/deep/ .el-table__body tr:hover > td {
+  background-color: #03112359 !important;
 }
 
 .bottom {
@@ -1006,5 +1031,9 @@ export default {
   flex: 1;
   font-size: 20px;
   color: #fff;
+}
+.el-table th,
+.el-table tr {
+  background-color: transparent !important;
 }
 </style>
