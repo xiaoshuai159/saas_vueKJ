@@ -475,6 +475,9 @@ export default {
         this.data = [];
         this.data = newARrr;
         //  console.log(this.data);
+      } else if (res.code == 500) {
+        this.dialogVisible = false;
+        this.$message(res.message);
       }
     },
     //删除
@@ -494,6 +497,9 @@ export default {
             // this.$message(res.message);
             this.zhikong();
             this.getdata();
+          } else if (res.code == 500) {
+            this.dialogVisible = false;
+            this.$message(res.message);
           }
           // else {
           //   this.$message(res.message);
@@ -526,11 +532,10 @@ export default {
     },
     async xiugai() {
       if (this.form2.id2 == -1) {
-             this.$message({
-          message: '公安部不可修改',
-          type: 'warning'
+        this.$message({
+          message: "公安部不可修改",
+          type: "warning",
         });
-    
       } else {
         const list = {
           deptName: this.form2.bm2,

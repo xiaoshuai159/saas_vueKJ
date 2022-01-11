@@ -235,7 +235,7 @@
       </el-table-column>
       <!--  -->
       <!-- ----------------- -->
-      <el-table-column label="URL" min-width="35%" v-if="getlist1('url')" show-overflow-tooltip>
+      <el-table-column label="URL" min-width="20%" v-if="getlist1('url')" show-overflow-tooltip>
         <template slot-scope="scope">
           <el-popconfirm
             v-if="getRole1('getUrl')"
@@ -295,7 +295,7 @@
           >
         </template>
       </el-table-column>
-          <el-table-column label="二级分类"    min-width="7%" prop="category" show-overflow-tooltip> 
+          <el-table-column label="二级分类"    min-width="17%" prop="category" show-overflow-tooltip> 
         <template slot-scope="scope" >
 {{erji(scope.row.category)}}
         </template>
@@ -562,6 +562,8 @@ export default {
         }
         this.dayliangchuzhi = sum;
         // this.daytydpe = sumtype;
+      }else if(res.code==500){
+            this.$message(res.message)
       }
     },
     // 当天处置数量
@@ -577,6 +579,8 @@ export default {
         }
 
         this.dayliang = sum1;
+      }else if(res.code==500){
+            this.$message(res.message)
       }
     },
     // +++++++++++++++++++++++++++++++++++++
@@ -596,6 +600,8 @@ export default {
         this.jieURL = res.data;
         this.kanjietutitle = label;
         // console.log(label);
+      }else if(res.code==500){
+            this.$message(res.message)
       }
 
       this.newkanjietu = true;
@@ -877,8 +883,8 @@ export default {
           this.drawLine();
           this.Columnar();
         }, 500);
-      } else {
-        alert("无数据");
+      } else if(res.code==500){
+            this.$message(res.message)
       }
     },
     //图表数据查询
@@ -946,8 +952,8 @@ export default {
           this.drawLine();
           this.Columnar();
         }, 500);
-      } else {
-        alert("无数据");
+      } else if(res.code==500){
+            this.$message(res.message)
       }
     },
     //初始化获取数据
@@ -978,6 +984,8 @@ export default {
         this.tableData = res.data.content;
         this.total = res.data.totalElements;
         this.totalPages = res.data.totalPages;
+      }else if(res.code==500){
+            this.$message(res.message)
       }
     },
 
@@ -1027,6 +1035,8 @@ export default {
         // this.mypageable.pageSize = 10;
         // this.getTabData();
         // }
+      }else if(res.code==500){
+            this.$message(res.message)
       } else {
         this.$message("无数据");
         this.mypageable.pageNum = 1;
@@ -1150,8 +1160,8 @@ export default {
         eleLink.click();
         eleLink.remove();
         this.$refs.multipleTable.clearSelection();
-      } else {
-        this.$message(res.message);
+      } else if(res.code==500){
+            this.$message(res.message)
       }
     },
     dataCreate_change(val) {

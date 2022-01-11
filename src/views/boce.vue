@@ -124,7 +124,9 @@
               :loading="loadingbut"
               >{{ loadingbuttext }}</el-button
             >
-            <el-button type="primary" size="mini">添加</el-button>
+            <el-button type="primary" size="mini" @click="urlAdd"
+              >添加</el-button
+            >
             <!-- :loading="isLoading" -->
 
             <!-- </template> -->
@@ -196,7 +198,7 @@
         </el-pagination>
       </div>
     </div>
-    <!-- 111111111111111111111111111111111111 -->
+    <!-- 结果概览 -->
     <el-dialog
       title="结果概览"
       :visible.sync="dialog"
@@ -311,14 +313,86 @@
         </div>
       </div>
     </el-dialog>
+    <!-- 添加 -->
+    <el-dialog
+      title="添加"
+      :visible.sync="dialogadd"
+      width="30%"
+      class="dialogInfo"
+      :close-on-click-modal="false"
+      v-loading="loading"
+      :before-close="handleCloseadd"
+    >
+      <el-form
+        :inline="true"
+        :rules="rules"
+        class="demo-form-inline search_select_form"
+        size="mini"
+        style="padding-top: 20px"
+        :model="addList"
+        ref="addList"
+      >
+        <!-- URL -->
+        <el-form-item label="URL" label-width="70px" prop="url">
+          <el-input
+            placeholder="输入url"
+            v-model="addList.url"
+            @clear="state_url(addList.url)"
+          ></el-input>
+        </el-form-item>
+        <!-- 类型 -->
+        <el-form-item label="类型" label-width="70px" prop="type">
+          <el-select
+            placeholder="选择类型"
+            @clear="sourceType_type(addList.type)"
+            v-model="addList.type"
+            clearable
+          >
+            <el-option
+              v-for="item in selectData.sourceTypeData"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <!-- 类型 -->
+        <el-form-item label="时间" label-width="70px">
+          <el-date-picker
+            v-model="addList.time"
+            type="datetime"
+            placeholder="选择日期时间"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            :default-time="['00:00:00', '23:59:59']"
+          >
+          </el-date-picker>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" size="mini" @click="dialogaddup"
+          >取消</el-button
+        >
+        <el-button type="primary" size="mini" @click="dialogadderr('addList')"
+          >确定</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import dayjs from "dayjs";
+
 export default {
   name: "boce",
   data() {
     return {
+      rules: {
+        url: [{ required: true, message: "请输入url", trigger: "blur" }],
+        type: [{   required: true, message: "请选择类型", trigger: "change" }],
+      },
+      dialogadd: false,
+
       chuzhinum: 0,
       chuzhisuccess: 0,
       loadingbut: false,
@@ -394,10 +468,10 @@ export default {
       },
       tableData: [],
       gailan: {
-        url: "www.https.cpn",
-        type: "szp",
-        kehuduan: "1",
-        boceci: "16",
+        // url: "www.https.cpn",
+        // type: "szp",
+        // kehuduan: "1",
+        // boceci: "16",
       },
       tableData1: [
         // {
@@ -424,6 +498,12 @@ export default {
       textnum: [],
       probeTime: [],
       textnotNum: [],
+      //添加弹窗
+      addList: {
+        url: null, //url
+        type: null, //类型
+        time: dayjs(`${new Date()}`).format("YYYY-MM-DD hh:mm:ss"), //时间
+      },
     };
   },
   mounted() {
@@ -434,6 +514,7 @@ export default {
     this.zongnum();
     this.boceclist();
   },
+
   methods: {
     //柱状
     drawLine() {
@@ -580,6 +661,8 @@ export default {
         this.tableData = res.data.content;
         this.total = res.data.totalElements;
         this.totalPages = res.data.totalPages;
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     async zongnum() {
@@ -597,6 +680,8 @@ export default {
       if (res.code == 200) {
         // console.log(res.data);
         this.chuzhinum = res.data;
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     //查讯
@@ -622,7 +707,9 @@ export default {
         this.tableData = res.data.content;
         this.total = res.data.totalElements;
         this.totalPages = res.data.totalPages;
-        this.zongnum()
+        this.zongnum();
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     //下载
@@ -652,6 +739,8 @@ export default {
         eleLink.href = url;
         eleLink.click();
         eleLink.remove();
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     //查看
@@ -664,6 +753,61 @@ export default {
       // this.$nextTick(() => {
       //   this.drawLine();
       // });
+    },
+    //添加
+    urlAdd() {
+    
+      this.dialogadd = true;
+         this.$refs["addList"].clearValidate();
+    },
+    //添加确认
+    dialogadderr(num) {
+      this.$refs[num].validate((valid) => {
+        if (valid) {
+          this.adderr();
+             this.$nextTick(() => {
+          this.$refs["addList"].clearValidate();
+            });
+        } else {
+          // console.log("error submit!!");
+          return false;
+        }
+      });
+      // if (this.addList.type == null || this.addList.url == null) {
+      //   this.$message("请输入url和选择类型");
+      // } else {
+
+      // }
+    },
+    async adderr() {
+      const list = {
+        type: this.addList.type,
+        url: this.addList.url,
+        handleTime: this.addList.time,
+      };
+      const { data: res } = await this.$http.post("/save", list);
+      if (res.code == 200) {
+        // console.log(res.data);
+        this.$message(res.message);
+        this.dialogadd = false;
+
+        this.boceclist();
+        this.addListcz();
+      } else if (res.code == 500) {
+        this.dialogadd = false;
+        this.$message(res.message);
+      }
+    },
+    dialogaddup() {
+      this.dialogadd = false;
+          this.$refs["addList"].clearValidate();
+      this.addListcz();
+    },
+    // addList重置
+    addListcz() {
+      this.addList.url = null; //url
+      this.addList.type = null; //类型
+      this.addList.time = dayjs(`${new Date()}`).format("YYYY-MM-DD hh:mm:ss"); //时间
     },
     //重置
     resetFun() {
@@ -682,7 +826,7 @@ export default {
       this.whiteSearchList.endCreateTime = null;
       this.mypageable.pageNum = 1;
       this.mypageable.pageSize = 10;
-      this.search()
+      this.search();
       // this.boceclist();
       // this.zongnum()
     },
@@ -698,6 +842,8 @@ export default {
         this.gailan.type = res.data.type;
         this.gailan.kehuduan = res.data.clientTotal;
         this.gailan.boceci = res.data.completeTotal;
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     //查看拨测详情列表
@@ -729,10 +875,14 @@ export default {
           this.drawLine();
         });
         this.loading = false;
-      } else {
-        this.$message("无数据");
+      } else if (res.code == 500) {
         this.loading = false;
+        this.$message(res.message);
       }
+      //  else {
+      //   this.$message("无数据");
+
+      // }
     },
     async gailanxiazai() {
       this.loadingbuttext1 = "...加载中";
@@ -755,6 +905,8 @@ export default {
         eleLink.href = url;
         eleLink.click();
         eleLink.remove();
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     //确认
@@ -786,10 +938,14 @@ export default {
           this.drawLine();
         });
         this.loading = false;
-      } else {
-        this.$message("无数据");
+      } else if (res.code == 500) {
         this.loading = false;
+        this.$message(res.message);
       }
+      // else {
+      //   this.$message("无数据");
+
+      // }
     },
     //重置
     async conerr() {
@@ -820,10 +976,14 @@ export default {
         this.$nextTick(() => {
           this.drawLine();
         });
-      } else {
-        this.$message("无数据");
+      } else if (res.code == 500) {
         this.loading = false;
+        this.$message(res.message);
       }
+      // else {
+      //   this.$message("无数据");
+
+      // }
     },
     dataCreate_change(val) {
       if (val && val != "") {
@@ -870,7 +1030,17 @@ export default {
     },
     sourceType_clearFun(val) {
       if (val == "") {
+        this.addList.type = null;
+      }
+    },
+    sourceType_type(val) {
+      if (val == "") {
         this.newdomainSimpleVo.sourceType = null;
+      }
+    },
+    state_url(val) {
+      if (val == "") {
+        this.newdomainSimpleVo.url = null;
       }
     },
     handleSizeChange(val) {
@@ -892,6 +1062,9 @@ export default {
     handleSelectionChange() {},
     handleClose1() {
       this.dialog = false;
+    },
+    handleCloseadd() {
+      this.dialogadd = false;
     },
     handleCurrentChange1(val) {
       this.mypageable1.pageNum1 = val;
@@ -1035,5 +1208,8 @@ export default {
 .el-table th,
 .el-table tr {
   background-color: transparent !important;
+}
+/deep/ .el-date-editor--datetime {
+  width: 23.5rem;
 }
 </style>

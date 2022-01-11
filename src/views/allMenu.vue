@@ -33,15 +33,19 @@
               {{ user(scope.row.menuType) }}
             </template>
           </el-table-column>
-          <el-table-column label="操作" >
+          <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button type="text" size="mini" @click="add(scope.row.pid)"
-               v-if="hide"  >新增</el-button
+              <el-button
+                type="text"
+                size="mini"
+                @click="add(scope.row.pid)"
+                v-if="hide"
+                >新增</el-button
               >
-              <el-button type="text" size="mini" @click="upload(scope.row)" 
+              <el-button type="text" size="mini" @click="upload(scope.row)"
                 >修改</el-button
               >
-              <el-button type="text" size="mini" @click="del(scope.row.id)"  
+              <el-button type="text" size="mini" @click="del(scope.row.id)"
                 >删除</el-button
               >
             </template>
@@ -146,16 +150,14 @@
 
         <el-form-item label="路由:">
           <el-input
-          disabled
+            disabled
             v-model="domainSimpleVo1.name11"
             placeholder="请输入路由(如：/xxx)"
           ></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="err" type="primary" size="mini"
-          >确定</el-button
-        >
+        <el-button @click="err" type="primary" size="mini">确定</el-button>
         <el-button type="primary" @click="dialog1 = false" size="mini"
           >取 消</el-button
         >
@@ -166,12 +168,12 @@
 </template>
 
 <script>
-import getRole from '@/utils/promission.js'
+import getRole from "@/utils/promission.js";
 export default {
   name: "NEwmeun",
   data() {
     return {
-      hide:false,
+      hide: false,
       domainSimpleVo: {
         menuName1: "",
         menuUrl1: "",
@@ -218,7 +220,7 @@ export default {
     this.getdata();
   },
   methods: {
-        getRole1(data) {
+    getRole1(data) {
       return getRole(data);
       // console.log( getRole(data));
     },
@@ -228,6 +230,8 @@ export default {
       // console.log(res);
       if (res.code == 200) {
         this.tableData1 = res.data;
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     add(val) {
@@ -250,7 +254,7 @@ export default {
         this.dialog = false;
       } else {
         this.dialog = false;
-        this.$message("添加失败");
+        this.$message(res.message);
       }
     },
     async del(val) {
@@ -261,10 +265,11 @@ export default {
       if (res.code == 200) {
         this.$message("删除成功");
         this.getdata();
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
-     upload(val) {
-
+    upload(val) {
       this.domainSimpleVo1.menuName11 = val.menuName;
       this.domainSimpleVo1.menuUrl11 = val.menuUrl;
       this.domainSimpleVo1.xuhao11 = val.sort;
@@ -272,25 +277,26 @@ export default {
       this.domainSimpleVo1.name11 = val.name;
       this.domainSimpleVo1.pid1 = val.pid;
       this.domainSimpleVo1.id1 = val.id;
-       this.dialog1 = true;
+      this.dialog1 = true;
     },
-  async  err(){
-       let list = {
+    async err() {
+      let list = {
         id: this.domainSimpleVo1.id1,
         pid: this.domainSimpleVo1.pid1,
         menuName: this.domainSimpleVo1.menuName11,
         menuUrl: this.domainSimpleVo1.menuUrl11,
         sort: this.domainSimpleVo1.xuhao11,
         menuType: this.domainSimpleVo1.state11,
-        name:this.domainSimpleVo1.name11
+        name: this.domainSimpleVo1.name11,
       };
       const { data: res } = await this.$http.post("/menu/updateMenuById", list);
       if (res.code == 200) {
         this.dialog1 = false;
         this.$message("修改成功");
-        this.getdata()
+        this.getdata();
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
-    
     },
     handleClose() {
       this.dialog = false;

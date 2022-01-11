@@ -92,12 +92,23 @@
             <el-table-column label="更新时间" prop="update_time">
             </el-table-column>
             <el-table-column label="备注" prop="remark"> </el-table-column>
-            <el-table-column label="操作"  v-if="getRole1('updateUser' && 'delUser')">
+            <el-table-column
+              label="操作"
+              v-if="getRole1('updateUser' && 'delUser')"
+            >
               <template slot-scope="scope">
-                <el-button type="text" size="mini" @click="bj(scope.row)"  v-if="getRole1('updateUser')"
+                <el-button
+                  type="text"
+                  size="mini"
+                  @click="bj(scope.row)"
+                  v-if="getRole1('updateUser')"
                   >编辑</el-button
                 >
-                <el-button type="text" size="mini" @click="del(scope.row.id)" v-if="getRole1('delUser')"
+                <el-button
+                  type="text"
+                  size="mini"
+                  @click="del(scope.row.id)"
+                  v-if="getRole1('delUser')"
                   >删除</el-button
                 >
               </template>
@@ -138,10 +149,7 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="部门" prop="bm">
-          <el-select
-            v-model="newdomainSimpleVo.bm"
-            placeholder="请输入部门"
-          >
+          <el-select v-model="newdomainSimpleVo.bm" placeholder="请输入部门">
             <el-option :value="treeDataValue" style="height: auto">
               <el-tree
                 ref="tree"
@@ -178,7 +186,7 @@
             placeholder="请输入备注"
           ></el-input>
         </el-form-item>
-        <br/>
+        <br />
         <el-form-item label="状态">
           <el-radio v-model="newdomainSimpleVo.radio" label="1">有效</el-radio>
           <el-radio v-model="newdomainSimpleVo.radio" label="0">锁定</el-radio>
@@ -328,7 +336,7 @@ export default {
         callback();
       }
     };
-       var validateNewPwd= (rule, value, callback) => {
+    var validateNewPwd = (rule, value, callback) => {
       if (!reg.test(value)) {
         callback(new Error("密码必须是英文和数字!"));
       } else {
@@ -415,7 +423,7 @@ export default {
             message: "请输入密码",
             trigger: "blur",
           },
-          {validator:validateNewPwd,trigger:'blur'},
+          { validator: validateNewPwd, trigger: "blur" },
           { min: 6, max: 10, message: "请输入6到10位密码", trigger: "blur" },
         ],
         pwd: [
@@ -464,7 +472,7 @@ export default {
     this.getdata();
   },
   methods: {
-       getRole1(data) {
+    getRole1(data) {
       return getRole(data);
       // console.log( getRole(data));
     },
@@ -484,8 +492,8 @@ export default {
         this.tableData = res.data.content;
         this.total = res.data.totalElements;
         this.totalPages = res.data.totalPages;
-      } else {
-        this.$message("无数据");
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     //tree
@@ -495,6 +503,8 @@ export default {
       if (res.code == 200) {
         this.treedata = res.data;
         this.treedata1 = res.data;
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     //下拉狂
@@ -520,6 +530,8 @@ export default {
       if (res.code == 200) {
         this.$message("删除成功");
         this.getTabData();
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     //修改
@@ -554,6 +566,8 @@ export default {
           this.$message(res.data);
           this.getTabData();
           this.domainSimpleVo.ssbm = "";
+        } else if (res.code == 500) {
+          this.$message(res.message);
         }
       }
     },
@@ -572,8 +586,8 @@ export default {
         this.tableData = res.data.content;
         this.total = res.data.totalElements;
         this.totalPages = res.data.totalPages;
-      } else {
-        this.$message("无数据");
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
 
@@ -644,6 +658,8 @@ export default {
       if (res.code == 200) {
         this.$message(res.data);
         this.getTabData();
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     quxiao() {

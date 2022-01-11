@@ -227,10 +227,14 @@ export default {
         // startCreateTime1: dayjs()
         // .subtract(1, "month")
         // .format("YYYY-MM-DD HH:mm:ss"),
-        startCreateTime1: dayjs()
-          .subtract(1, "month")
-          .format("YYYY-MM-DD")+' '+'00:'+'00:'+'00',
-        endCreateTime1: dayjs().format("YYYY-MM-DD")+' '+'23:'+'59:'+'59',
+        startCreateTime1:
+          dayjs().subtract(1, "month").format("YYYY-MM-DD") +
+          " " +
+          "00:" +
+          "00:" +
+          "00",
+        endCreateTime1:
+          dayjs().format("YYYY-MM-DD") + " " + "23:" + "59:" + "59",
       },
       leftarrX: [],
       leftarrY: [],
@@ -257,7 +261,7 @@ export default {
       newcity: true,
       title: "成都市访问量历史变化趋势",
       title1: "访问量历史变化趋势",
-      res:''
+      res: "",
     };
   },
   mounted() {
@@ -265,18 +269,17 @@ export default {
     this.leftipqu();
   },
   // created() {
-    // this.leftip();
-    // this.leftipqu();
-    // this.mapquan();
-    // this.limap();
-    // this.time();
+  // this.leftip();
+  // this.leftipqu();
+  // this.mapquan();
+  // this.limap();
+  // this.time();
   // },
   methods: {
     // 时间
     // time() {
     //   this.res = new Date().getTime() / 1000 - 7 * 24 * 3600;
 
-    
     // },
     // 初始化柱状图区---左侧
     async leftipqu() {
@@ -317,6 +320,8 @@ export default {
             this.drawLinequ();
           }, 500);
         }
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     // 右侧柱状--区
@@ -355,6 +360,8 @@ export default {
             this.drawLinequ1();
           }, 500);
         }
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     //初始化数据
@@ -392,6 +399,8 @@ export default {
             // this.$message("源IP访问无数据");
           }, 500);
         }
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     // 右侧柱状
@@ -425,6 +434,8 @@ export default {
             // this.$message("域名访问无数据");
           }, 500);
         }
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     // 下折线
@@ -458,6 +469,8 @@ export default {
             // this.$message("成都市访问量无数据");
           }, 500);
         }
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     // ?////////////////////////////////////////////
@@ -499,6 +512,8 @@ export default {
             this.drawLine();
           }, 500);
         }
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     // 右侧柱状
@@ -537,6 +552,8 @@ export default {
             this.drawLine1();
           }, 500);
         }
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     // 下折线
@@ -575,6 +592,8 @@ export default {
             this.drawLine2();
           }, 500);
         }
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     //统计全部地区地图显示
@@ -624,6 +643,8 @@ export default {
 
         // console.log(res.data);
         // this.loading=false
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     // 1111111111111111111111111111111
@@ -683,6 +704,8 @@ export default {
             // this.$message("源IP访问无数据");
           }, 500);
         }
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     async urlxuan() {
@@ -721,6 +744,8 @@ export default {
             // this.$message("域名访问无数据");
           }, 500);
         }
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     async zhexuan() {
@@ -757,6 +782,8 @@ export default {
             // this.$message("成都市访问量无数据");
           }, 500);
         }
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     //统计全部地区地图显示
@@ -800,6 +827,8 @@ export default {
         }
         // console.log(res.data);
         // this.loading=false
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     // 里面地图
@@ -1527,12 +1556,14 @@ export default {
         this.whiteSearchList1.startCreateTime1 = val[0];
         this.whiteSearchList1.endCreateTime1 = val[1];
       } else {
-        this.whiteSearchList1.startCreateTime1 = dayjs()
-          .subtract(1, "month")
-          .format("YYYY-MM-DD")+' '+'00:'+'00:'+'00';
-        this.whiteSearchList1.endCreateTime1 = dayjs().format(
-          "YYYY-MM-DD"
-        )+' '+'23:'+'59:'+'59';
+        this.whiteSearchList1.startCreateTime1 =
+          dayjs().subtract(1, "month").format("YYYY-MM-DD") +
+          " " +
+          "00:" +
+          "00:" +
+          "00";
+        this.whiteSearchList1.endCreateTime1 =
+          dayjs().format("YYYY-MM-DD") + " " + "23:" + "59:" + "59";
       }
     },
     //返回
@@ -1552,13 +1583,15 @@ export default {
     },
     chongzhi() {
       this.newdomainSimpleVo.dateValue_find1 = null;
-      this.whiteSearchList1.startCreateTime1 =  dayjs()
-          .subtract(1, "month")
-          .format("YYYY-MM-DD")+' '+'00:'+'00:'+'00';
-      this.whiteSearchList1.endCreateTime1 = dayjs().format(
-          "YYYY-MM-DD"
-        )+' '+'23:'+'59:'+'59';
-      
+      this.whiteSearchList1.startCreateTime1 =
+        dayjs().subtract(1, "month").format("YYYY-MM-DD") +
+        " " +
+        "00:" +
+        "00:" +
+        "00";
+      this.whiteSearchList1.endCreateTime1 =
+        dayjs().format("YYYY-MM-DD") + " " + "23:" + "59:" + "59";
+
       this.leftip();
       this.leftipqu();
       this.fanhui();
@@ -1583,6 +1616,8 @@ export default {
         this.gridData = res.data.content;
         this.total1 = res.data.totalElements;
         this.totalPages1 = res.data.totalPages;
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     async handleCurrentChange1(val) {
@@ -1607,6 +1642,8 @@ export default {
         this.gridData = res.data.content;
         this.total1 = res.data.totalElements;
         this.totalPages1 = res.data.totalPages;
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
   },
@@ -1647,7 +1684,7 @@ export default {
 .leftmap {
   width: 26%;
   height: 100%;
-    // height: 50%;   //源ip一半
+  // height: 50%;   //源ip一半
   float: left;
   // border: 1px solid red;
 }
@@ -1660,7 +1697,7 @@ export default {
 .rightmap {
   width: 26%;
   height: 100%;
-      // height: 50%;   //源ip一半
+  // height: 50%;   //源ip一半
   float: left;
   // border: 1px solid red;
 }

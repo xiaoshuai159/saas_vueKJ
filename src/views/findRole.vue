@@ -413,6 +413,8 @@ export default {
         this.tableData = res.data.content;
         this.total = res.data.totalElements;
         this.totalPages = res.data.totalPages;
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     //添加
@@ -427,10 +429,14 @@ export default {
         this.$message(res.message);
         this.getTabData();
         this.dialog = false;
-      } else {
-        this.$message(res.message);
+      } else if (res.code == 500) {
         this.dialog = false;
+        this.$message(res.message);
       }
+      // else {
+      //   this.$message(res.message);
+
+      // }
     },
     //修改
     async xiugai() {
@@ -446,10 +452,14 @@ export default {
         this.getTabData();
         this.clear1();
         this.dialogVisible = false;
-      } else {
-        this.$message(res.message);
+      } else if (res.code == 500) {
         this.dialogVisible = false;
+        this.$message(res.message);
       }
+      //  else {
+      //   this.$message(res.message);
+      //   this.dialogVisible = false;
+      // }
     },
     //删除
     async del(val) {
@@ -460,7 +470,8 @@ export default {
       if (res.code == 200) {
         this.$message(res.message);
         this.getTabData();
-      } else {
+      } else if (res.code == 500) {
+        this.dialogVisible = false;
         this.$message(res.message);
       }
     },
@@ -497,6 +508,9 @@ export default {
         // this.qx();
         this.newdialog = false;
         this.$message(res.message);
+      } else if (res.code == 500) {
+        this.dialogVisible = false;
+        this.$message(res.message);
       }
     },
 
@@ -512,6 +526,9 @@ export default {
       if (res.code == 200) {
         this.newdialog = true;
         this.newdata = res.data;
+      } else if (res.code == 500) {
+        this.dialogVisible = false;
+        this.$message(res.message);
       }
     },
     search() {},

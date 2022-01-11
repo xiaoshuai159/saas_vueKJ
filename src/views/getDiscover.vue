@@ -60,7 +60,7 @@
           <!-- 境内外Ip -->
           <el-form-item label="境内外IP">
             <el-input
-              v-model="newdomainSimpleVo.ip"
+              v-model.trim="newdomainSimpleVo.ip"
               placeholder="请输入IP"
               @clear="modelType1_ip(newdomainSimpleVo.ip)"
             ></el-input>
@@ -69,7 +69,7 @@
 
           <el-form-item label="域名">
             <el-input
-              v-model="newdomainSimpleVo.domain"
+              v-model.trim="newdomainSimpleVo.domain"
               placeholder="请输入域名"
               @clear="modelType1_perple(newdomainSimpleVo.domain)"
             ></el-input>
@@ -125,11 +125,12 @@
         show-overflow-tooltip
       >
       </el-table-column>
-      <el-table-column label="境内外IP" prop=""> </el-table-column>
-      <el-table-column label="有无备案" prop=""> </el-table-column>
-      <el-table-column label="二级分类" prop=""> 
+      <el-table-column label="境内外IP" prop="domesticForeign">
+      </el-table-column>
+      <el-table-column label="有无备案" prop="keepRecord"> </el-table-column>
+      <el-table-column label="二级分类" prop="category">
         <template slot-scope="scope">
-{{erji(scope.row.erjixxx)}}
+          {{ erji(scope.row.category) }}
         </template>
       </el-table-column>
       <el-table-column label="访问量" v-if="getRole1('getRawData')">
@@ -363,10 +364,6 @@ export default {
       },
       tableData: [
         // {
-        //   url: "www.baidu.com",
-        //   visits: "100",
-        // },
-        // {
         //   url: "www.baidu.com11",
         //   visits: "100",
         // },
@@ -394,11 +391,11 @@ export default {
         startDiscoverDate: this.whiteSearchList.startCreateTime,
         endDiscoverDate: this.whiteSearchList.endCreateTime,
         mypageable: this.mypageable,
-        ifForeign:this.newdomainSimpleVo.record,
-        ifRecord:this.newdomainSimpleVo.ip,
+        ifForeign: this.newdomainSimpleVo.record,
+        ifRecord: this.newdomainSimpleVo.ip,
         url: this.newdomainSimpleVo.domain,
         // 二级分类
-        // xxx:this.newdomainSimpleVo.classification,
+        category: this.newdomainSimpleVo.classification,
         visits: this.newdomainSimpleVo.visits,
       };
       const { data: res } = await this.$http.post(
@@ -406,11 +403,12 @@ export default {
         getlist
       );
       // console.log(res);
-      if (res.code == 200) 
-      console.log(res.data);{
+      if (res.code == 200) {
         this.tableData = res.data.content;
         this.total = res.data.totalElements;
         this.totalPages = res.data.totalPages;
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     //查询
@@ -425,10 +423,11 @@ export default {
         },
         url: this.newdomainSimpleVo.domain,
         visits: this.newdomainSimpleVo.visits,
-           ifRecord:newdomainSimpleVo.ip,
+        ifRecord: this.newdomainSimpleVo.ip,
         url: this.newdomainSimpleVo.domain,
+        ifForeign: this.newdomainSimpleVo.record,
         // 二级分类
-        // xxx:this.newdomainSimpleVo.classification,
+        category: this.newdomainSimpleVo.classification,
       };
       const { data: res } = await this.$http.post(
         "/discover/getDiscover",
@@ -440,6 +439,8 @@ export default {
         this.tableData = res.data.content;
         this.total = res.data.totalElements;
         this.totalPages = res.data.totalPages;
+      } else if (res.code == 500) {
+        this.$message(res.message);
       } else {
         this.$message("无数据");
         this.mypageable.pageNum = 1;
@@ -454,16 +455,17 @@ export default {
       this.newdomainSimpleVo = {
         domain: null, //域名
         dateValue_find: null, //时间
-        ip:null,
-        classification:null,
-        record:null,
-        visits:null,
+        ip: null,
+        classification: null,
+        record: null,
+        visits: null,
+        classification: null,
       };
       this.whiteSearchList = {
         startCreateTime: null,
         endCreateTime: null,
       };
-        this.getTabData();
+      this.getTabData();
     },
     handleSelectionChange(val) {
       this.tableDatalist = val;
@@ -493,7 +495,7 @@ export default {
           eleLink.click();
           eleLink.remove();
           this.$refs.multipleTable.clearSelection();
-        } else {
+        } else if (res.code == 500) {
           this.$message(res.message);
         }
       } else {
@@ -521,6 +523,8 @@ export default {
         this.gridData = res.data.content;
         this.total1 = res.data.totalElements;
         this.totalPages1 = res.data.totalPages;
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     handleSizeChange(val) {
@@ -572,12 +576,15 @@ export default {
         endDiscoverTime: null,
         startDiscoverTime: null,
       };
+
       const { data: res } = await this.$http.post("/discover/getRawData", list);
       if (res.code == 200) {
         this.loading = false;
         this.gridData = res.data.content;
         this.total1 = res.data.totalElements;
         this.totalPages1 = res.data.totalPages;
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     modelType1_clearFun(val) {
@@ -625,89 +632,88 @@ export default {
     getRowKeys(row) {
       return row.id;
     },
-    erji(val){
-      if(val=="kf_ds"){
-        return  "冒充电商客服"
-      }else if (val == "kf_wl") {
+    erji(val) {
+      if (val == "kf_ds") {
+        return "冒充电商客服";
+      } else if (val == "kf_wl") {
         return "冒充物流客服(物流快递)";
-      }else if (val == "kf_other") {
+      } else if (val == "kf_other") {
         return "其他冒充客服类";
-      }else if (val == "gif_mc") {
+      } else if (val == "gif_mc") {
         return "冒充公检法";
-      }else if (val == "gif_ss") {
+      } else if (val == "gif_ss") {
         return "工商平台类";
-      }else if (val == "gif_etc") {
+      } else if (val == "gif_etc") {
         return "ETC通行卡";
-      }else if (val == "gif_other") {
+      } else if (val == "gif_other") {
         return "其他政府机关或单位组织";
-      }else if (val == "sd") {
+      } else if (val == "sd") {
         return "做任务赚钱";
-      }else if (val == "dk_xyz") {
+      } else if (val == "dk_xyz") {
         return "虚假代办信用卡";
-      }else if (val == "dk_te") {
+      } else if (val == "dk_te") {
         return "虚假提额套现";
-      }else if (val == "dk_dk") {
+      } else if (val == "dk_dk") {
         return "虚假贷款";
-      }else if (val == "dk_other") {
+      } else if (val == "dk_other") {
         return "其他贷款代办信用卡类";
-      }else if (val == "jjgw") {
+      } else if (val == "jjgw") {
         return "冒充军警购物诈骗";
-      }else if (val == "szp_lc") {
+      } else if (val == "szp_lc") {
         return "虚假投资理财(股票期货交易/数字币)";
-      }else if (val == "szp_dubo") {
+      } else if (val == "szp_dubo") {
         return "博彩彩票/娱乐城/购彩/投注押注/开奖/赛马会";
-      }else if (val == "szp_ty") {
+      } else if (val == "szp_ty") {
         return "体育直播/比分竞猜";
-      }else if (val == "szp_yx") {
+      } else if (val == "szp_yx") {
         return "棋牌游戏";
-      }else if (val == "ds_gw") {
+      } else if (val == "ds_gw") {
         return "虚假购物(购买账号/发卡/自动下单/购物商城/领卷/卡密/刷单刷信誉/提升店铺流量/提升排名)";
-      }else if (val == "ds_fw") {
+      } else if (val == "ds_fw") {
         return "虚假服务";
-      }else if (val == "ds_other") {
+      } else if (val == "ds_other") {
         return "其他电商类诈骗";
-      }else if (val == "jy_jr") {
+      } else if (val == "jy_jr") {
         return "冒充外国军人";
-      }else if (val == "jy_hl") {
+      } else if (val == "jy_hl") {
         return "冒充婚恋";
-      }else if (val == "jy_jy") {
+      } else if (val == "jy_jy") {
         return "网络教育/聊天交友(密聊/闲聊)";
-      }else if (val == "jy_other") {
+      } else if (val == "jy_other") {
         return "其他网络婚恋/交友类";
-      }else if (val == "zx_xyd") {
+      } else if (val == "zx_xyd") {
         return "消除校园贷记录";
-      }else if (val == "zx_bljl") {
+      } else if (val == "zx_bljl") {
         return "消除不良记录";
-      }else if (val == "zx_other") {
+      } else if (val == "zx_other") {
         return "其他虚假征信类";
-      }else if (val == "mc_ld") {
+      } else if (val == "mc_ld") {
         return "冒充领导";
-      }else if (val == "mc_sr") {
+      } else if (val == "mc_sr") {
         return "冒充熟人";
-      }else if (val == "mc_gz") {
+      } else if (val == "mc_gz") {
         return "冒充公众人物";
-      }else if (val == "mc_other") {
+      } else if (val == "mc_other") {
         return "冒充其他身份";
-      }else if (val == "yx_card") {
+      } else if (val == "yx_card") {
         return "游戏币/游戏点卡诈骗";
-      }else if (val == "yx_zhzb") {
+      } else if (val == "yx_zhzb") {
         return "游戏账号/游戏装备诈骗";
-      }else if (val == "yx_other") {
+      } else if (val == "yx_other") {
         return "其他游戏产品虚假交易";
-      }else if (val == "other_zj") {
+      } else if (val == "other_zj") {
         return "虚假中奖诈骗";
-      }else if (val == "other_zp") {
+      } else if (val == "other_zp") {
         return "虚假招聘";
-      }else if (val == "other_jp") {
+      } else if (val == "other_jp") {
         return "机票退改诈骗";
-      }else if (val == "other_tp") {
+      } else if (val == "other_tp") {
         return "ps图片诈骗";
-      }else if (val == "app_ff") {
+      } else if (val == "app_ff") {
         return "分发平台";
-      }else if (val == "xzym") {
+      } else if (val == "xzym") {
         return "下载页面";
       }
-
     },
     zP(val) {
       if (val == "DK") {

@@ -10,7 +10,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import preventClick from './utils/controlClickState'
 import formatDate from './utils/formatDate'
 import * as echarts from 'echarts'
-import dayjs from 'dayjs'
+import dayjss from 'dayjs'
 
 
 Vue.prototype.$echarts = echarts
@@ -18,7 +18,7 @@ Vue.prototype.$echarts = echarts
 
 Vue.prototype.$http = axios
 Vue.prototype.formatDate = formatDate
-Vue.prototype.$times = dayjs
+Vue.prototype.dayjstime = dayjss
 Vue.use(Element)
 Vue.use(preventClick)
 // Vue.use(store)

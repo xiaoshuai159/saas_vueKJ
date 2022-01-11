@@ -121,8 +121,8 @@ export default {
           this.drawLine();
           this.Columnar();
         }, 500);
-      } else {
-        alert("无数据");
+      } else if(res.code==500) {
+        this.$message(res.message)
       }
     },
     // 图表初次渲染
@@ -154,8 +154,9 @@ export default {
           this.drawLine1();
           this.Columnar1();
         }, 500);
-      } else {
-        alert("无数据");
+      } else if(res.code==500){
+        // alert("无数据");
+        this.$message(res.message)
       }
     },
     // 处置成功率数据 
@@ -179,7 +180,7 @@ export default {
       //         startFraudTime: this.whiteSearchList2.startCreateTime2,
       //         endTFraudTime: this.whiteSearchList2.endCreateTime2,
       //       };
-      const { data: res } = await this.$http.post("/treatment/getDomainCount");
+      const { data: res } = await this.$http.get("/treatment/getDomainCount");
       if (res.code == 200) {
         // console.log(res.data);
         res.data.forEach((item) => {
@@ -190,6 +191,8 @@ export default {
         if (this.$refs.bar_qx1) {
           this.drawLine1();
         }
+      }else if(res.code==500){
+            this.$message(res.message)
       }
     },
     //曲线图++++++++++++++++++++++++++++++++++++
