@@ -17,7 +17,7 @@
             >
             </el-date-picker>
           </el-form-item>
-          <!-- 数据来源 -->
+          <!-- 域名类型 -->
           <el-form-item label="域名类型">
             <el-select
               v-model="newdomainSimpleVo.sourceType"
@@ -87,12 +87,21 @@
             </el-select>
           </el-form-item>
           <!-- 数据来源 -->
+
+
+     <!-- @clear="state_clearform(newdomainSimpleVo.form)" -->
+      
+             
+         
           <el-form-item label="数据来源">
             <el-select
+          filterable 
+          clearable
               v-model="newdomainSimpleVo.form"
               placeholder="数据来源"
-              clearable
-              @clear="state_clearform(newdomainSimpleVo.form)"
+              @blur="selectBlur"
+            @clear="selectClear"
+            @change="selectChange"
             >
               <el-option
                 v-for="item in selectData.formType"
@@ -475,7 +484,6 @@ export default {
         formType: [
           { value: "CA", label: "长安处置" },
           { value: "SY", label: "沈阳处置" },
-          { value: "上传账户名", label: "上传账户名" },
         ],
         sourceTypeData: [
           { value: "dk", label: "贷款" },
@@ -540,10 +548,12 @@ export default {
         type: null, //类型
         time: dayjs(`${new Date()}`).format("YYYY-MM-DD hh:mm:ss"), //时间
       },
+      restaurants:[],
     };
   },
   mounted() {
     // this.drawLine()
+
   },
   created() {
     // this.boceclist();
@@ -552,6 +562,23 @@ export default {
   },
 
   methods: {
+     selectBlur(e) {
+        // 意见类型
+        if (e.target.value !== '') {
+          this.newdomainSimpleVo.form = e.target.value 
+          this.$forceUpdate()   // 强制更新
+        }
+      },
+      selectClear() {
+        this.newdomainSimpleVo.form  = ''
+        this.$forceUpdate()
+      },
+      selectChange(val) {
+        this.newdomainSimpleVo.form  = val
+        this.$forceUpdate()
+      },
+
+
     //柱状
     drawLine() {
       // eslint-disable-next-line camelcase
@@ -694,7 +721,7 @@ export default {
       const { data: res } = await this.$http.post("/updateBcTesList", bcListVo);
       // console.log(res);
       if (res.code == 200) {
-        console.log(res.data);
+        // console.log(res.data);
         this.tableData = res.data.content;
         this.total = res.data.totalElements;
         this.totalPages = res.data.totalPages;
@@ -1309,4 +1336,5 @@ export default {
 /deep/ .el-date-editor--datetime {
   width: 23.5rem;
 }
+
 </style>
