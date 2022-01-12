@@ -124,9 +124,10 @@
               :loading="loadingbut"
               >{{ loadingbuttext }}</el-button
             >
-            <el-button type="primary" size="mini" @click="urlAdd"
+                <!-- 周五 -->
+            <!-- <el-button type="primary" size="mini" @click="urlAdd"
               >添加</el-button
-            >
+            > -->
             <!-- :loading="isLoading" -->
 
             <!-- </template> -->
@@ -150,6 +151,11 @@
     >
       <!-- <el-table-column type="selection" min-widt="5%"> </el-table-column> -->
       <el-table-column prop="handletime" label="处置时间"> </el-table-column>
+      <el-table-column prop="id" label="id" v-if="ifziduan"> </el-table-column>
+      <el-table-column prop="操作状态" label="operationState" v-if="ifziduan">
+      </el-table-column>
+      <el-table-column prop="按钮判断" label="uploadType" v-if="ifziduan">
+      </el-table-column>
       <el-table-column prop="url" label="URL" show-overflow-tooltip width="200">
       </el-table-column>
       <el-table-column label="域名类型" prop="type" show-overflow-tooltip>
@@ -175,10 +181,40 @@
           <el-button type="text" size="mini" @click="add(scope.row.url)"
             >查看</el-button
           >
-          <el-button type="text" size="mini">开始</el-button>
-          <el-button type="text" size="mini">暂停</el-button>
-          <el-button type="text" size="mini">结束</el-button>
-          <el-button type="text" size="mini">删除</el-button>
+          <!-- 周五 -->
+          <!-- <el-button
+            type="text"
+            size="mini"
+            @click="starts(scope.row.id)"
+            :disabled="scope.row.operationState == 1 ? true : false"
+            v-if="scope.row.uploadType == 1 ? true : false"
+          >
+            开始
+          </el-button>
+          <el-button
+            type="text"
+            size="mini"
+            v-if="scope.row.uploadType == 1 ? true : false"
+            :disabled="scope.row.operationState != 1 ? true : false"
+            @click="end(scope.row.id)"
+            >暂停</el-button
+          >
+          <el-button
+            type="text"
+            size="mini"
+            v-if="scope.row.uploadType == 1 ? true : false"
+            :disabled="scope.row.operationState != 1 ? true : false"
+            @click="end1(scope.row.id)"
+            >结束</el-button
+          >
+          <el-button
+            type="text"
+            size="mini"
+            v-if="scope.row.uploadType == 1 ? true : false"
+            :disabled="scope.row.operationState == 1 ? true : false"
+            @click="end2(scope.row.id)"
+            >删除</el-button
+          > -->
         </template>
       </el-table-column>
     </el-table>
@@ -389,10 +425,10 @@ export default {
     return {
       rules: {
         url: [{ required: true, message: "请输入url", trigger: "blur" }],
-        type: [{   required: true, message: "请选择类型", trigger: "change" }],
+        type: [{ required: true, message: "请选择类型", trigger: "change" }],
       },
       dialogadd: false,
-
+      ifziduan: false,
       chuzhinum: 0,
       chuzhisuccess: 0,
       loadingbut: false,
@@ -658,6 +694,7 @@ export default {
       const { data: res } = await this.$http.post("/updateBcTesList", bcListVo);
       // console.log(res);
       if (res.code == 200) {
+        console.log(res.data);
         this.tableData = res.data.content;
         this.total = res.data.totalElements;
         this.totalPages = res.data.totalPages;
@@ -756,18 +793,17 @@ export default {
     },
     //添加
     urlAdd() {
-    
       this.dialogadd = true;
-         this.$refs["addList"].clearValidate();
+      this.$refs["addList"].clearValidate();
     },
     //添加确认
     dialogadderr(num) {
       this.$refs[num].validate((valid) => {
         if (valid) {
           this.adderr();
-             this.$nextTick(() => {
-          this.$refs["addList"].clearValidate();
-            });
+          this.$nextTick(() => {
+            this.$refs["addList"].clearValidate();
+          });
         } else {
           // console.log("error submit!!");
           return false;
@@ -800,7 +836,7 @@ export default {
     },
     dialogaddup() {
       this.dialogadd = false;
-          this.$refs["addList"].clearValidate();
+      this.$refs["addList"].clearValidate();
       this.addListcz();
     },
     // addList重置
@@ -984,6 +1020,67 @@ export default {
       //   this.$message("无数据");
 
       // }
+    },
+    //拨测 ————开始
+    async starts(val) {
+      const { data: res } = await this.$http.get("/getBcStart", {
+        params: {
+          id: val,
+        },
+      });
+      if (res.code == 200) {
+        // console.log(res.data);
+
+        this.$message(res.message);
+        this.boceclist();
+      } else {
+        this.$message(res.message);
+      }
+    },
+    //拨测 ————暂停
+    async end(val) {
+      const { data: res } = await this.$http.get("/getBcEnd", {
+        params: {
+          id: val,
+          operationState: 2,
+        },
+      });
+      if (res.code == 200) {
+        this.$message(res.data);
+        this.boceclist();
+      } else {
+        this.$message(res.message);
+      }
+    },
+    // 结束
+    async end1(val) {
+      const { data: res } = await this.$http.get("/getBcEnd", {
+        params: {
+          id: val,
+          operationState: 3,
+        },
+      });
+      if (res.code == 200) {
+        this.$message(res.data);
+        this.boceclist();
+      } else {
+        this.$message(res.message);
+      }
+    },
+    // 删除
+    async end2(val) {
+      const { data: res } = await this.$http.get("/getBcEnd", {
+        params: {
+          id: val,
+          operationState: 4,
+        },
+      });
+      if (res.code == 200) {
+        this.$message(res.data);
+        this.boceclist();
+      } else {
+        this.$message(res.message);
+      }
     },
     dataCreate_change(val) {
       if (val && val != "") {

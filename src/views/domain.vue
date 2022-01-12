@@ -212,8 +212,9 @@
     <div class="shguliang">
       <span>今日总量： {{ this.dayliang }}</span>
       <span> 处置总量： {{ this.dayliangchuzhi }} </span>
-      <!-- <span> 类型： {{ this.daytydpe }}</span> -->
-      <span></span>
+      <!-- 周五 -->
+      <!-- <span> 今日拦截量： {{ this.daylanjieliang }}</span>
+      <span>累计总拦截量：{{this.daylanjienum}}</span> -->
     </div>
     <!-- //列表 -->
 
@@ -301,7 +302,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="处置前一天访问量"
+        label="处置后拦截量"
         prop="visits"
         min-width="10%"
         v-if="getlist1('visits')"
@@ -399,6 +400,8 @@ export default {
       },
       dayliang: 0,
       dayliangchuzhi: 0,
+      daylanjieliang:0,
+      daylanjienum:0,
       daytydpe: 0,
       domainFeedbackVo: {
         accessSystemType: null,

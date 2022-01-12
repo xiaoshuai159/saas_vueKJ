@@ -216,7 +216,7 @@ export default {
         },
         title: {
           x: "center",
-          text: "域名访问量", //xin
+          text: "域名拦截量", //xin
           textStyle: {
             //xin
             fontSize: 20,

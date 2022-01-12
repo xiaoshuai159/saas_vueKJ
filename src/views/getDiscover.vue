@@ -133,7 +133,8 @@
           {{ erji(scope.row.category) }}
         </template>
       </el-table-column>
-      <el-table-column label="访问量" v-if="getRole1('getRawData')">
+      <!-- 周五 -->
+      <!-- <el-table-column label="访问量" v-if="getRole1('getRawData')">
         <template slot-scope="scope">
           <el-button
             type="text"
@@ -143,7 +144,7 @@
             >{{ scope.row.visits }}</el-button
           >
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         label="访问量"
         min-width="10%"
@@ -502,31 +503,31 @@ export default {
         this.$message("请勾选");
       }
     },
-    //访问量
-    async fangwenl(val) {
-      (this.gridData = []), (this.loading = true);
-      this.yuming = val.url;
-      this.arr.push(val.id);
-      this.dialogTableVisible = true;
-      let list = {
-        mypageable: {
-          pageNum: this.mypageable1.pageNum1,
-          pageSize: this.mypageable1.pageSize1,
-        },
-        masterIds: this.arr,
-        endDiscoverTime: null,
-        startDiscoverTime: null,
-      };
-      const { data: res } = await this.$http.post("/discover/getRawData", list);
-      if (res.code == 200) {
-        this.loading = false;
-        this.gridData = res.data.content;
-        this.total1 = res.data.totalElements;
-        this.totalPages1 = res.data.totalPages;
-      } else if (res.code == 500) {
-        this.$message(res.message);
-      }
-    },
+      //  <!-- 周五 -->   //访问量
+    // async fangwenl(val) {
+    //   (this.gridData = []), (this.loading = true);
+    //   this.yuming = val.url;
+    //   this.arr.push(val.id);
+    //   this.dialogTableVisible = true;
+    //   let list = {
+    //     mypageable: {
+    //       pageNum: this.mypageable1.pageNum1,
+    //       pageSize: this.mypageable1.pageSize1,
+    //     },
+    //     masterIds: this.arr,
+    //     endDiscoverTime: null,
+    //     startDiscoverTime: null,
+    //   };
+    //   const { data: res } = await this.$http.post("/discover/getRawData", list);
+    //   if (res.code == 200) {
+    //     this.loading = false;
+    //     this.gridData = res.data.content;
+    //     this.total1 = res.data.totalElements;
+    //     this.totalPages1 = res.data.totalPages;
+    //   } else if (res.code == 500) {
+    //     this.$message(res.message);
+    //   }
+    // },
     handleSizeChange(val) {
       // console.log(val);
       this.mypageable.pageSize = val;
