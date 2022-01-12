@@ -389,7 +389,7 @@ export default {
               },
             },
             {
-              name: "域名访问量",
+              name: "域名拦截量",
               textStyle: {
                 color: ["#EE6666"],
               },
@@ -444,7 +444,7 @@ export default {
             type: "bar",
 
             barWidth: 20,
-            name: "域名访问量",
+            name: "域名拦截量",
             color: "#EE6666",
           },
         ],
