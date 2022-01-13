@@ -128,12 +128,12 @@
       <el-table-column label="境内外IP" prop="domesticForeign">
       </el-table-column>
       <el-table-column label="有无备案" prop="keepRecord"> </el-table-column>
-      <el-table-column label="二级分类" prop="category">
+      <el-table-column label="二级分类" prop="category" show-overflow-tooltip>
         <template slot-scope="scope">
           {{ erji(scope.row.category) }}
         </template>
       </el-table-column>
-      <!-- 周五 -->
+      <!-- 周五  去除-->
       <!-- <el-table-column label="访问量" v-if="getRole1('getRawData')">
         <template slot-scope="scope">
           <el-button
@@ -288,10 +288,10 @@ export default {
           { value: "kf_ds", label: "冒充电商客服" },
           { value: "kf_wl", label: "冒充物流客服(物流快递)" },
           { value: "kf_other", label: "其他冒充客服类" },
-          { value: "gif_mc", label: "冒充公检法" },
-          { value: "gif_ss", label: "工商平台类" },
-          { value: "gif_etc", label: "ETC通行卡" },
-          { value: "gif_other", label: "其他政府机关或单位组织" },
+          { value: "gjf_mc", label: "冒充公检法" },
+          { value: "gjf_ss", label: "工商平台类" },
+          { value: "gjf_etc", label: "ETC通行卡" },
+          { value: "gjf_other", label: "其他政府机关或单位组织" },
           { value: "sd", label: "做任务赚钱" },
           { value: "dk_xyz", label: "虚假代办信用卡" },
           { value: "dk_te", label: "虚假提额套现" },
@@ -640,13 +640,13 @@ export default {
         return "冒充物流客服(物流快递)";
       } else if (val == "kf_other") {
         return "其他冒充客服类";
-      } else if (val == "gif_mc") {
+      } else if (val == "gjf_mc") {
         return "冒充公检法";
-      } else if (val == "gif_ss") {
+      } else if (val == "gjf_ss") {
         return "工商平台类";
-      } else if (val == "gif_etc") {
+      } else if (val == "gjf_etc") {
         return "ETC通行卡";
-      } else if (val == "gif_other") {
+      } else if (val == "gjf_other") {
         return "其他政府机关或单位组织";
       } else if (val == "sd") {
         return "做任务赚钱";
@@ -714,6 +714,102 @@ export default {
         return "分发平台";
       } else if (val == "xzym") {
         return "下载页面";
+      } else if (val == "dk_bxf") {
+        return "贷款(部下发)";
+      } else if (val == "dk_aj") {
+        return "贷款(案件)";
+      } else if (val == "sd_bxf") {
+        return "刷单(部下发)";
+      } else if (val == "sd_aj") {
+        return "刷单(案件)";
+      } else if (val == "gJf_bxf") {
+        return "仿冒公检法(部下发)";
+      } else if (val == "gjf_aj") {
+        return "仿冒公检法(案件)";
+      } else if (val == "lc_bxf") {
+        return "投资理财(部下发)";
+      } else if (val == "lc_aj") {
+        return "网络购物(案件)";
+      } else if (val == "gw_bxf") {
+        return "投资理财(部下发)";
+      } else if (val == "gw_aj") {
+        return "网络购物(案件)";
+      } else if (val == "qt_bxf") {
+        return "其他类型诈骗(部下发)";
+      } else if (val == "qt_aj") {
+        return "其他类型诈骗(案件)";
+      } else if (val == "jjgw_bxf") {
+        return "冒充军警购物诈骗(部下发)";
+      } else if (val == "jjgw_aj") {
+        return "冒充军警购物诈骗(案件)";
+      } else if (val == "szp_bxf") {
+        return "杀猪盘(部下发)";
+      } else if (val == "szp_aj") {
+        return "杀猪盘(案件)";
+      } else if (val == "ds_bxf") {
+        return "虚假购物/服务类(部下发)";
+      } else if (val == "ds_aj") {
+        return "虚假购物/服务类(案件)";
+      } else if (val == "jy_bxf") {
+        return "网络婚恋/交友类(部下发)";
+      } else if (val == "jy_aj") {
+        return "网络婚恋/交友类(案件)";
+      } else if (val == "zx_bxf") {
+        return "虚假征信类(部下发)";
+      } else if (val == "zx_aj") {
+        return "虚假征信类(案件)";
+      } else if (val == "mc_bxf") {
+        return "冒充领导/熟人类(部下发)";
+      } else if (val == "mc_aj") {
+        return "冒充领导/熟人类(案件)";
+      } else if (val == "yx_bxf") {
+        return "网络游戏产品虚假交易类(部下发)";
+      } else if (val == "yx_aj") {
+        return "网络游戏产品虚假交易类(案件)";
+      } else if (val == "app_bxf") {
+        return "分发平台(部下发)";
+      } else if (val == "app_aj") {
+        return "分发平台(案件)";
+      } else if (val == "xzym_bxf") {
+        return "下载页面(部下发)";
+      } else if (val == "xzym_aj") {
+        return "下载页面(案件)";
+      } else if (val == "other_bxf") {
+        return "其他类型诈骗(部下发)";
+      } else if (val == "other_aj") {
+        return "其他类型诈骗(案件)";
+      } else if (val == "dk") {
+        return "贷款代办信用卡类";
+      } else if (val == "gjf") {
+        return "冒充公检法及政府机关类";
+      } else if (val == "lc") {
+        return "投资理财";
+      } else if (val == "gw") {
+        return "网络购物";
+      } else if (val == "qt") {
+        return "其他";
+      } else if (val == "kf") {
+        return "冒充电商客服类";
+      } else if (val == "szp") {
+        return "杀猪盘";
+      } else if (val == "ds") {
+        return "虚假购物、服务类";
+      } else if (val == "jy") {
+        return "网络婚恋、交友类（非杀猪盘类）";
+      } else if (val == "zx") {
+        return "虚假征信类";
+      } else if (val == "mc") {
+        return "冒充领导、熟人类";
+      } else if (val == "yx") {
+        return "网络游戏产品虚假交易类";
+      } else if (val == "other") {
+        return "其他类型诈骗";
+      } else if (val == "app") {
+        return "APP签名分发";
+      } else if (val == "xzym") {
+        return "带二维码的下载链接";
+      } else {
+        return val;
       }
     },
     zP(val) {
@@ -747,10 +843,12 @@ export default {
         return "网络游戏产品虚假交易类";
       } else if (val == "OTHER") {
         return "其他类型诈骗";
-      } else if (val == "APP_FF") {
+      } else if (val == "APP") {
         return "APP签名分发";
       } else if (val == "XZYM") {
         return "带二维码的下载链接";
+      }else{
+        return val
       }
     },
     // 转ip

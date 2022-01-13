@@ -79,13 +79,17 @@ export default {
   created() {
     // this.echartslist();
     // this.echartslist1();
-  
-  },
-  mounted() {
     this.echartslist();
     this.echartslist1();
       this.chuzhiyumingshuecharts();
       this.chuzhisuccess()
+  
+  },
+  mounted() {
+    // this.echartslist();
+    // this.echartslist1();
+    //   this.chuzhiyumingshuecharts();
+    //   this.chuzhisuccess()
   },
   methods: {
     // 图表初次渲染

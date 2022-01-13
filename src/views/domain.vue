@@ -105,7 +105,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-              <!-- 二级分类 -->
+          <!-- 二级分类 -->
           <el-form-item label="二级分类">
             <el-select
               v-model="newdomainSimpleVo.classification"
@@ -213,8 +213,8 @@
       <span>今日总量： {{ this.dayliang }}</span>
       <span> 处置总量： {{ this.dayliangchuzhi }} </span>
       <!-- 周五 -->
-      <!-- <span> 今日拦截量： {{ this.daylanjieliang }}</span>
-      <span>累计总拦截量：{{this.daylanjienum}}</span> -->
+      <span> 今日拦截量： {{ this.daylanjieliang }}</span>
+      <span>累计总拦截量：{{ this.daylanjienum }}</span>
     </div>
     <!-- //列表 -->
 
@@ -236,7 +236,12 @@
       </el-table-column>
       <!--  -->
       <!-- ----------------- -->
-      <el-table-column label="URL" min-width="20%" v-if="getlist1('url')" show-overflow-tooltip>
+      <el-table-column
+        label="URL"
+        min-width="20%"
+        v-if="getlist1('url')"
+        show-overflow-tooltip
+      >
         <template slot-scope="scope">
           <el-popconfirm
             v-if="getRole1('getUrl')"
@@ -268,7 +273,12 @@
         </template>
       </el-table-column>
       <!-- ----------------- -->
-      <el-table-column label="诈骗类型" min-width="10%" v-if="getlist1('type')" show-overflow-tooltip>
+      <el-table-column
+        label="诈骗类型"
+        min-width="10%"
+        v-if="getlist1('type')"
+        show-overflow-tooltip
+      >
         <template slot-scope="scope">
           {{ zP(scope.row.type) }}
         </template>
@@ -296,9 +306,14 @@
           >
         </template>
       </el-table-column>
-          <el-table-column label="二级分类"    min-width="17%" prop="category" show-overflow-tooltip> 
-        <template slot-scope="scope" >
-{{erji(scope.row.category)}}
+      <el-table-column
+        label="二级分类"
+        min-width="17%"
+        prop="category"
+        show-overflow-tooltip
+      >
+        <template slot-scope="scope">
+          {{ erji(scope.row.category) }}
         </template>
       </el-table-column>
       <el-table-column
@@ -372,8 +387,8 @@ export default {
       newkanjietu: false,
       visible: false,
       whiteSearchList: {
-        startCreateTime: "",
-        endCreateTime: "",
+        startCreateTime: null,
+        endCreateTime: null,
       },
       whiteSearchList1: {
         startCreateTime1: "",
@@ -396,12 +411,12 @@ export default {
         authorize: null, //是否授权
         state: null, //状态
         dateValue_find1: null, //图表时间
-        classification:null,//二级分类
+        classification: null, //二级分类
       },
       dayliang: 0,
       dayliangchuzhi: 0,
-      daylanjieliang:0,
-      daylanjienum:0,
+      daylanjieliang: 0,
+      daylanjienum: 0,
       daytydpe: 0,
       domainFeedbackVo: {
         accessSystemType: null,
@@ -416,14 +431,14 @@ export default {
       totalPages: "",
       //下拉框的选项数据
       selectData: {
-          classificationlist: [
+        classificationlist: [
           { value: "kf_ds", label: "冒充电商客服" },
           { value: "kf_wl", label: "冒充物流客服(物流快递)" },
           { value: "kf_other", label: "其他冒充客服类" },
-          { value: "gif_mc", label: "冒充公检法" },
-          { value: "gif_ss", label: "工商平台类" },
-          { value: "gif_etc", label: "ETC通行卡" },
-          { value: "gif_other", label: "其他政府机关或单位组织" },
+          { value: "gjf_mc", label: "冒充公检法" },
+          { value: "gjf_ss", label: "工商平台类" },
+          { value: "gjf_etc", label: "ETC通行卡" },
+          { value: "gjf_other", label: "其他政府机关或单位组织" },
           { value: "sd", label: "做任务赚钱" },
           { value: "dk_xyz", label: "虚假代办信用卡" },
           { value: "dk_te", label: "虚假提额套现" },
@@ -474,7 +489,7 @@ export default {
           { value: "BD", label: "本地上传" },
           { value: "BXF", label: "部下发" },
           { value: "AJ", label: "案件" },
-             { value: "SY", label: "沈阳" },
+          { value: "SY", label: "沈阳" },
         ],
 
         stateTypeData: [
@@ -488,7 +503,6 @@ export default {
           { value: "LC", label: "理财" },
           { value: "GW", label: "网络购物" },
           { value: "QT", label: "其他类型" },
-        
           { value: "JJGW", label: "冒充军警购物诈骗" },
           { value: "SZP", label: "杀猪盘" },
           { value: "DS", label: "虚假购物/服务类" },
@@ -526,6 +540,8 @@ export default {
     this.echartslist();
     this.daychuzhiliang();
     this.dayzong();
+    this.daylanjienumliang();
+    this.daylanjiezong();
   },
   mounted() {
     // setTimeout(() => {
@@ -565,8 +581,8 @@ export default {
         }
         this.dayliangchuzhi = sum;
         // this.daytydpe = sumtype;
-      }else if(res.code==500){
-            this.$message(res.message)
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     // 当天处置数量
@@ -582,8 +598,50 @@ export default {
         }
 
         this.dayliang = sum1;
-      }else if(res.code==500){
-            this.$message(res.message)
+      } else if (res.code == 500) {
+        this.$message(res.message);
+      }
+    },
+    //拦截量总量   //时间有问题
+    async daylanjiezong() {
+      const list = {
+        endTreatmentTime: this.whiteSearchList.endCreateTime,
+        startTreatmentTime: this.whiteSearchList.startCreateTime,
+      };
+      const { data: res } = await this.$http.get(
+        "/treatment/getSumDomainVisits",
+        {
+          params: list,
+        }
+      );
+      if (res.code == 200) {
+        console.log(res.data);
+        let sum = 0;
+
+        for (var i = 0; i < res.data.length; i++) {
+          sum += res.data[i].sumStatus;
+        }
+        this.daylanjienum = sum;
+      } else if (res.code == 500) {
+        this.$message(res.message);
+      }
+    },
+    //当天拦截量
+    async daylanjienumliang() {
+      const { data: res } = await this.$http.get(
+        "/treatment/getDomainVisitsToday"
+      );
+      if (res.code == 200) {
+        console.log(res.data);
+        let sum1 = 0;
+
+        for (var i = 0; i < res.data.length; i++) {
+          sum1 += res.data[i].sumStatus;
+        }
+
+        this.daylanjieliang = sum1;
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     // +++++++++++++++++++++++++++++++++++++
@@ -603,8 +661,8 @@ export default {
         this.jieURL = res.data;
         this.kanjietutitle = label;
         // console.log(label);
-      }else if(res.code==500){
-            this.$message(res.message)
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
 
       this.newkanjietu = true;
@@ -886,8 +944,8 @@ export default {
           this.drawLine();
           this.Columnar();
         }, 500);
-      } else if(res.code==500){
-            this.$message(res.message)
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     //图表数据查询
@@ -955,8 +1013,8 @@ export default {
           this.drawLine();
           this.Columnar();
         }, 500);
-      } else if(res.code==500){
-            this.$message(res.message)
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     //初始化获取数据
@@ -987,8 +1045,8 @@ export default {
         this.tableData = res.data.content;
         this.total = res.data.totalElements;
         this.totalPages = res.data.totalPages;
-      }else if(res.code==500){
-            this.$message(res.message)
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
 
@@ -1005,7 +1063,7 @@ export default {
           status: this.newdomainSimpleVo.state,
           protocol: this.newdomainSimpleVo.protocol,
           authorize: this.newdomainSimpleVo.authorize,
-          category:this.newdomainSimpleVo.classification,
+          category: this.newdomainSimpleVo.classification,
         },
         domainTimeVo: {
           startTreatmentTime: this.whiteSearchList.startCreateTime,
@@ -1013,7 +1071,7 @@ export default {
         },
         mypageable: {
           // pageNum: this.mypageable.pageNum,
-          pageNum:1,
+          pageNum: 1,
           pageSize: this.mypageable.pageSize,
         },
       };
@@ -1025,6 +1083,7 @@ export default {
       if (res.code == 200) {
         // console.log(res);
         this.dayzong();
+        this.daylanjiezong();
         this.mypageable.pageNum = 1;
 
         // if (res.data.content.length > 0) {
@@ -1038,8 +1097,8 @@ export default {
         // this.mypageable.pageSize = 10;
         // this.getTabData();
         // }
-      }else if(res.code==500){
-            this.$message(res.message)
+      } else if (res.code == 500) {
+        this.$message(res.message);
       } else {
         this.$message("无数据");
         this.mypageable.pageNum = 1;
@@ -1076,17 +1135,20 @@ export default {
         authorize: null, //是否授权
         state: null, //状态
         dateValue_find: null, //处置时间
-          classification:null,//二级分类
+        classification: null, //二级分类
       };
       this.whiteSearchList = {
         startCreateTime: null,
         endCreateTime: null,
       };
-      this.mypageable={
-        pageNum:1,
-        pageSize:10
-      }
-        this.getTabData();
+
+      this.mypageable = {
+        pageNum: 1,
+        pageSize: 10,
+      };
+      this.getTabData();
+      this.dayzong();
+      this.daylanjiezong();
     },
     handleSelectionChange(val) {
       this.tableDatalist = val;
@@ -1163,8 +1225,8 @@ export default {
         eleLink.click();
         eleLink.remove();
         this.$refs.multipleTable.clearSelection();
-      } else if(res.code==500){
-            this.$message(res.message)
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     dataCreate_change(val) {
@@ -1272,89 +1334,184 @@ export default {
         this.newdomainSimpleVo.authorize = null;
       }
     },
-      erji(val){
-      if(val=="kf_ds"){
-        return  "冒充电商客服"
-      }else if (val == "kf_wl") {
+    erji(val) {
+      if (val == "kf_ds") {
+        return "冒充电商客服";
+      } else if (val == "kf_wl") {
         return "冒充物流客服(物流快递)";
-      }else if (val == "kf_other") {
+      } else if (val == "kf_other") {
         return "其他冒充客服类";
-      }else if (val == "gif_mc") {
+      } else if (val == "gjf_mc") {
         return "冒充公检法";
-      }else if (val == "gif_ss") {
+      } else if (val == "gjf_ss") {
         return "工商平台类";
-      }else if (val == "gif_etc") {
+      } else if (val == "gjf_etc") {
         return "ETC通行卡";
-      }else if (val == "gif_other") {
+      } else if (val == "gjf_other") {
         return "其他政府机关或单位组织";
-      }else if (val == "sd") {
+      } else if (val == "sd") {
         return "做任务赚钱";
-      }else if (val == "dk_xyz") {
+      } else if (val == "dk_xyz") {
         return "虚假代办信用卡";
-      }else if (val == "dk_te") {
+      } else if (val == "dk_te") {
         return "虚假提额套现";
-      }else if (val == "dk_dk") {
+      } else if (val == "dk_dk") {
         return "虚假贷款";
-      }else if (val == "dk_other") {
+      } else if (val == "dk_other") {
         return "其他贷款代办信用卡类";
-      }else if (val == "jjgw") {
+      } else if (val == "jjgw") {
         return "冒充军警购物诈骗";
-      }else if (val == "szp_lc") {
+      } else if (val == "szp_lc") {
         return "虚假投资理财(股票期货交易/数字币)";
-      }else if (val == "szp_dubo") {
+      } else if (val == "szp_dubo") {
         return "博彩彩票/娱乐城/购彩/投注押注/开奖/赛马会";
-      }else if (val == "szp_ty") {
+      } else if (val == "szp_ty") {
         return "体育直播/比分竞猜";
-      }else if (val == "szp_yx") {
+      } else if (val == "szp_yx") {
         return "棋牌游戏";
-      }else if (val == "ds_gw") {
+      } else if (val == "ds_gw") {
         return "虚假购物(购买账号/发卡/自动下单/购物商城/领卷/卡密/刷单刷信誉/提升店铺流量/提升排名)";
-      }else if (val == "ds_fw") {
+      } else if (val == "ds_fw") {
         return "虚假服务";
-      }else if (val == "ds_other") {
+      } else if (val == "ds_other") {
         return "其他电商类诈骗";
-      }else if (val == "jy_jr") {
+      } else if (val == "jy_jr") {
         return "冒充外国军人";
-      }else if (val == "jy_hl") {
+      } else if (val == "jy_hl") {
         return "冒充婚恋";
-      }else if (val == "jy_jy") {
+      } else if (val == "jy_jy") {
         return "网络教育/聊天交友(密聊/闲聊)";
-      }else if (val == "jy_other") {
+      } else if (val == "jy_other") {
         return "其他网络婚恋/交友类";
-      }else if (val == "zx_xyd") {
+      } else if (val == "zx_xyd") {
         return "消除校园贷记录";
-      }else if (val == "zx_bljl") {
+      } else if (val == "zx_bljl") {
         return "消除不良记录";
-      }else if (val == "zx_other") {
+      } else if (val == "zx_other") {
         return "其他虚假征信类";
-      }else if (val == "mc_ld") {
+      } else if (val == "mc_ld") {
         return "冒充领导";
-      }else if (val == "mc_sr") {
+      } else if (val == "mc_sr") {
         return "冒充熟人";
-      }else if (val == "mc_gz") {
+      } else if (val == "mc_gz") {
         return "冒充公众人物";
-      }else if (val == "mc_other") {
+      } else if (val == "mc_other") {
         return "冒充其他身份";
-      }else if (val == "yx_card") {
+      } else if (val == "yx_card") {
         return "游戏币/游戏点卡诈骗";
-      }else if (val == "yx_zhzb") {
+      } else if (val == "yx_zhzb") {
         return "游戏账号/游戏装备诈骗";
-      }else if (val == "yx_other") {
+      } else if (val == "yx_other") {
         return "其他游戏产品虚假交易";
-      }else if (val == "other_zj") {
+      } else if (val == "other_zj") {
         return "虚假中奖诈骗";
-      }else if (val == "other_zp") {
+      } else if (val == "other_zp") {
         return "虚假招聘";
-      }else if (val == "other_jp") {
+      } else if (val == "other_jp") {
         return "机票退改诈骗";
-      }else if (val == "other_tp") {
+      } else if (val == "other_tp") {
         return "ps图片诈骗";
-      }else if (val == "app_ff") {
+      } else if (val == "app_ff") {
         return "分发平台";
-      }else if (val == "xzym") {
+      } else if (val == "xzym") {
         return "下载页面";
+      } else if (val == "dk_bxf") {
+        return "贷款(部下发)";
+      } else if (val == "dk_aj") {
+        return "贷款(案件)";
+      } else if (val == "sd_bxf") {
+        return "刷单(部下发)";
+      } else if (val == "sd_aj") {
+        return "刷单(案件)";
+      } else if (val == "gJf_bxf") {
+        return "仿冒公检法(部下发)";
+      } else if (val == "gjf_aj") {
+        return "仿冒公检法(案件)";
+      } else if (val == "lc_bxf") {
+        return "投资理财(部下发)";
+      } else if (val == "lc_aj") {
+        return "网络购物(案件)";
+      } else if (val == "gw_bxf") {
+        return "投资理财(部下发)";
+      } else if (val == "gw_aj") {
+        return "网络购物(案件)";
+      } else if (val == "qt_bxf") {
+        return "其他类型诈骗(部下发)";
+      } else if (val == "qt_aj") {
+        return "其他类型诈骗(案件)";
+      } else if (val == "jjgw_bxf") {
+        return "冒充军警购物诈骗(部下发)";
+      } else if (val == "jjgw_aj") {
+        return "冒充军警购物诈骗(案件)";
+      } else if (val == "szp_bxf") {
+        return "杀猪盘(部下发)";
+      } else if (val == "szp_aj") {
+        return "杀猪盘(案件)";
+      } else if (val == "ds_bxf") {
+        return "虚假购物/服务类(部下发)";
+      } else if (val == "ds_aj") {
+        return "虚假购物/服务类(案件)";
+      } else if (val == "jy_bxf") {
+        return "网络婚恋/交友类(部下发)";
+      } else if (val == "jy_aj") {
+        return "网络婚恋/交友类(案件)";
+      } else if (val == "zx_bxf") {
+        return "虚假征信类(部下发)";
+      } else if (val == "zx_aj") {
+        return "虚假征信类(案件)";
+      } else if (val == "mc_bxf") {
+        return "冒充领导/熟人类(部下发)";
+      } else if (val == "mc_aj") {
+        return "冒充领导/熟人类(案件)";
+      } else if (val == "yx_bxf") {
+        return "网络游戏产品虚假交易类(部下发)";
+      } else if (val == "yx_aj") {
+        return "网络游戏产品虚假交易类(案件)";
+      } else if (val == "app_bxf") {
+        return "分发平台(部下发)";
+      } else if (val == "app_aj") {
+        return "分发平台(案件)";
+      } else if (val == "xzym_bxf") {
+        return "下载页面(部下发)";
+      } else if (val == "xzym_aj") {
+        return "下载页面(案件)";
+      } else if (val == "other_bxf") {
+        return "其他类型诈骗(部下发)";
+      } else if (val == "other_aj") {
+        return "其他类型诈骗(案件)";
+      } else if (val == "dk") {
+        return "贷款代办信用卡类";
+      } else if (val == "gjf") {
+        return "冒充公检法及政府机关类";
+      } else if (val == "lc") {
+        return "投资理财";
+      } else if (val == "gw") {
+        return "网络购物";
+      } else if (val == "qt") {
+        return "其他";
+      } else if (val == "kf") {
+        return "冒充电商客服类";
+      } else if (val == "szp") {
+        return "杀猪盘";
+      } else if (val == "ds") {
+        return "虚假购物、服务类";
+      } else if (val == "jy") {
+        return "网络婚恋、交友类（非杀猪盘类）";
+      } else if (val == "zx") {
+        return "虚假征信类";
+      } else if (val == "mc") {
+        return "冒充领导、熟人类";
+      } else if (val == "yx") {
+        return "网络游戏产品虚假交易类";
+      } else if (val == "other") {
+        return "其他类型诈骗";
+      } else if (val == "app") {
+        return "APP签名分发";
+      } else if (val == "xzym") {
+        return "带二维码的下载链接";
+      } else {
+        return val;
       }
-
     },
     //诈骗
     zP(val) {
@@ -1388,6 +1545,8 @@ export default {
         return "分发平台";
       } else if (val == "XZYM") {
         return "下载页面";
+      } else {
+        return val;
       }
     },
     //处置时间去零
@@ -1404,7 +1563,7 @@ export default {
         return "长安";
       } else if (val == "BD") {
         return "本地";
-      }else if (val == "SY") {
+      } else if (val == "SY") {
         return "沈阳";
       }
     },

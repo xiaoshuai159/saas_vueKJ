@@ -30,10 +30,10 @@ instance.interceptors.response.use(function (response) {
   }
   if (error.response && error.response.status === 404) {
     // 将path换成fullPath, 目的是丢失我们的参数
-    alert('404')
+    // alert('404')
     
 
-    router.push('/')
+    // router.push('/')
   }
   // if (error.response && error.response.status === 500) {
   //   // 将path换成fullPath, 目的是丢失我们的参数
