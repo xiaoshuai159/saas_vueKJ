@@ -376,6 +376,7 @@
 <script>
 import getRole from "@/utils/promission.js";
 import getList from "@/utils/poresslist.js";
+import dayjs from 'dayjs';
 export default {
   // inject: ["reload"],
   name: "search",
@@ -605,9 +606,10 @@ export default {
     //拦截量总量   //时间有问题
     async daylanjiezong() {
       const list = {
-        endTreatmentTime: this.whiteSearchList.endCreateTime,
-        startTreatmentTime: this.whiteSearchList.startCreateTime,
+        endTreatmentTime:this.whiteSearchList.endCreateTime==null?this.whiteSearchList.endCreateTime: dayjs(this.whiteSearchList.endCreateTime).format('YYYY/MM/DD'),
+        startTreatmentTime:this.whiteSearchList.startCreateTime==null?this.whiteSearchList.startCreateTime: dayjs(this.whiteSearchList.startCreateTime).format('YYYY/MM/DD'),
       };
+      console.log(list);
       const { data: res } = await this.$http.get(
         "/treatment/getSumDomainVisits",
         {
