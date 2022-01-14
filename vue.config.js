@@ -4,8 +4,8 @@ module.exports = {
   devServer: {
     proxy: {
       '': {
-        // target: 'http://10.8.3.100:8080/',
-        target:'http://10.8.0.120:8022',  //sy
+        target: 'http://10.8.3.100:8080/',
+        // target:'http://10.8.0.120:8022',  //sy
         // target:"http://10.8.0.10:8080",
         // target:"http://localhost:8080",
         // target:'http://172.31.0.72:8080',  //mfy 

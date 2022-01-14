@@ -134,9 +134,9 @@
               >{{ loadingbuttext }}</el-button
             >
                 <!-- 周五 -->
-            <!-- <el-button type="primary" size="mini" @click="urlAdd"
+            <el-button type="primary" size="mini" @click="urlAdd"
               >添加</el-button
-            > -->
+            >
             <!-- :loading="isLoading" -->
 
             <!-- </template> -->
@@ -191,7 +191,7 @@
             >查看</el-button
           >
           <!-- 周五 -->
-          <!-- <el-button
+          <el-button
             type="text"
             size="mini"
             @click="starts(scope.row.id)"
@@ -223,7 +223,7 @@
             :disabled="scope.row.operationState == 1 ? true : false"
             @click="end2(scope.row.id)"
             >删除</el-button
-          > -->
+          >
         </template>
       </el-table-column>
     </el-table>

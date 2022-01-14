@@ -130,7 +130,7 @@
       <el-table-column label="有无备案" prop="keepRecord"> </el-table-column>
       <el-table-column label="二级分类" prop="category" show-overflow-tooltip>
         <template slot-scope="scope">
-          {{ erji(scope.row.category) }}
+          {{ geterji(scope.row.category) }}
         </template>
       </el-table-column>
       <!-- 周五  去除-->
@@ -230,6 +230,8 @@
 
 <script>
 import getRole from "@/utils/promission.js";
+import erji from "@/utils/twotype.js"
+import zPtype from "@/utils/type.js"
 export default {
   // inject: ["reload"],
   name: "search",
@@ -382,6 +384,14 @@ export default {
   },
   mounted() {},
   methods: {
+     //类型
+    zP(data){
+      return zPtype(data)
+    },
+       //二级分类
+        geterji(data){
+     return erji(data)
+    },
     getRole1(data) {
       return getRole(data);
       // console.log( getRole(data));
@@ -633,224 +643,9 @@ export default {
     getRowKeys(row) {
       return row.id;
     },
-    erji(val) {
-      if (val == "kf_ds") {
-        return "冒充电商客服";
-      } else if (val == "kf_wl") {
-        return "冒充物流客服(物流快递)";
-      } else if (val == "kf_other") {
-        return "其他冒充客服类";
-      } else if (val == "gjf_mc") {
-        return "冒充公检法";
-      } else if (val == "gjf_ss") {
-        return "工商平台类";
-      } else if (val == "gjf_etc") {
-        return "ETC通行卡";
-      } else if (val == "gjf_other") {
-        return "其他政府机关或单位组织";
-      } else if (val == "sd") {
-        return "做任务赚钱";
-      } else if (val == "dk_xyz") {
-        return "虚假代办信用卡";
-      } else if (val == "dk_te") {
-        return "虚假提额套现";
-      } else if (val == "dk_dk") {
-        return "虚假贷款";
-      } else if (val == "dk_other") {
-        return "其他贷款代办信用卡类";
-      } else if (val == "jjgw") {
-        return "冒充军警购物诈骗";
-      } else if (val == "szp_lc") {
-        return "虚假投资理财(股票期货交易/数字币)";
-      } else if (val == "szp_dubo") {
-        return "博彩彩票/娱乐城/购彩/投注押注/开奖/赛马会";
-      } else if (val == "szp_ty") {
-        return "体育直播/比分竞猜";
-      } else if (val == "szp_yx") {
-        return "棋牌游戏";
-      } else if (val == "ds_gw") {
-        return "虚假购物(购买账号/发卡/自动下单/购物商城/领卷/卡密/刷单刷信誉/提升店铺流量/提升排名)";
-      } else if (val == "ds_fw") {
-        return "虚假服务";
-      } else if (val == "ds_other") {
-        return "其他电商类诈骗";
-      } else if (val == "jy_jr") {
-        return "冒充外国军人";
-      } else if (val == "jy_hl") {
-        return "冒充婚恋";
-      } else if (val == "jy_jy") {
-        return "网络教育/聊天交友(密聊/闲聊)";
-      } else if (val == "jy_other") {
-        return "其他网络婚恋/交友类";
-      } else if (val == "zx_xyd") {
-        return "消除校园贷记录";
-      } else if (val == "zx_bljl") {
-        return "消除不良记录";
-      } else if (val == "zx_other") {
-        return "其他虚假征信类";
-      } else if (val == "mc_ld") {
-        return "冒充领导";
-      } else if (val == "mc_sr") {
-        return "冒充熟人";
-      } else if (val == "mc_gz") {
-        return "冒充公众人物";
-      } else if (val == "mc_other") {
-        return "冒充其他身份";
-      } else if (val == "yx_card") {
-        return "游戏币/游戏点卡诈骗";
-      } else if (val == "yx_zhzb") {
-        return "游戏账号/游戏装备诈骗";
-      } else if (val == "yx_other") {
-        return "其他游戏产品虚假交易";
-      } else if (val == "other_zj") {
-        return "虚假中奖诈骗";
-      } else if (val == "other_zp") {
-        return "虚假招聘";
-      } else if (val == "other_jp") {
-        return "机票退改诈骗";
-      } else if (val == "other_tp") {
-        return "ps图片诈骗";
-      } else if (val == "app_ff") {
-        return "分发平台";
-      } else if (val == "xzym") {
-        return "下载页面";
-      } else if (val == "dk_bxf") {
-        return "贷款(部下发)";
-      } else if (val == "dk_aj") {
-        return "贷款(案件)";
-      } else if (val == "sd_bxf") {
-        return "刷单(部下发)";
-      } else if (val == "sd_aj") {
-        return "刷单(案件)";
-      } else if (val == "gJf_bxf") {
-        return "仿冒公检法(部下发)";
-      } else if (val == "gjf_aj") {
-        return "仿冒公检法(案件)";
-      } else if (val == "lc_bxf") {
-        return "投资理财(部下发)";
-      } else if (val == "lc_aj") {
-        return "网络购物(案件)";
-      } else if (val == "gw_bxf") {
-        return "投资理财(部下发)";
-      } else if (val == "gw_aj") {
-        return "网络购物(案件)";
-      } else if (val == "qt_bxf") {
-        return "其他类型诈骗(部下发)";
-      } else if (val == "qt_aj") {
-        return "其他类型诈骗(案件)";
-      } else if (val == "jjgw_bxf") {
-        return "冒充军警购物诈骗(部下发)";
-      } else if (val == "jjgw_aj") {
-        return "冒充军警购物诈骗(案件)";
-      } else if (val == "szp_bxf") {
-        return "杀猪盘(部下发)";
-      } else if (val == "szp_aj") {
-        return "杀猪盘(案件)";
-      } else if (val == "ds_bxf") {
-        return "虚假购物/服务类(部下发)";
-      } else if (val == "ds_aj") {
-        return "虚假购物/服务类(案件)";
-      } else if (val == "jy_bxf") {
-        return "网络婚恋/交友类(部下发)";
-      } else if (val == "jy_aj") {
-        return "网络婚恋/交友类(案件)";
-      } else if (val == "zx_bxf") {
-        return "虚假征信类(部下发)";
-      } else if (val == "zx_aj") {
-        return "虚假征信类(案件)";
-      } else if (val == "mc_bxf") {
-        return "冒充领导/熟人类(部下发)";
-      } else if (val == "mc_aj") {
-        return "冒充领导/熟人类(案件)";
-      } else if (val == "yx_bxf") {
-        return "网络游戏产品虚假交易类(部下发)";
-      } else if (val == "yx_aj") {
-        return "网络游戏产品虚假交易类(案件)";
-      } else if (val == "app_bxf") {
-        return "分发平台(部下发)";
-      } else if (val == "app_aj") {
-        return "分发平台(案件)";
-      } else if (val == "xzym_bxf") {
-        return "下载页面(部下发)";
-      } else if (val == "xzym_aj") {
-        return "下载页面(案件)";
-      } else if (val == "other_bxf") {
-        return "其他类型诈骗(部下发)";
-      } else if (val == "other_aj") {
-        return "其他类型诈骗(案件)";
-      } else if (val == "dk") {
-        return "贷款代办信用卡类";
-      } else if (val == "gjf") {
-        return "冒充公检法及政府机关类";
-      } else if (val == "lc") {
-        return "投资理财";
-      } else if (val == "gw") {
-        return "网络购物";
-      } else if (val == "qt") {
-        return "其他";
-      } else if (val == "kf") {
-        return "冒充电商客服类";
-      } else if (val == "szp") {
-        return "杀猪盘";
-      } else if (val == "ds") {
-        return "虚假购物、服务类";
-      } else if (val == "jy") {
-        return "网络婚恋、交友类（非杀猪盘类）";
-      } else if (val == "zx") {
-        return "虚假征信类";
-      } else if (val == "mc") {
-        return "冒充领导、熟人类";
-      } else if (val == "yx") {
-        return "网络游戏产品虚假交易类";
-      } else if (val == "other") {
-        return "其他类型诈骗";
-      } else if (val == "app") {
-        return "APP签名分发";
-      } else if (val == "xzym") {
-        return "带二维码的下载链接";
-      } else {
-        return val;
-      }
-    },
-    zP(val) {
-      if (val == "DK") {
-        return "贷款代办信用卡类";
-      } else if (val == "SD") {
-        return "刷单返利类";
-      } else if (val == "GJF") {
-        return "冒充公检法及政府机关类";
-      } else if (val == "LC") {
-        return "投资理财";
-      } else if (val == "GW") {
-        return "网络购物";
-      } else if (val == "QT") {
-        return "其他";
-      } else if (val == "KF") {
-        return "冒充电商客服类";
-      } else if (val == "JJGW") {
-        return "冒充军警购物诈骗";
-      } else if (val == "SZP") {
-        return "杀猪盘";
-      } else if (val == "DS") {
-        return "虚假购物、服务类";
-      } else if (val == "JY") {
-        return "网络婚恋、交友类（非杀猪盘类）";
-      } else if (val == "ZX") {
-        return "虚假征信类";
-      } else if (val == "MC") {
-        return "冒充领导、熟人类";
-      } else if (val == "YX") {
-        return "网络游戏产品虚假交易类";
-      } else if (val == "OTHER") {
-        return "其他类型诈骗";
-      } else if (val == "APP") {
-        return "APP签名分发";
-      } else if (val == "XZYM") {
-        return "带二维码的下载链接";
-      }else{
-        return val
-      }
-    },
+   
+  
+  
     // 转ip
     zhuanip(num) {
       var str;
