@@ -55,7 +55,10 @@ export default {
       zhutest2: [],
       zhutest3: [],
       restest: [],
-
+      typemax: {
+        zhutest2max: 0,
+        zhutest3max: 0,
+      },
       //  111111111111
       newqutest: [],
       newqutest1: [],
@@ -71,9 +74,9 @@ export default {
       yumingtestsy: [],
       //  newrestest: [],
       //处置成功率数据
-      czsuccessx:[],
-      czsuccessca:[],
-      czsuccesssy:[],
+      czsuccessx: [],
+      czsuccessca: [],
+      czsuccesssy: [],
     };
   },
   created() {
@@ -81,9 +84,8 @@ export default {
     // this.echartslist1();
     this.echartslist();
     this.echartslist1();
-      this.chuzhiyumingshuecharts();
-      this.chuzhisuccess()
-  
+    this.chuzhiyumingshuecharts();
+    this.chuzhisuccess();
   },
   mounted() {
     // this.echartslist();
@@ -120,13 +122,53 @@ export default {
           this.zhutest2.push(item.urlCount2);
           this.zhutest3.push(item.typeVisits);
         });
-        // console.log(this.zhutest1);
+
+        // var num = [...this.zhutest2, ...this.zhutest3];
+        this.typemax.zhutest2max = Math.max(...this.zhutest2);
+ 
+        this.typemax.zhutest3max = Math.max(...this.zhutest3);
+       
+        this.typemax.zhutest2max = this.ceilNumber(this.typemax.zhutest2max);
+        this.typemax.zhutest3max = this.ceilNumber(this.typemax.zhutest3max);
+     
+        // console.log(  this.typemax.zhutest3max);
+        // console.log(this.typemax);
+        // console.log(num);
         setTimeout(() => {
           this.drawLine();
           this.Columnar();
         }, 500);
-      } else if(res.code==500) {
-        this.$message(res.message)
+      } else if (res.code == 500) {
+        this.$message(res.message);
+      }
+    },
+    //取整数
+    ceilNumber(number) {
+      if (number > 0) {
+        let bite = 0;
+        if (number < 10) {
+          return 10;
+        }
+        while (number >= 10) {
+          number /= 10;
+          bite += 1;
+        }
+        // debugger
+        return Math.ceil(number) * Math.pow(10, bite);
+      } else if (number < 0) {
+        // console.log("我是负数");
+        let bite = 0;
+        if (number > -10) {
+          return -10;
+        }
+        while (number <= -10) {
+          number /= 10;
+          bite += 1;
+        }
+        // debugger
+        return Math.floor(number) * Math.pow(10, bite);
+      } else if (number == 0) {
+        return 0;
       }
     },
     // 图表初次渲染
@@ -158,24 +200,23 @@ export default {
           this.drawLine1();
           this.Columnar1();
         }, 500);
-      } else if(res.code==500){
+      } else if (res.code == 500) {
         // alert("无数据");
-        this.$message(res.message)
+        this.$message(res.message);
       }
     },
-    // 处置成功率数据 
-    async chuzhisuccess(){
-      const {data:res}=await this.$http.get('/getCounterByDate')
-      if(res.code==200){
-        res.data.forEach(item=>{
-  this.czsuccessx.push(item.date)
-    this.czsuccessca.push(item.caSource)
-      this.czsuccesssy.push(item.sySource)
-      if(this.$refs.bar_zz1){
-        this.Columnar1()
-      }
-        })
-    
+    // 处置成功率数据
+    async chuzhisuccess() {
+      const { data: res } = await this.$http.get("/getCounterByDate");
+      if (res.code == 200) {
+        res.data.forEach((item) => {
+          this.czsuccessx.push(item.date);
+          this.czsuccessca.push(item.caSource);
+          this.czsuccesssy.push(item.sySource);
+          if (this.$refs.bar_zz1) {
+            this.Columnar1();
+          }
+        });
       }
     },
     // 处置域名数_echarts
@@ -195,8 +236,8 @@ export default {
         if (this.$refs.bar_qx1) {
           this.drawLine1();
         }
-      }else if(res.code==500){
-            this.$message(res.message)
+      } else if (res.code == 500) {
+        this.$message(res.message);
       }
     },
     //曲线图++++++++++++++++++++++++++++++++++++
@@ -307,7 +348,7 @@ export default {
 
             data: this.qutest2,
             smooth: true,
-               areaStyle: {},
+            areaStyle: {},
           },
         ],
 
@@ -349,14 +390,167 @@ export default {
         }
       });
       // console.log(this.restest);
+      // let option = {
+
+      //   tooltip: {
+      //     trigger: "axis",
+      //     axisPointer: {
+      //       // 坐标轴指示器，坐标轴触发有效
+      //       type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
+      //     },
+      //   },
+      //   title: {
+      //     x: "center",
+      //     text: "反制数据统计(按类型)", //xin
+      //     textStyle: {
+      //       //xin
+      //       fontSize: 20,
+      //       color: "#fff", //xin
+      //     },
+      //   },
+      //   grid: {
+      //     x: 70,
+      //     y: 60,
+      //     x2: 70,
+      //     y2: 40,
+      //     borderWidth: 1,
+      //   },
+      //   color: [" #fac858", "#EE6666"], //绿色  橙色
+      //   legend: {
+      //     left: "80%", //xin
+      //     orient: "vertical", //xin  horizontal
+      //     data: [
+      //       {
+      //         name: "处置域名数",
+      //         textStyle: {
+      //           color: ["#fac858"],
+      //         },
+      //       },
+      //       {
+      //         name: "域名拦截量",
+      //         textStyle: {
+      //           color: ["#EE6666"],
+      //         },
+      //         //  ["处置域名数", "域名访问量"]
+      //       },
+      //     ],
+      //   },
+      //   xAxis: {
+      //     type: "category",
+      //     // data:this.zhutest2,
+      //     data: this.restest,
+
+      //     axisLabel: {
+      //       // rotate: -30,
+      //       //  让x轴文字方向为竖向
+      //       interval: 0,
+      //     },
+      //     axisLine: {
+      //       lineStyle: {
+      //         color: "#fff",
+      //         width: 1,
+      //       },
+      //     },
+      //   },
+      //   yAxis: [
+      //     {
+      //       splitLine: {
+      //         //控制刻度横线的显示
+      //         show: true,
+      //       },
+      //       type: "value",
+      //       // max: 20,
+      //       min: 0,
+      //       interval: 5,
+      //       minInterval: 5,
+      //       // name:"处置域名数",
+      //       //   nameLocation: "center",
+      //       // nameGap: 50,
+      //       // nameRotate: 0,
+      //       // nameTextStyle: {
+      //       //   fontSize: 16,
+      //       // },
+
+      //       axisLine: {
+      //         // Y轴线的颜色、和轴线的宽度
+      //         lineStyle: {
+      //           color: "#D5D5D5",
+      //           width: 2,
+      //         },
+      //       },
+      //     },
+      //     {
+      //       splitLine: {
+      //         show: true,
+      //       },
+      //       type: "value",
+      //       max: 100,
+      //       min: 0,
+      //       interval: 20,
+      //       // name:"域名拦截量",
+      //       // nameLocation: "center",
+      //       // nameGap: 50,
+      //       // nameRotate: 0,
+      //       // nameTextStyle: {
+      //       //   fontSize: 16,
+      //       // },
+
+      //       axisLine: {
+      //         lineStyle: {
+      //           color: "#D5D5D5",
+      //           width: 2,
+      //         },
+      //       },
+      //     },
+      //   ],
+
+      //   // yAxis: {
+
+      //   //   type: "value",
+      //   //   splitLine: {
+      //   //     lineStyle: {
+      //   //       color: ["#fff"],
+      //   //     },
+      //   //   },
+      //   //   nameTextStyle: {
+      //   //     color: ["#fff"],
+      //   //   },
+      //   //   axisLine: {
+      //   //     lineStyle: {
+      //   //       color: "#fff",
+      //   //       width: 1,
+      //   //     },
+      //   //   },
+      //   // },
+      //   series: [
+      //     {
+      //       data: this.zhutest2,
+      //       type: "bar",
+      //       color: "#fac858",
+      //       barWidth: 20,
+      //       yAxisIndex: 0,
+      //       name: "处置域名数",
+      //     },
+      //     {
+      //       data: this.zhutest3,
+      //       type: "bar",
+      //       yAxisIndex: 1,
+      //       barWidth: 20,
+      //       name: "域名拦截量",
+      //       color: "#EE6666",
+      //     },
+      //   ],
+      // };
       let option = {
-        //下载
-        toolbox: {
-          show: true,
-          // feature: {
-          //   mark: { show: true },
-          //   saveAsImage: { show: true },
-          // },
+        title: {
+          text: "反制数据统计(按类型)",
+          x: "center",
+          y: "top",
+          align: "center",
+          textStyle: {
+            fontSize: 20,
+            color: "#fff", //xin
+          },
         },
         tooltip: {
           trigger: "axis",
@@ -365,96 +559,136 @@ export default {
             type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
           },
         },
-        title: {
-          x: "center",
-          text: "反制数据统计(按类型)", //xin
-          textStyle: {
-            //xin
-            fontSize: 20,
-            color: "#fff", //xin
-          },
-        },
+
         grid: {
-          x: 70,
-          y: 60,
-          x2: 40,
-          y2: 40,
-          borderWidth: 1,
+          //调整统计图上下左右边距
+          top: 80,
+          right: 65,
+          bottom: 50,
+          left: 80,
         },
-        color: [" #fac858", "#EE6666"], //绿色  橙色
         legend: {
           left: "80%", //xin
           orient: "vertical", //xin  horizontal
           data: [
+               {
+              name: "域名拦截量",
+              textStyle: {
+                color: ["#EE6666"],
+              },
+            },
             {
               name: "处置域名数",
               textStyle: {
                 color: ["#fac858"],
               },
             },
-            {
-              name: "域名拦截量",
-              textStyle: {
-                color: ["#EE6666"],
-              },
-              //  ["处置域名数", "域名访问量"]
-            },
+         
           ],
         },
-        xAxis: {
-          type: "category",
-          // data:this.zhutest2,
-          data: this.restest,
 
-          axisLabel: {
-            // rotate: -30,
-            //  让x轴文字方向为竖向
-            interval: 0,
-          },
-          axisLine: {
-            lineStyle: {
-              color: "#fff",
-              width: 1,
+        xAxis: [
+          {
+            type: "category",
+            data: this.restest,
+            axisLine: {
+              lineStyle: {
+                color: "#fff",
+                width: 1,
+              },
+            },
+
+            axisLabel: {
+              interval: 0, //代表显示所有x轴标签显示
             },
           },
-        },
-        yAxis: {
-          type: "value",
-          splitLine: {
-            lineStyle: {
-              color: ["#fff"],
+        ],
+        yAxis: [
+          {
+           
+            type: "value",
+            max: this.typemax.zhutest3max,
+            min: 0,
+            interval:
+              this.typemax.zhutest3max == 0
+                ? 5
+                : Math.ceil(this.typemax.zhutest3max / 5),
+            // name: "域\n名\n拦\n截\n量",
+            // nameLocation: "center",
+            // nameGap: 35,
+            // nameRotate: 0,
+            // nameTextStyle: {
+            //   fontSize: 16,
+            // },
+
+            axisLine: {
+              lineStyle: {
+                color: "#D5D5D5",
+                width: 2,
+              },
             },
           },
-          nameTextStyle: {
-            color: ["#fff"],
-          },
-          axisLine: {
-            lineStyle: {
-              color: "#fff",
-              width: 1,
+          {
+            type: "value",
+            max: this.typemax.zhutest2max,
+            min: 0,
+            interval:
+              this.typemax.zhutest2max == 0
+                ? 5
+                : Math.ceil(this.typemax.zhutest2max / 5),
+      
+            // name: "处\n置\n域\n名\n数",
+            // nameLocation: "center",
+            // nameGap: 35,
+            // nameRotate: 0,
+            // nameTextStyle: {
+            //   fontSize: 16,
+            // },
+
+            axisLine: {
+              // Y轴线的颜色、和轴线的宽度
+              lineStyle: {
+                color: "#D5D5D5",
+                width: 2,
+              },
             },
           },
-        },
+          
+        ],
         series: [
-          {
-            data: this.zhutest2,
-            type: "bar",
-            color: "#fac858",
-            barWidth: 20,
-            name: "处置域名数",
-          },
-          {
-            data: this.zhutest3,
-            type: "bar",
-
-            barWidth: 20,
+           {
             name: "域名拦截量",
-            color: "#EE6666",
+            type: "bar",
+            yAxisIndex: 0,
+            barWidth: 20,
+            data: this.zhutest3,
+            itemStyle: {
+              //双Y轴B柱的柱体颜色
+              normal: {
+                color: "#EE6666",
+              },
+            },
           },
+          {
+            name: "处置域名数",
+            type: "bar",
+            yAxisIndex: 1,
+            barWidth: 20,
+            data: this.zhutest2,
+            itemStyle: {
+              //双Y轴A柱的柱体颜色
+              normal: {
+                color: "#fac858",
+              },
+            },
+          },
+         
         ],
       };
       return option;
     },
+
+    //this.zhutest2  处置域名数  20   this.zhutest3  域名拦截量  20
     //曲线图++++++++++++++++++++++++++++++++++++1111
     drawLine1() {
       // eslint-disable-next-line camelcase
@@ -550,7 +784,6 @@ export default {
             data: this.yumingtestca,
             // data: [4000,6000,40000,10000,50000,31020,12345,70000],
             smooth: true,
-           
           },
           {
             name: "沈阳",
@@ -558,7 +791,6 @@ export default {
             data: this.yumingtestsy,
             // data: [40000,7000,5000,10000,20020,22020,123450,1000],
             smooth: true,
-         
           },
         ],
 
@@ -602,14 +834,13 @@ export default {
       // console.log(this.restest);
       let option = {
         //下载
-   
+
         tooltip: {
           trigger: "axis",
           axisPointer: {
             // 坐标轴指示器，坐标轴触发有效
             type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
           },
-       
         },
         title: {
           x: "center",
@@ -627,7 +858,7 @@ export default {
           y2: 40,
           borderWidth: 1,
         },
-        color: ["#fac858", "#EE6666", ], //绿色  橙色
+        color: ["#fac858", "#EE6666"], //绿色  橙色
         legend: {
           left: "80%", //xin
           orient: "vertical", //xin horizontal
@@ -648,7 +879,7 @@ export default {
         },
         xAxis: {
           type: "category",
-          data:this.czsuccessx,
+          data: this.czsuccessx,
           // data: [
           //   "2021-01-01",
           //   "2021-01-02",
@@ -673,15 +904,15 @@ export default {
         },
         yAxis: {
           type: "value",
-              name: '百分比(%)',
+          name: "百分比(%)",
           splitLine: {
             lineStyle: {
               color: ["#fff"],
             },
           },
 
-          max:100,
-          min:0,
+          max: 100,
+          min: 0,
           nameTextStyle: {
             color: ["#fff"],
           },
@@ -695,7 +926,7 @@ export default {
         series: [
           {
             // data: ["20", "30", "40", "50", "60", "70", "80"],
-            data:this.czsuccessca,
+            data: this.czsuccessca,
             type: "bar",
             color: "#fac858",
             barWidth: 20,
@@ -704,7 +935,7 @@ export default {
 
           {
             // data: ["80", "70", "60", "50", "40", "30", "20"],
-                 data:this.czsuccesssy,
+            data: this.czsuccesssy,
             type: "bar",
             barWidth: 20,
             name: "沈阳成功率",
