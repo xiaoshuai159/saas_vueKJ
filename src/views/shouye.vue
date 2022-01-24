@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import erji from "@/utils/twotype.js"
 export default {
   data() {
     return {
@@ -112,6 +113,7 @@ export default {
       );
       // console.log(res);
       if (res.code == 200) {
+        console.log(res.data);
         res.data.tjList.forEach((item) => {
           this.qutest.push(item.treatmentTime1);
           this.qutest1.push(item.urlCount);
@@ -127,7 +129,7 @@ export default {
         this.typemax.zhutest2max = Math.max(...this.zhutest2);
  
         this.typemax.zhutest3max = Math.max(...this.zhutest3);
-       
+ 
         this.typemax.zhutest2max = this.ceilNumber(this.typemax.zhutest2max);
         this.typemax.zhutest3max = this.ceilNumber(this.typemax.zhutest3max);
      
@@ -137,10 +139,13 @@ export default {
         setTimeout(() => {
           this.drawLine();
           this.Columnar();
-        }, 500);
+        }, 1000);
       } else if (res.code == 500) {
         this.$message(res.message);
       }
+    },
+      geterji(data){
+     return erji(data)
     },
     //取整数
     ceilNumber(number) {
@@ -199,7 +204,7 @@ export default {
         setTimeout(() => {
           this.drawLine1();
           this.Columnar1();
-        }, 500);
+        }, 1000);
       } else if (res.code == 500) {
         // alert("无数据");
         this.$message(res.message);
@@ -214,7 +219,10 @@ export default {
           this.czsuccessca.push(item.caSource);
           this.czsuccesssy.push(item.sySource);
           if (this.$refs.bar_zz1) {
-            this.Columnar1();
+         setTimeout(()=>{
+             this.Columnar1();
+         },1000)
+          
           }
         });
       }
@@ -234,13 +242,17 @@ export default {
           this.yumingtestsy.push(item.syCount);
         });
         if (this.$refs.bar_qx1) {
-          this.drawLine1();
+             setTimeout(()=>{
+           this.drawLine1();
+         },1000)
+          
+        
         }
       } else if (res.code == 500) {
         this.$message(res.message);
       }
     },
-    //曲线图++++++++++++++++++++++++++++++++++++
+    //域名拦截量++++++++++++++++++++++++++++++++++++
     drawLine() {
       // eslint-disable-next-line camelcase
       var bar_qx = this.$refs.chart;
@@ -362,7 +374,7 @@ export default {
       };
       return option;
     },
-    //柱状图----------------------------------------
+    //反制数据统计----------------------------------------
     Columnar() {
       // eslint-disable-next-line camelcase
       var bar_zz = this.$refs.zhuchart;
@@ -376,172 +388,63 @@ export default {
     zhusetOption() {
       this.zhutest1.forEach((item) => {
         if (item == "DK") {
-          this.restest.push("网络贷款");
+          this.restest.push("贷款");
         } else if (item == "SD") {
-          this.restest.push("兼职刷单");
+          this.restest.push("刷单");
         } else if (item == "GJF") {
-          this.restest.push("冒充公务单位");
+          this.restest.push("冒充公检法");
         } else if (item == "LC") {
           this.restest.push("投资理财");
         } else if (item == "GW") {
           this.restest.push("网络购物");
         } else if (item == "QT") {
-          this.restest.push("未分类");
+          this.restest.push("其他类型");
+        }else if  (item == "JJGW"){
+          this.restest.push("冒充军警购物诈骗") 
+        } else if (item == "SZP") {
+          this.restest.push("杀猪盘");
+        } else if (item == "DS") {
+          this.restest.push("虚假购物/服务类");
+        }else if  (item == "JY"){
+          this.restest.push("网络婚恋/交友类") 
+        }else if  (item == "ZX"){
+          this.restest.push("虚假征信类") 
+        } else if (item == "MC") {
+          this.restest.push("冒充领导/熟人类");
+        } else if (item == "YX") {
+          this.restest.push("网络游戏产品虚假交易类");
+        }else if  (item == "APP"){
+          this.restest.push("分发平台") 
+        } else if (item == "XZYM") {
+          this.restest.push("下载页面");
+        } else if (item == "OTHER") {
+          this.restest.push("其他类型诈骗");
         }
+
       });
-      // console.log(this.restest);
-      // let option = {
-
-      //   tooltip: {
-      //     trigger: "axis",
-      //     axisPointer: {
-      //       // 坐标轴指示器，坐标轴触发有效
-      //       type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
-      //     },
-      //   },
-      //   title: {
-      //     x: "center",
-      //     text: "反制数据统计(按类型)", //xin
-      //     textStyle: {
-      //       //xin
-      //       fontSize: 20,
-      //       color: "#fff", //xin
-      //     },
-      //   },
-      //   grid: {
-      //     x: 70,
-      //     y: 60,
-      //     x2: 70,
-      //     y2: 40,
-      //     borderWidth: 1,
-      //   },
-      //   color: [" #fac858", "#EE6666"], //绿色  橙色
-      //   legend: {
-      //     left: "80%", //xin
-      //     orient: "vertical", //xin  horizontal
-      //     data: [
-      //       {
-      //         name: "处置域名数",
-      //         textStyle: {
-      //           color: ["#fac858"],
-      //         },
-      //       },
-      //       {
-      //         name: "域名拦截量",
-      //         textStyle: {
-      //           color: ["#EE6666"],
-      //         },
-      //         //  ["处置域名数", "域名访问量"]
-      //       },
-      //     ],
-      //   },
-      //   xAxis: {
-      //     type: "category",
-      //     // data:this.zhutest2,
-      //     data: this.restest,
-
-      //     axisLabel: {
-      //       // rotate: -30,
-      //       //  让x轴文字方向为竖向
-      //       interval: 0,
-      //     },
-      //     axisLine: {
-      //       lineStyle: {
-      //         color: "#fff",
-      //         width: 1,
-      //       },
-      //     },
-      //   },
-      //   yAxis: [
-      //     {
-      //       splitLine: {
-      //         //控制刻度横线的显示
-      //         show: true,
-      //       },
-      //       type: "value",
-      //       // max: 20,
-      //       min: 0,
-      //       interval: 5,
-      //       minInterval: 5,
-      //       // name:"处置域名数",
-      //       //   nameLocation: "center",
-      //       // nameGap: 50,
-      //       // nameRotate: 0,
-      //       // nameTextStyle: {
-      //       //   fontSize: 16,
-      //       // },
-
-      //       axisLine: {
-      //         // Y轴线的颜色、和轴线的宽度
-      //         lineStyle: {
-      //           color: "#D5D5D5",
-      //           width: 2,
-      //         },
-      //       },
-      //     },
-      //     {
-      //       splitLine: {
-      //         show: true,
-      //       },
-      //       type: "value",
-      //       max: 100,
-      //       min: 0,
-      //       interval: 20,
-      //       // name:"域名拦截量",
-      //       // nameLocation: "center",
-      //       // nameGap: 50,
-      //       // nameRotate: 0,
-      //       // nameTextStyle: {
-      //       //   fontSize: 16,
-      //       // },
-
-      //       axisLine: {
-      //         lineStyle: {
-      //           color: "#D5D5D5",
-      //           width: 2,
-      //         },
-      //       },
-      //     },
-      //   ],
-
-      //   // yAxis: {
-
-      //   //   type: "value",
-      //   //   splitLine: {
-      //   //     lineStyle: {
-      //   //       color: ["#fff"],
-      //   //     },
-      //   //   },
-      //   //   nameTextStyle: {
-      //   //     color: ["#fff"],
-      //   //   },
-      //   //   axisLine: {
-      //   //     lineStyle: {
-      //   //       color: "#fff",
-      //   //       width: 1,
-      //   //     },
-      //   //   },
-      //   // },
-      //   series: [
-      //     {
-      //       data: this.zhutest2,
-      //       type: "bar",
-      //       color: "#fac858",
-      //       barWidth: 20,
-      //       yAxisIndex: 0,
-      //       name: "处置域名数",
-      //     },
-      //     {
-      //       data: this.zhutest3,
-      //       type: "bar",
-      //       yAxisIndex: 1,
-      //       barWidth: 20,
-      //       name: "域名拦截量",
-      //       color: "#EE6666",
-      //     },
-      //   ],
-      // };
+  
       let option = {
+         dataZoom:[{
+            type: "slider",
+            // show:_this.zoomShow == true?true:false,
+            show:true,
+            xAxisIndex: 0,
+            bottom: 20,
+            // start:_this.zoomShow == true ? document.body.clientWidth < 1920 ? 40 : 60 : 100,
+            start:document.body.clientWidth < 1920 ? 40 : 50,
+            end: 0,
+            height: '10',
+            handleSize:'0px',
+            handleStyle:{
+                color: "#3AAAF0",
+                borderColor: "#007acc",
+            },
+            fillerColor: 'rgba(27, 102, 177, 1)',
+            backgroundColor: "rgba(4, 28, 52, 1)",
+            showDetail:false,
+            borderColor: '#002944',
+         
+        }],
         title: {
           text: "反制数据统计(按类型)",
           x: "center",
@@ -563,24 +466,25 @@ export default {
         grid: {
           //调整统计图上下左右边距
           top: 80,
-          right: 65,
+          right: 80,
           bottom: 50,
-          left: 80,
+          left: 65,
         },
         legend: {
           left: "80%", //xin
           orient: "vertical", //xin  horizontal
           data: [
                {
-              name: "域名拦截量",
-              textStyle: {
-                color: ["#EE6666"],
-              },
-            },
-            {
               name: "处置域名数",
               textStyle: {
                 color: ["#fac858"],
+              },
+            },
+         
+               {
+              name: "域名拦截量",
+              textStyle: {
+                color: ["#EE6666"],
               },
             },
          
@@ -604,31 +508,9 @@ export default {
           },
         ],
         yAxis: [
+     
           {
-           
-            type: "value",
-            max: this.typemax.zhutest3max,
-            min: 0,
-            interval:
-              this.typemax.zhutest3max == 0
-                ? 5
-                : Math.ceil(this.typemax.zhutest3max / 5),
-            // name: "域\n名\n拦\n截\n量",
-            // nameLocation: "center",
-            // nameGap: 35,
-            // nameRotate: 0,
-            // nameTextStyle: {
-            //   fontSize: 16,
-            // },
-
-            axisLine: {
-              lineStyle: {
-                color: "#D5D5D5",
-                width: 2,
-              },
-            },
-          },
-          {
+              name: "处置域名数",
             type: "value",
             max: this.typemax.zhutest2max,
             min: 0,
@@ -653,26 +535,37 @@ export default {
               },
             },
           },
-          
-        ],
-        series: [
-           {
+               {
             name: "域名拦截量",
-            type: "bar",
-            yAxisIndex: 0,
-            barWidth: 20,
-            data: this.zhutest3,
-            itemStyle: {
-              //双Y轴B柱的柱体颜色
-              normal: {
-                color: "#EE6666",
+            type: "value",
+            max: this.typemax.zhutest3max,
+            min: 0,
+            interval:
+              this.typemax.zhutest3max == 0
+                ? 5
+                : Math.ceil(this.typemax.zhutest3max / 5),
+            // name: "域\n名\n拦\n截\n量",
+            // nameLocation: "center",
+            // nameGap: 35,
+            // nameRotate: 0,
+            // nameTextStyle: {
+            //   fontSize: 16,
+            // },
+
+            axisLine: {
+              lineStyle: {
+                color: "#D5D5D5",
+                width: 2,
               },
             },
           },
-          {
+          
+        ],
+        series: [
+              {
             name: "处置域名数",
             type: "bar",
-            yAxisIndex: 1,
+            yAxisIndex: 0,
             barWidth: 20,
             data: this.zhutest2,
             itemStyle: {
@@ -682,6 +575,20 @@ export default {
               },
             },
           },
+           {
+            name: "域名拦截量",
+            type: "bar",
+            yAxisIndex: 1,
+            barWidth: 20,
+            data: this.zhutest3,
+            itemStyle: {
+              //双Y轴B柱的柱体颜色
+              normal: {
+                color: "#EE6666",
+              },
+            },
+          },
+      
          
         ],
       };
