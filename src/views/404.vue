@@ -2,12 +2,12 @@
   <div class="error-page">
       <div class="error-code">4<span>0</span>4</div>
       <div class="error-desc">啊哦~ 你所访问的页面正在建设中</div>
-      <div class="error-handle">
+      <!-- <div class="error-handle">
           <router-link to="/">
             <el-button type="primary" size="large" @click="goBack">返回登录页</el-button>
           </router-link>
-          <!-- <el-button class="error-btn" type="primary" size="large" @click="goBack">返回上一页</el-button> -->
-      </div>
+       
+      </div> -->
   </div>
 </template>
 

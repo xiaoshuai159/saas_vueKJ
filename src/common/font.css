@@ -1,0 +1,50 @@
+
+/* //导航字体 */
+@font-face {  
+    font-family: 'heiti';    
+    src: url('时尚中黑简体.TTF'); 
+    font-weight: normal;  
+    font-style: normal;  
+  }
+/* 思源黑体加粗 */
+  @font-face {  
+    font-family: 'siyuanheitibold';    
+    src: url('SourceHanSansCN-Bold.otf'); 
+    font-weight: normal;  
+    font-style: normal;  
+  }
+  /*  思源黑体加粗 */
+  @font-face {  
+    font-family: 'siyuanheitibold1';    
+    src: url('SourceHanSansCN-Heavy.otf'); 
+    font-weight: normal;  
+    font-style: normal;  
+  }
+  /*  思源黑体加粗600 */
+  @font-face {  
+    font-family: 'siyuanheitibold2';    
+    src: url('SourceHanSansCN-Medium.otf'); 
+    font-weight: normal;  
+    font-style: normal;  
+  }
+    /*  思源黑体正常 */
+    @font-face {  
+      font-family: 'siyuanheiti';    
+      src: url('SourceHanSansCN-Light.otf'); 
+      font-weight: normal;  
+      font-style: normal;  
+    }
+             /*  思源黑体正常 500*/
+             @font-face {  
+              font-family: 'siyuanheitinormal1';    
+              src: url('SourceHanSansCN-Normal.otf'); 
+              font-weight: normal;  
+              font-style: normal;  
+            }
+                 /*  思源黑体正常 */
+                 @font-face {  
+                  font-family: 'siyuanheitinormal';    
+                  src: url('SourceHanSansCN-Regular.otf'); 
+                  font-weight: normal;  
+                  font-style: normal;  
+                }

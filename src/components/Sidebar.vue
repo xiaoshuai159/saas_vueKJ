@@ -3,9 +3,9 @@
     <el-menu
       class="sidebar-el-menu"
       :default-active="$route.path"
-      background-color="#01162d"
-      text-color="#bfcbd9"
-      active-text-color="rgb(69 125 187)"
+      background-color="rgba(1, 22, 45,.5)"
+      text-color="#fff"
+      active-text-color="rgb(69, 125 ,187)"
       router
     >
       <NavItem
@@ -30,112 +30,84 @@ export default {
       Newname2: [],
       Newname3: [],
       items: [
+    
+        {
+          // icon: "el-icon-pie-chart",
+          index: "shouye",
+          menuName: "首页",
+          name: "shouye",
+          children: null,
+          menuType: 1,
+          menuUrl: "/shouye",
+          pid: -1
+        },
+        {
+          // icon: "el-icon-pie-chart",
+          index: "numhei",
+          menuName: "黑样本整合",
+          menuType: 0,
+          menuUrl: "/numhei",
+          name: "numhei",
+          pid: 3,
+          // img: Images.logoUrl1,
+          children: [
+            {
+              index: "domain",
+              menuName: "黑样本上传",
+              name: "domain",
+              menuType: 1,
+              children: null,
+              menuUrl: "/domain",
+            },
+            {
+              index: "getUploadDomain",
+              menuName: "黑样本展示",
+              name: "getUploadDomain",
+              children: null,
+              menuType: 1,
+              menuUrl: "/getUploadDomain",
+            },
+          ],
+        },
+        {
+          // icon: "el-icon-pie-chart",
+          index: "finished",
+          menuName: "黑样本处理",
+          name: "finished",
+          children: null,
+          menuType: 1,
+          menuUrl: "/finished",
+          // img: Images.logoUrl,
+        },
+           {
+          // icon: "el-icon-pie-chart",
+          index: "404",
+          menuName: "黑样本应用",
+          name: "404",
+          children: null,
+          menuType: 1,
+          menuUrl: "/404",
+          // img: Images.logoUrl,
+        },
+        {
+          // icon: "el-icon-pie-chart",
+          index: "boce",
+          menuName: "黑样本拨测",
+          name: "boce",
+          children: null,
+          menuType: 1,
+          menuUrl: "/boce",
+          // img: Images.logoUrl,
+        },
         // {
         //   // icon: "el-icon-pie-chart",
-        //   index: "shouye",
-        //   title: "首页",
+        //   index: "findUser",
+        //   menuName: "用户管理",
+        //   name: "findUser",
+        //   children: null,
+        //   menuType: 1,
+        //   menuUrl: "/findUser",
         // },
-        // {
-        //   // icon: "el-icon-pie-chart",
-        //   index: "one",
-        //   title: "反制",
-        //   // img: Images.logoUrl1,
-        //   subs: [
-        //     {
-        //       index: "domain",
-        //       title: "数据详情",
-        //     },
-        //     {
-        //       index: "getUploadDomain",
-        //       title: "上传样本",
-        //     },
-        //   ],
-        // },
-        // {
-        //   // icon: "el-icon-pie-chart",
-        //   index: "dashboard",
-        //   title: "预警",
-        //   // img: Images.logoUrl,
-        //   subs: [
-        //     {
-        //       index: "getWarning",
-        //       title: "进行中",
-        //     },
-        //     {
-        //       index: "search_success",
-        //       title: "已完成",
-        //     },
-        //     {
-        //       index: "search_echarts",
-        //       title: "统计结果",
-        //     },
-        //   ],
-        // },
-        // {
-        //   // icon: "el-icon-pie-chart",
-        //   index: "faxian",
-        //   title: "访问记录",
-        //   // img: Images.logoUrl,
-        //   subs: [
-        //     {
-        //       index: "getDiscover",
-        //       title: "数据详情",
-        //     },
-        //   ],
-        // },
-        // {
-        //   // icon: "el-icon-pie-chart",
-        //   index: "xitong",
-        //   title: "系统管理",
-        //   subs: [
-        //     {
-        //       index: "findUser",
-        //       title: "用户管理",
-        //     },
-        //     {
-        //       index: "allMenu",
-        //       title: "菜单管理",
-        //     },
-        //     {
-        //       index: "findRole",
-        //       title: "角色管理",
-        //     },
-        //     {
-        //       index: "bumen",
-        //       title: "部门管理",
-        //     },
-        //   ],
-        // },
-        // // ——————————————————————————————————————————————————————————
-        // // {
-        // //   icon: "el-icon-pie-chart",
-        // //   // index: "ruleFeatures",
-        // //   title: "侦察",
-        // //   img: Images.logoUrl1,
-        // // },
-        // // {
-        // //   icon: "el-icon-pie-chart",
-        // //   // index: "checkTrans",
-        // //   title: "管控",
-        // //   img: Images.logoUrl1,
-        // // },
-        // // {
-        // //   icon: "el-icon-pie-chart",
-        // //   // index: "search_bak",
-        // //   title: "警情",
-        // //   img: Images.logoUrl1,
-        // // },
-        // // subs: [
-        // //   {
-        // //     index: "permission",
-        // //     title: "权限测试",
-        // //   },
-        // //   {
-        // //     index: "404",
-        // //     title: "404页面",
-        // //   },
-        // // ],
-        // // },
       ],
     };
   },
@@ -148,30 +120,30 @@ export default {
   methods: {
     async qx() {
       const that = this;
-      const { data: res } = await this.$http.post("/menu/queryUserMenuList");
+      // const { data: res } = await this.$http.post("/menu/queryUserMenuList");
       // console.log(res);
-      if (res.code == 200) {
-        // console.log(res.data);
-        this.items = res.data;
-
-        // =========================
-        res.data.forEach((item) => {
-          that.menuFir(item);
-        });
-        this.pid = this.getSetArr(this.pid);
-        // console.log(this.pid);
-        if (!window.sessionStorage.getItem("btn")) {
-          window.sessionStorage.setItem("btn", this.Newname1);
-        }
-        if (!window.sessionStorage.getItem("list")) {
-          window.sessionStorage.setItem("list", this.Newname3);
-        }
-        // console.log(this.Newname3);
-        res.data.forEach((item) => {
-          that.menuSec(item);
-        });
-        // console.log(res.data);
+      // if (res.code == 200) {
+      // console.log(res.data);
+      //  this.items= res.data;
+let  res=[]
+      // =========================
+      res.forEach((item) => {
+        that.menuFir(item);
+      });
+      this.pid = this.getSetArr(this.pid);
+      // console.log(this.pid);
+      if (!window.sessionStorage.getItem("btn")) {
+        window.sessionStorage.setItem("btn", this.Newname1);
       }
+      if (!window.sessionStorage.getItem("list")) {
+        window.sessionStorage.setItem("list", this.Newname3);
+      }
+      // console.log(this.Newname3);
+     res.forEach((item) => {
+        that.menuSec(item);
+      });
+      // console.log(res.data);
+      // }
 
       // console.log(res.data);
       // this.items = res.data;
@@ -256,8 +228,7 @@ export default {
   height: 67px;
   line-height: 70px;
 }
-/deep/.el-submenu__title {
-}
+
 // .el-submenu{
 //   padding: 10px;
 //     box-sizing: border-box;
@@ -267,9 +238,18 @@ export default {
   width: 100%;
   height: 100%;
 }
-.el-menu-item /deep/ img {
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
+
+/deep/ .el-menu {
+  border-right: 0px solid transparent;
+}
+/deep/ .el-menu-item.is-active {
+  background-color: rgba(48, 105, 132, 0.5) !important; //你要修改的颜色
+  color: #409eff !important;
+}
+/deep/.el-submenu__title:hover,
+/deep/ .el-menu-item:focus,
+/deep/ .el-menu-item:hover {
+  background-color: rgba(48, 105, 132, 0.5) !important;
+  color: #409eff !important;
 }
 </style>

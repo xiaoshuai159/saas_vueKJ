@@ -43,7 +43,7 @@
               size="mini"
               :inline="true"
               style="margin-left: 3rem"
-              label-width="80px"
+              label-width="140px"
             >
               <el-col :span="16">
                 <el-form-item
@@ -127,7 +127,7 @@
               size="mini"
               :inline="true"
               style="margin-left: 3rem"
-              label-width="80px"
+              label-width="140px"
             >
               <el-col :span="16">
                 <el-form-item
@@ -218,7 +218,7 @@
               size="mini"
               :inline="true"
               style="margin-left: 3rem"
-              label-width="80px"
+              label-width="140px"
             >
               <el-col :span="16">
                 <el-form-item
@@ -658,4 +658,5 @@ export default {
 .righttable {
   padding-top: 20px;
 }
+
 </style>

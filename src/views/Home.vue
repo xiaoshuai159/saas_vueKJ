@@ -1,7 +1,8 @@
 <template>
     <div class="about">
         <v-header :inpName="warns"/>
-        <v-sidebar />
+      <div class="bgs">
+            <v-sidebar />
         <div class="content-box" >
            
             <div class="content">
@@ -14,6 +15,7 @@
                 </router-view>
             </div>
         </div>
+      </div>
     </div>
 </template>
 <script>
@@ -96,11 +98,18 @@ export default {
 </script>
 <style>
   .content-box{
-    background:#031123;
+    /* background:#031123; */
     left: 15rem;
   }
   .content-collapse{
     background:#031123;
     left: 4rem;
+  }
+  .bgs{
+      width: 100%;
+      height: 100%;
+          background-image: url(../assets/img/shouye/bg1.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
   }
 </style>

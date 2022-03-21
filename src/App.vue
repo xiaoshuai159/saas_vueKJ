@@ -1,5 +1,5 @@
 <template>
-  <div @mousemove="handleTime">
+  <div @mousemove="handleTime"  style="height:100vh;">
     <router-view id="app" class="analysis" />
   </div>
 </template>
