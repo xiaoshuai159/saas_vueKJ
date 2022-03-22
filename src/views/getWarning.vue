@@ -1,7 +1,7 @@
 <template>
   <div class="right_main_under">
     <!-- 统计图表 -->
-    <div class="tubiao" v-if="getRole1('statistics')">
+    <!-- <div class="tubiao" v-if="getRole1('statistics')">
       <div>
         <el-form size="mini" style="margin: 0 0 0 5rem">
           <el-form-item>
@@ -38,7 +38,7 @@
           ></div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <div class="search_select_form">
       <el-form
@@ -391,7 +391,7 @@ export default {
   },
   created() {
     this.getTabData();
-    this.echartslist1();
+    // this.echartslist1();
   },
   methods: {
      getRole1(data) {
@@ -438,77 +438,77 @@ export default {
       }
     },
     // 图表初次渲染
-    async echartslist1() {
-      let charecharts = {
-        startFraudTime: this.whiteSearchList1.startCreateTime1,
-        endFraudTime: this.whiteSearchList1.endCreateTime1,
-      };
-      const { data: res } = await this.$http.post(
-        "/warning/statistics",
-        charecharts
-      );
-      if (res.code == 200) {
-        // console.log(res);
-        res.data.warningStatisticsGradeList.forEach((item) => {
-          this.newqutest.push(item.fraudTimeVo);
-          this.newqutest1.push(item.high);
-          this.newqutest2.push(item.middle);
-          this.newqutest3.push(item.lower);
-        });
-        res.data.warningStatisticsTypeList.forEach((item) => {
-          this.newzhutest1.push(item.fraudType1);
-          this.newzhutest2.push(item.high);
-          this.newzhutest3.push(item.lower);
-          this.newzhutest4.push(item.middle);
-        });
-        setTimeout(() => {
-          this.drawLine();
-          this.Columnar();
-        }, 500);
-      } else {
-        alert("无数据");
-      }
-    },
+    // async echartslist1() {
+    //   let charecharts = {
+    //     startFraudTime: this.whiteSearchList1.startCreateTime1,
+    //     endFraudTime: this.whiteSearchList1.endCreateTime1,
+    //   };
+    //   const { data: res } = await this.$http.post(
+    //     "/warning/statistics",
+    //     charecharts
+    //   );
+    //   if (res.code == 200) {
+    //     // console.log(res);
+    //     res.data.warningStatisticsGradeList.forEach((item) => {
+    //       this.newqutest.push(item.fraudTimeVo);
+    //       this.newqutest1.push(item.high);
+    //       this.newqutest2.push(item.middle);
+    //       this.newqutest3.push(item.lower);
+    //     });
+    //     res.data.warningStatisticsTypeList.forEach((item) => {
+    //       this.newzhutest1.push(item.fraudType1);
+    //       this.newzhutest2.push(item.high);
+    //       this.newzhutest3.push(item.lower);
+    //       this.newzhutest4.push(item.middle);
+    //     });
+    //     setTimeout(() => {
+    //       this.drawLine();
+    //       this.Columnar();
+    //     }, 500);
+    //   } else {
+    //     alert("无数据");
+    //   }
+    // },
 
     //图表数据查询
-    async chaxun1() {
-      let charecharts2 = {
-        endFraudTime: this.whiteSearchList1.endCreateTime1,
-        startFraudTime: this.whiteSearchList1.startCreateTime1,
-      };
-      const { data: res } = await this.$http.post(
-        "/warning/statistics",
-        charecharts2
-      );
-      if (res.code == 200) {
-        (this.newqutest = []),
-          (this.newqutest1 = []),
-          (this.newqutest2 = []),
-          (this.newqutest3 = []),
-          (this.newzhutest1 = []),
-          (this.newzhutest2 = []),
-          (this.newzhutest3 = []),
-          (this.newzhutest4 = []),
-          res.data.warningStatisticsGradeList.forEach((item) => {
-            this.newqutest.push(item.fraudTimeVo);
-            this.newqutest1.push(item.high);
-            this.newqutest2.push(item.middle);
-            this.newqutest3.push(item.lower);
-          });
-        res.data.warningStatisticsTypeList.forEach((item) => {
-          this.newzhutest1.push(item.fraudType1);
-          this.newzhutest2.push(item.high);
-          this.newzhutest3.push(item.middle);
-          this.newzhutest4.push(item.lower);
-        });
-        setTimeout(() => {
-          this.drawLine();
-          this.Columnar();
-        }, 500);
-      } else {
-        alert("无数据");
-      }
-    },
+    // async chaxun1() {
+    //   let charecharts2 = {
+    //     endFraudTime: this.whiteSearchList1.endCreateTime1,
+    //     startFraudTime: this.whiteSearchList1.startCreateTime1,
+    //   };
+    //   const { data: res } = await this.$http.post(
+    //     "/warning/statistics",
+    //     charecharts2
+    //   );
+    //   if (res.code == 200) {
+    //     (this.newqutest = []),
+    //       (this.newqutest1 = []),
+    //       (this.newqutest2 = []),
+    //       (this.newqutest3 = []),
+    //       (this.newzhutest1 = []),
+    //       (this.newzhutest2 = []),
+    //       (this.newzhutest3 = []),
+    //       (this.newzhutest4 = []),
+    //       res.data.warningStatisticsGradeList.forEach((item) => {
+    //         this.newqutest.push(item.fraudTimeVo);
+    //         this.newqutest1.push(item.high);
+    //         this.newqutest2.push(item.middle);
+    //         this.newqutest3.push(item.lower);
+    //       });
+    //     res.data.warningStatisticsTypeList.forEach((item) => {
+    //       this.newzhutest1.push(item.fraudType1);
+    //       this.newzhutest2.push(item.high);
+    //       this.newzhutest3.push(item.middle);
+    //       this.newzhutest4.push(item.lower);
+    //     });
+    //     setTimeout(() => {
+    //       this.drawLine();
+    //       this.Columnar();
+    //     }, 500);
+    //   } else {
+    //     alert("无数据");
+    //   }
+    // },
     //曲线图++++++++++++++++++++++++++++++++++++1111
     drawLine() {
       // eslint-disable-next-line camelcase

@@ -9,23 +9,42 @@
           size="mini"
         >
           <!-- 发现日期 -->
-          <el-form-item label="发现日期">
+           <el-form-item label="日期">
             <el-date-picker
               v-model="newdomainSimpleVo.dateValue_find"
-              type="daterange"
+              type="datetimerange"
               :change="dataCreate_change(newdomainSimpleVo.dateValue_find)"
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-              value-format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              align="right"
+              size="mini"
+              :default-time="['00:00:00', '23:59:59']"
             >
             </el-date-picker>
           </el-form-item>
+          <el-form-item label="来源">
+            <el-select
+              v-model="newdomainSimpleVo.source"
+              placeholder="来源"
+              clearable
+              @clear="sourceType_record(newdomainSimpleVo.source)"
+            >
+              <el-option
+                v-for="item in selectData.sourceTypeData"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
           <!-- 二级分类 -->
-          <el-form-item label="二级分类">
+          <el-form-item label="类型">
             <el-select
               v-model="newdomainSimpleVo.classification"
-              placeholder="二级分类"
+              placeholder="类型"
               clearable
               @clear="
                 sourceType_classification(newdomainSimpleVo.classification)
@@ -40,16 +59,16 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <!-- 有无备案 -->
-          <el-form-item label="有无备案">
+          <!-- 级别 -->
+          <el-form-item label="级别">
             <el-select
-              v-model="newdomainSimpleVo.record"
-              placeholder="有无备案"
+              v-model="newdomainSimpleVo.jibie"
+              placeholder="级别"
               clearable
-              @clear="sourceType_record(newdomainSimpleVo.record)"
+              @clear="sourceType_classification(newdomainSimpleVo.jibie)"
             >
               <el-option
-                v-for="item in selectData.recordlist"
+                v-for="item in selectData.classificationlist"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -57,23 +76,30 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <!-- 境内外Ip -->
-          <el-form-item label="境内外IP">
+          <!-- 域名/URL -->
+          <el-form-item label="域名/URL">
             <el-input
-              v-model.trim="newdomainSimpleVo.ip"
-              placeholder="请输入IP"
-              @clear="modelType1_ip(newdomainSimpleVo.ip)"
+              v-model="newdomainSimpleVo.domain"
+              placeholder="域名/URL"
             ></el-input>
           </el-form-item>
-          <!-- 域名 -->
-
-          <el-form-item label="域名">
-            <el-input
-              v-model.trim="newdomainSimpleVo.domain"
-              placeholder="请输入域名"
-              @clear="modelType1_perple(newdomainSimpleVo.domain)"
+          <!-- 主域名 -->
+          <!-- <el-form-item label="主域名">
+                <el-input
+              v-model="newdomainSimpleVo.ip"
+              placeholder="主域名"
             ></el-input>
-          </el-form-item>
+          
+          </el-form-item> -->
+           <!-- 主域名 -->
+          <!-- <el-form-item label="网站名称">
+                <el-input
+              v-model="newdomainSimpleVo.record"
+              placeholder="网站名称"
+            ></el-input>
+          
+          </el-form-item> -->
+      
           <el-form-item>
             <el-button
               type="primary"
@@ -109,56 +135,44 @@
       class="tableStyle"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" min-width="5%"> </el-table-column>
-      <el-table-column label="id" prop="id" v-if="isLoading"> </el-table-column>
-      <el-table-column label="发现日期" prop="discoverDate"> </el-table-column>
-      <el-table-column label="类型" show-overflow-tooltip>
-        <template slot-scope="scope">
-          {{ zP(scope.row.type) }}
-        </template>
+      <!-- <el-table-column type="selection" min-width="5%"> </el-table-column> -->
+      <!-- <el-table-column label="序号" prop="id" >
+      </el-table-column> -->
+      <el-table-column label="日期" prop="discoverDate"> </el-table-column>
+      <el-table-column label="来源" prop="discoverDate"> </el-table-column>
+      <el-table-column label="类型" prop="type" show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column label="级别" prop="jibie" show-overflow-tooltip>
       </el-table-column>
       <!-- <el-table-column label="类型" prop=""> </el-table-column> -->
       <el-table-column
-        label="域名"
+        label="域名/URL"
         prop="url"
         width="400"
         show-overflow-tooltip
       >
       </el-table-column>
-      <el-table-column label="境内外IP" prop="domesticForeign">
-      </el-table-column>
-      <el-table-column label="有无备案" prop="keepRecord"> </el-table-column>
-      <el-table-column label="二级分类" prop="category" show-overflow-tooltip>
-        <template slot-scope="scope">
-          {{ geterji(scope.row.category) }}
-        </template>
-      </el-table-column>
-      <!-- 周五  去除-->
-      <!-- <el-table-column label="访问量" v-if="getRole1('getRawData')">
-        <template slot-scope="scope">
-          <el-button
-            type="text"
-            size="mini"
-            style="height: 20px"
-            @click="fangwenl(scope.row)"
-            >{{ scope.row.visits }}</el-button
-          >
-        </template>
-      </el-table-column> -->
-      <el-table-column
-        label="访问量"
-        min-width="10%"
-        v-if="!getRole1('getRawData')"
-      >
-        <template slot-scope="scope">
-          <el-button type="text" size="mini" style="height: 20px">{{
-            scope.row.visits
-          }}</el-button>
-        </template>
-      </el-table-column>
+      <el-table-column label="主域名" prop="domesticForeign"> </el-table-column>
+      <el-table-column label="网站名称" prop="keepRecord"> </el-table-column>
     </el-table>
+    <!-- //分页 -->
+    <div class="bottom">
+      <div class="ss">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="mypageable.pageNum"
+          :page-sizes="[10, 20, 30, 40]"
+          :page-size="mypageable.pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+          class="pagePagination pageRight"
+        >
+        </el-pagination>
+      </div>
+    </div>
     <!-- 访问量 -->
-
+    <!-- 
     <el-dialog
       :title="'访问详情——' + this.yuming"
       :visible.sync="dialogTableVisible"
@@ -193,10 +207,10 @@
         </el-table-column>
         <el-table-column prop="targetPort" label="目标端口"></el-table-column>
       </el-table>
-      <!-- //分页 -->
+  
       <div class="bottom1">
         <div class="ss1">
-          <!-- @size-change="handleSizeChange1" -->
+      
           <el-pagination
             @current-change="handleCurrentChange1"
             :current-page.sync="mypageable1.pageNum1"
@@ -208,30 +222,14 @@
           </el-pagination>
         </div>
       </div>
-    </el-dialog>
-    <!-- //分页 -->
-    <div class="bottom">
-      <div class="ss">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="mypageable.pageNum"
-          :page-sizes="[10, 20, 30, 40]"
-          :page-size="mypageable.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total"
-          class="pagePagination pageRight"
-        >
-        </el-pagination>
-      </div>
-    </div>
+    </el-dialog> -->
   </div>
 </template>
 
 <script>
 import getRole from "@/utils/promission.js";
-import erji from "@/utils/twotype.js"
-import zPtype from "@/utils/type.js"
+import erji from "@/utils/twotype.js";
+import zPtype from "@/utils/type.js";
 export default {
   // inject: ["reload"],
   name: "search",
@@ -250,7 +248,7 @@ export default {
         startCreateTime: null,
         endCreateTime: null,
       },
-      isLoading: false,
+      // isLoading: false,
       dialogTableVisible: false,
       dialogFormVisible: false,
 
@@ -259,12 +257,17 @@ export default {
         region: "",
       },
       newdomainSimpleVo: {
-        dateValue_find: null, //发现日期
-        domain: null, //域名
-        visits: null, //部署
-        ip: null, //境内外ip
-        record: null, //备案
-        classification: null, //二级分类
+        xuhao:null,//序号
+        source: null, //来源
+        classification: null, //类型
+        jibie: null, //级别
+        domain: null, //域名/URL
+        dateValue_find:null , //日期
+        // ip: null, //主域名
+        // record: null, //网站名称
+            // dateValue_find: null, //发现日期
+        // visits: null, //部署
+        // cda:null, //cda
       },
 
       domainFeedbackVo: {
@@ -364,6 +367,14 @@ export default {
           { value: 0, label: "未授权" },
           { value: 1, label: "已授权" },
         ],
+        ip_list: [
+          { value: 0, label: "是" },
+          { value: 1, label: "否" },
+        ],
+        Cda_list: [
+          { value: 0, label: "是" },
+          { value: 1, label: "否" },
+        ],
       },
       tableData: [
         // {
@@ -384,13 +395,13 @@ export default {
   },
   mounted() {},
   methods: {
-     //类型
-    zP(data){
-      return zPtype(data)
+    //类型
+    zP(data) {
+      return zPtype(data);
     },
-       //二级分类
-        geterji(data){
-     return erji(data)
+    //二级分类
+    geterji(data) {
+      return erji(data);
     },
     getRole1(data) {
       return getRole(data);
@@ -513,7 +524,7 @@ export default {
         this.$message("请勾选");
       }
     },
-      //  <!-- 周五 -->   //访问量
+    //  <!-- 周五 -->   //访问量
     // async fangwenl(val) {
     //   (this.gridData = []), (this.loading = true);
     //   this.yuming = val.url;
@@ -643,9 +654,7 @@ export default {
     getRowKeys(row) {
       return row.id;
     },
-   
-  
-  
+
     // 转ip
     zhuanip(num) {
       var str;
@@ -687,7 +696,7 @@ export default {
 }
 .bottom {
   width: 100%;
-  height: 3.75rem /* 60/16 */ /* 40/16 */;
+  height:40px /* 60/16 */ /* 40/16 */;
 
   .ss_l {
     float: left;
@@ -710,7 +719,7 @@ export default {
 
 .bottom1 {
   width: 100%;
-  height: 2.75rem /* 60/16 */ /* 40/16 */;
+  height: 40px /* 60/16 */ /* 40/16 */;
   box-sizing: border-box;
   .ss1 {
     float: right;

@@ -1,37 +1,6 @@
 <template>
   <div class="right_main_under">
     <!-- 统计图表 -->
-    <!-- <div class="tubiao" v-if="getRole1('tongJiUpload')">
-      <div>
-        <el-form size="mini" style="margin: 1rem 0 0 5rem">
-          <el-form-item>
-            <el-date-picker
-              v-model="newdomainSimpleVo.dateValue_find1"
-              type="daterange"
-              :change="dataCreate_change1(newdomainSimpleVo.dateValue_find1)"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              value-format="yyyy-MM-dd HH:mm:ss"
-              :default-time="['00:00:00', '23:59:59']"
-            >
-            </el-date-picker>
-            <el-button
-              style="margin-left: 1rem"
-              type="primary"
-              @click.native.stop="chaxun1"
-            >
-              查询</el-button
-            >
-          </el-form-item>
-        </el-form>
-      </div>
-      <div class="tubiao1">
-        <div class="left">
-          <div id="bar_qx" ref="chart1" style="width:500px,height:200px"></div>
-        </div>
-      </div>
-    </div> -->
 
     <div class="search_select_form">
       <template>
@@ -66,10 +35,10 @@
             </el-date-picker>
           </el-form-item>
           <!-- 诈骗类型 -->
-          <el-form-item label="诈骗类型">
+          <el-form-item label="上传来源">
             <el-select
               v-model="newdomainSimpleVo.modelType1"
-              placeholder="诈骗类型"
+              placeholder="上传来源"
               clearable
               @clear="modelType1_clearFun(newdomainSimpleVo.modelType1)"
             >
@@ -82,41 +51,23 @@
               </el-option>
             </el-select>
           </el-form-item>
-
-          <!-- 状态 -->
-          <el-form-item label="状态">
+          <!-- 诈骗类型 -->
+          <!-- <el-form-item label="模板类型选择">
             <el-select
-              v-model="newdomainSimpleVo.state"
-              placeholder="状态"
+              v-model="newdomainSimpleVo.mobanType1"
+              placeholder="模板类型选择"
               clearable
-              @clear="state_clearFun(newdomainSimpleVo.state)"
+              @clear="moban_clearFun(newdomainSimpleVo.mobanType1)"
             >
               <el-option
-                v-for="item in selectData.stateTypeData"
+                v-for="item in selectData.moban_typeData"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
               >
               </el-option>
             </el-select>
-          </el-form-item>
-          <!-- 协议 -->
-          <el-form-item label="协议">
-            <el-select
-              v-model="newdomainSimpleVo.protocol"
-              placeholder="协议"
-              clearable
-              @clear="protocol_clearFun(newdomainSimpleVo.protocol)"
-            >
-              <el-option
-                v-for="item in selectData.protocolData"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item>
             <el-button
               type="primary"
@@ -128,48 +79,11 @@
             <el-button type="primary" size="mini" @click.native="resetFun"
               >重置</el-button
             >
-            <!-- :loading="isLoading" -->
-            <el-button
-              type="primary"
-              size="mini"
-              @click.native.stop="put"
-              :loading="loadingbut"
-              v-if="getRole1('downloadTemplate')"
-              >{{ loadingbuttext }}</el-button
+            <el-button type="primary" size="mini" @click.native="xiazai"
+              >模板下载</el-button
             >
-            <el-tooltip
-              class="item"
-              effect="dark"
-              content="上传"
-              placement="top"
-              style="margin-right: 10px"
-            >
-              <el-upload
-                action="/treatment/uploadDomain"
-                accept=".xlsx"
-                :before-remove="beforeRemove"
-                :on-success="successSendFile"
-                :data="{ User: use }"
-                multiple
-                :limit="3"
-                :on-exceed="handleExceed"
-                class="upload_demo addAllocate"
-              >
-                <el-button
-                  type="primary"
-                  v-prevent-click
-                  size="mini"
-                  v-if="getRole1('upload')"
-                  >上传</el-button
-                >
-              </el-upload>
-            </el-tooltip>
-            <el-button
-              type="primary"
-              size="mini"
-              @click.native.stop="authorizationURL"
-              v-if="getRole1('relation')"
-              >二次发现</el-button
+            <el-button type="primary" size="mini" @click.native="shangchuan"
+              >上传</el-button
             >
             <!-- </template> -->
           </el-form-item>
@@ -188,76 +102,40 @@
       class="tableStyle"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" :reserve-selection="true" width="55">
-      </el-table-column>
-      <el-table-column label="id" prop="id" v-if="isLoading"> </el-table-column>
-      <el-table-column label="URL">
-        <template slot-scope="scope">
+      <!-- <el-table-column type="selection" :reserve-selection="true" width="55"> -->
+      <!-- </el-table-column> -->
+      <!-- <el-table-column label="id" prop="id" v-if="isLoading"> </el-table-column> -->
+      <el-table-column label="上传人" prop="url">
+        <!-- <template slot-scope="scope">
           <a :href="scope.row.url" class="urlcolor" target="_blank">{{
             scope.row.url
           }}</a>
-        </template>
+        </template> -->
       </el-table-column>
-      <el-table-column label="诈骗类型" show-overflow-tooltip>
-        <template slot-scope="scope">
+      <el-table-column label="上传来源" prop="type" show-overflow-tooltip>
+        <!-- <template slot-scope="scope">
           {{ zP(scope.row.type) }}
-        </template>
+        </template> -->
       </el-table-column>
-      <el-table-column label="协议" prop="protocol"> </el-table-column>
-      <el-table-column label="状态" prop="status">
-        <template slot-scope="scope">
-          {{ scope.row.status == 0 ? "处置中" : "已处置" }}
-        </template>
-      </el-table-column>
-      <el-table-column label="上传时间">
-        <template slot-scope="scope">
-          {{ time(scope.row.upload_time) }}
-        </template>
-      </el-table-column>
-      <el-table-column label="上传人" prop="upload_person"> </el-table-column>
-      <el-table-column label="数据来源" prop="dataSource">
-        <template slot-scope="scope">
-          {{ scope.row.dataSource == "CA" ? "长安发现" : "本地上传" }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="二次发现数量"
-        prop="relationNum"
-      ></el-table-column>
-    </el-table>
-    <!-- //弹窗 -->
-    <el-dialog
-      title="二次发现"
-      style="width: '600px',height: '600px'"
-      :before-close="handleClose"
-      :modal-append-to-body="false"
-      :visible.sync="isShow"
-      append-to-body
-    >
-      <!-- @open="open()" -->
-      <!-- echars -->
-      <el-form :inline="true" size="medium" label-width="80px">
-        <el-row :gutter="10">
-          <el-col :xs="24" :sm="24" :md="24" :lg="24">
-            <!-- <el-form-item label="样本曲线"> -->
-            <div
-              id=" bar_dvn"
-              ref="chart"
-              style="width: 100%; height: 550px"
-              @mousedown="mousedown()"
-            ></div>
-            <!-- </el-form-item> -->
-            <!-- myChart -->
-          </el-col>
-        </el-row>
-      </el-form>
 
-      <!-- echars -->
-      <span slot="footer" class="dialog-footer">
-        <el-button @click.native.stop="eldialogout">关闭</el-button>
-        <!-- <el-button type="primary" @click="isShow = false">确 定</el-button> -->
-      </span>
-    </el-dialog>
+      <el-table-column label="上传时间" prop="upload_time">
+        <!-- <template slot-scope="scope">
+          {{ time(scope.row.upload_time) }}
+        </template> -->
+      </el-table-column>
+   <el-table-column label="条数" prop="tiaoshu">
+        <!-- <template slot-scope="scope">
+          {{ time(scope.row.upload_time) }}
+        </template> -->
+      </el-table-column>
+      <!-- <el-table-column label="操作">
+        <el-button type="text" size="mini">模板下载</el-button>
+      </el-table-column>
+      <el-table-column label="上传">
+        <el-button type="text" size="mini">上传</el-button>
+      </el-table-column> -->
+    </el-table>
+
     <!-- //分页 -->
     <div class="bottom">
       <div class="ss">
@@ -322,12 +200,10 @@ export default {
         region: "",
       },
       newdomainSimpleVo: {
-        dateValue_find1: null,
-        dateValue_find: null, //处置时间
-        modelType1: null, //诈骗类型
-        protocol: null, //协议
+        dateValue_find: null, //上传时间
+        modelType1: null, //上传来源
+        mobanType1: null,
         uploadPerson: null, //上传人
-        state: null, //状态
       },
 
       domainFeedbackVo: {
@@ -361,7 +237,7 @@ export default {
           { value: 0, label: "处置中" },
           { value: 1, label: "已处置" },
         ],
-       model_typeData: [
+        model_typeData: [
           { value: "DK", label: "贷款代办信用卡类" },
           { value: "SD", label: "刷单返利类" },
           { value: "GJF", label: "冒充公检法及政府机关类" },
@@ -380,13 +256,96 @@ export default {
           { value: "XZYM", label: "下载页面(带二维码的下载链接)" },
           { value: "OTHER", label: "其他类型诈骗" },
         ],
+        moban_typeData: [
+          {
+            value: "长安通信",
+            label: "长安通信",
+          },
+          {
+            value: "公安部",
+            label: "公安部",
+          },
+          {
+            value: "移动公司",
+            label: "移动公司",
+          },
+          {
+            value: "瑞斯",
+            label: "瑞斯",
+          },
+          {
+            value: "各个分局的涉案网址",
+            label: "各个分局的涉案网址",
+          },
+        ],
         authorize: [
           { value: 0, label: "未授权" },
           { value: 1, label: "已授权" },
         ],
       },
 
-      tableData: [],
+      tableData: [
+        {
+          url: "www.baidu.com",
+          type: "长安通信",
+          upload_time: "2022.3.22",
+          tiaoshu:'1000'
+        },
+        {
+          url: "www.baidu.com",
+          type: "公安部",
+          upload_time: "2022.3.22",
+            tiaoshu:'1000'
+        },
+        {
+          url: "www.baidu.com",
+          type: "移动公司",
+          upload_time: "2022.3.22",
+            tiaoshu:'1000'
+        },
+        {
+          url: "www.baidu.com",
+          type: "瑞斯",
+          upload_time: "2022.3.22",
+            tiaoshu:'1000'
+        },
+        {
+          url: "www.baidu.com",
+          type: "各个分局的涉案网址",
+          upload_time: "2022.3.22",
+            tiaoshu:'1000'
+        },
+        {
+          url: "www.baidu.com",
+          type: "长安通信",
+          upload_time: "2022.3.22",
+            tiaoshu:'1000'
+        },
+        {
+          url: "www.baidu.com",
+          type: "公安部",
+          upload_time: "2022.3.22",
+            tiaoshu:'1000'
+        },
+        {
+          url: "www.baidu.com",
+          type: "移动公司",
+          upload_time: "2022.3.22",
+            tiaoshu:'1000'
+        },
+        {
+          url: "www.baidu.com",
+          type: "瑞斯",
+          upload_time: "2022.3.22",
+            tiaoshu:'1000'
+        },
+        {
+          url: "www.baidu.com",
+          type: "各个分局的涉案网址",
+          upload_time: "2022.3.22",
+            tiaoshu:'1000'
+        },
+      ],
       tableDatalist: [],
       currentPage: 1,
       newurl: "",
@@ -626,7 +585,7 @@ export default {
         mypageable
       );
       if (res.code == 200) {
-        this.tableData = res.data.content;
+        // this.tableData = res.data.content;
         this.total = res.data.totalElements;
         this.totalPages = res.data.totalPages;
       }
@@ -1103,9 +1062,13 @@ export default {
       }
     },
     //上传人
-
+    moban_clearFun(val) {
+      if (val == "") {
+        this.newdomainSimpleVo.mobanType1 = null;
+      }
+    },
     //诈骗
-   zP(val) {
+    zP(val) {
       if (val == "DK") {
         return "网络贷款";
       } else if (val == "SD") {
@@ -1213,7 +1176,7 @@ export default {
 }
 .bottom {
   width: 100%;
-  height: 3.75rem /* 60/16 */ /* 40/16 */;
+  height: 40px /* 60/16 */ /* 40/16 */;
 
   .ss_l {
     float: left;

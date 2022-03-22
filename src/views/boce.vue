@@ -144,11 +144,11 @@
         </el-form>
       </template>
     </div>
-    <div class="wentitle">
+    <!-- <div class="wentitle">
       <span class="wen1">处置成功率：{{ this.chuzhinum + "%" }}</span>
       <span class="wen1"></span>
       <span class="wen1"></span>
-    </div>
+    </div> -->
     <el-table
       ref="multipleTable"
       :data="tableData"
@@ -159,20 +159,23 @@
       @selection-change="handleSelectionChange"
     >
       <!-- <el-table-column type="selection" min-widt="5%"> </el-table-column> -->
-      <el-table-column prop="handletime" label="处置时间"> </el-table-column>
-      <el-table-column prop="id" label="id" v-if="ifziduan"> </el-table-column>
-      <el-table-column prop="操作状态" label="operationState" v-if="ifziduan">
+        <el-table-column prop="operationState" label="域名">
       </el-table-column>
-      <el-table-column prop="按钮判断" label="uploadType" v-if="ifziduan">
+         <el-table-column prop="url" label="反制部门" show-overflow-tooltip width="200">
       </el-table-column>
-      <el-table-column prop="url" label="URL" show-overflow-tooltip width="200">
-      </el-table-column>
-      <el-table-column label="域名类型" prop="type" show-overflow-tooltip>
+        <el-table-column label="是否存活" prop="type" show-overflow-tooltip>
         <!-- <template slot-scope="scope">
           {{zP(scope.row.type)}}
         </template> -->
       </el-table-column>
-      <el-table-column prop="dialingTime" label="最后一次拨测时间">
+      <el-table-column prop="handletime" label="拨测时间"> </el-table-column>
+      <el-table-column prop="id" label="id" v-if="ifziduan"> </el-table-column>
+    
+      <!-- <el-table-column prop="" label="uploadType" v-if="ifziduan">
+      </el-table-column> -->
+   
+    
+      <!-- <el-table-column prop="dialingTime" label="最后一次拨测时间">
       </el-table-column>
       <el-table-column prop="completeTotal" label="检测次数(次)">
       </el-table-column>
@@ -183,47 +186,14 @@
       </el-table-column>
       <el-table-column prop="bcState" label="处置状态"> </el-table-column>
       <el-table-column prop="isp" label="运营商"> </el-table-column>
-      <el-table-column prop="netWork" label="网络环境"> </el-table-column>
+      <el-table-column prop="netWork" label="网络环境"> </el-table-column> -->
 
       <el-table-column label="操作" fixed="right" width="200">
         <template slot-scope="scope">
           <el-button type="text" size="mini" @click="add(scope.row.url)"
-            >查看</el-button
+            >详情</el-button
           >
-          <!-- 周五 -->
-          <el-button
-            type="text"
-            size="mini"
-            @click="starts(scope.row.id)"
-            :disabled="scope.row.operationState == 1 ? true : false"
-            v-if="scope.row.uploadType == 1 ? true : false"
-          >
-            开始
-          </el-button>
-          <el-button
-            type="text"
-            size="mini"
-            v-if="scope.row.uploadType == 1 ? true : false"
-            :disabled="scope.row.operationState != 1 ? true : false"
-            @click="end(scope.row.id)"
-            >暂停</el-button
-          >
-          <el-button
-            type="text"
-            size="mini"
-            v-if="scope.row.uploadType == 1 ? true : false"
-            :disabled="scope.row.operationState != 1 ? true : false"
-            @click="end1(scope.row.id)"
-            >结束</el-button
-          >
-          <el-button
-            type="text"
-            size="mini"
-            v-if="scope.row.uploadType == 1 ? true : false"
-            :disabled="scope.row.operationState == 1 ? true : false"
-            @click="end2(scope.row.id)"
-            >删除</el-button
-          >
+     
         </template>
       </el-table-column>
     </el-table>
@@ -244,119 +214,246 @@
       </div>
     </div>
     <!-- 结果概览 -->
-    <el-dialog
-      title="结果概览"
+   <el-dialog
+      :close-on-click-modal="false"
+      title="详情"
       :visible.sync="dialog"
-      width="90%"
-      top="4vh"
+      width="50%"
       :before-close="handleClose1"
       class="dialogInfo"
-      :close-on-click-modal="false"
-      v-loading="loading"
-      element-loading-text="拼命加载中"
-      element-loading-spinner="el-icon-loading"
-      element-loading-background="rgba(0, 0, 0, 0.8)"
+      top="5vh"
     >
-      <div class="gailan">
-        <h3>概览信息</h3>
-        <div class="gailanson">
-          <span>URL:&nbsp;&nbsp;{{ this.gailan.url }}</span>
-          <span>诈骗类型:&nbsp;&nbsp;{{ zP(this.gailan.type) }}</span>
-          <span>客户端总数：&nbsp;&nbsp;{{ this.gailan.kehuduan }}</span>
-          <span>拨测次数：&nbsp;&nbsp;{{ this.gailan.boceci }}</span>
-        </div>
-        <h3>拨测URL详情查看</h3>
-        <el-form
-          :inline="true"
-          class="demo-form-inline search_select_form"
-          size="mini"
-        >
-          <!-- 处置时间 -->
-          <el-form-item label="拨测时间">
-            <el-date-picker
-              v-model="tcboctime"
-              type="daterange"
-              :change="timechange(tcboctime)"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              value-format="yyyy-MM-dd HH:mm:ss"
-              :default-time="['00:00:00', '23:59:59']"
-            >
-            </el-date-picker>
-            <el-button
-              type="primary"
-              size="mini"
-              style="margin-left: 20px"
-              @click="confirm"
-              >确定</el-button
-            >
-            <el-button
-              type="primary"
-              size="mini"
-              style="margin-left: 20px"
-              @click="conerr"
-              >重置</el-button
-            >
-          </el-form-item>
-        </el-form>
-        <!-- //柱状 -->
-        <div class="zhuzhuang">
-          <div class="zhuzhuang1">
-            <div
-              id="bar_qx"
-              ref="chart"
-              style="width: 100%; height: 100%"
-            ></div>
+      <div class="xiangqinglist">
+        <div class="list1">
+          <div class="list2">
+            <div class="list4">
+              <span class="listtitle">创建时间：</span>
+              <span class="listtitle1">{{ xintableData.createTime }}</span>
+            </div>
+            <div class="list5">
+              <span class="listtitle">诈骗时间：</span>
+              <span class="listtitle1">{{ xintableData.fraudTime }}</span>
+            </div>
+          </div>
+          <div class="list3">
+            <div class="list4">
+              <span class="listtitle">预警等级：</span>
+              <span class="listtitle1">{{ xintableData.earlyGrade }}</span>
+            </div>
+            <div class="list5">
+              <span class="listtitle">诈骗类型：</span>
+              <span class="listtitle1">{{ xintableData.fraudType }}</span>
+            </div>
           </div>
         </div>
-        <el-button
-          type="primary"
-          size="mini"
-          style="float: right; margin-bottom: 10px"
-          @click="gailanxiazai"
-          :loading="loadingbut"
-          >{{ loadingbuttext1 }}</el-button
-        >
-        <!-- //列表 -->
-        <el-table
-          ref="multipleTable"
-          :data="tableData1"
-          style="width: 100%"
-          max-height="220px"
-          size="mini"
-          class="tableStyle"
-        >
-          <el-table-column prop="clientId" label="客户端id"> </el-table-column>
-          <el-table-column prop="url" label="url"> </el-table-column>
-          <el-table-column prop="ip" label="客户端IP"> </el-table-column>
-
-          <el-table-column prop="contry" label="国家"> </el-table-column>
-          <el-table-column prop="city" label="城市"> </el-table-column>
-          <el-table-column prop="downloadTime" label="总下载时间">
-          </el-table-column>
-          <el-table-column prop="connectTime" label="首次建联时间">
-          </el-table-column>
-
-          <el-table-column prop="probeTime" label="拨测时间"> </el-table-column>
-          <el-table-column prop="statusCode" label="状态码"> </el-table-column>
-        </el-table>
-        <!-- //分页 -->
-        <div class="bottom1">
-          <div class="ss1">
-            <!-- @size-change="handleSizeChange1" -->
-            <el-pagination
-              @current-change="handleCurrentChange1"
-              :current-page.sync="mypageable1.pageNum1"
-              :page-size="mypageable1.pageSize1"
-              layout="total, prev, pager, next"
-              :total="total1"
-              class="pagePagination"
-            >
-            </el-pagination>
+        <div class="list1">
+          <div class="list2">
+            <div class="list4">
+              <span class="listtitle">诈骗域名：</span>
+              <span class="listtitle1">{{ xintableData.fraudAddress }}</span>
+            </div>
+            <div class="list5">
+              <span class="listtitle">诈骗地址所属国家：</span>
+              <span class="listtitle1">{{ xintableData.domainName }}</span>
+            </div>
+          </div>
+          <div class="list3">
+            <div class="list4">
+              <span class="listtitle">诈骗网站IP：</span>
+              <span class="listtitle1">{{ xintableData.fraudIp }}</span>
+            </div>
+            <div class="list5">
+              <span class="listtitle">诈骗网站端口：</span>
+              <span class="listtitle1">{{ xintableData.fraudPort }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="list1">
+          <div class="list2">
+            <div class="list4">
+              <span class="listtitle">受害人IP：</span>
+              <span class="listtitle1">{{ xintableData.userIp }}</span>
+            </div>
+            <div class="list5">
+              <span class="listtitle">受害人端口：</span>
+              <span class="listtitle1">{{ xintableData.userPort }}</span>
+            </div>
+          </div>
+          <div class="list3">
+            <div class="list4">
+              <span class="listtitle">受害人IP归属地：</span>
+              <span class="listtitle1">{{
+                xintableData.userIpAscription
+              }}</span>
+            </div>
+            <div class="list5">
+              <span class="listtitle">用户名：</span>
+              <span class="listtitle1">{{ xintableData.username }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="list1">
+          <div class="list2">
+            <div class="list4">
+              <span class="listtitle">地址：</span>
+              <span class="listtitle1">{{ xintableData.address }}</span>
+            </div>
+            <div class="list5">
+              <span class="listtitle">身份证号：</span>
+              <span class="listtitle1">{{ xintableData.idCard }}</span>
+            </div>
+          </div>
+          <div class="list3">
+            <div class="list4">
+              <span class="listtitle">身份证归属地：</span>
+              <span class="listtitle1">{{ xintableData.idCardAddress }}</span>
+            </div>
+            <div class="list5">
+              <span class="listtitle">电话号码：</span>
+              <span class="listtitle1">{{ xintableData.phone }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="list1">
+          <div class="list2">
+             <div class="list4">
+              <span class="listtitle">电话归属地：</span>
+              <span class="listtitle1">{{ xintableData.phoneAddress }}</span>
+            </div>
+            <div class="list5">
+              <span class="listtitle">银行卡号：</span>
+              <span class="listtitle1">{{ xintableData.bankCard }}</span>
+            </div>
+          </div>
+          <div class="list3">
+             <div class="list4">
+              <span class="listtitle">通话时长：</span>
+              <span class="listtitle1">{{ xintableData.talkTime }}</span>
+            </div>
+            <div class="list5">
+              <span class="listtitle">诈骗金额：</span>
+              <span class="listtitle1">{{ xintableData.amount }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="list1">
+          <div class="list2">
+             <div class="list4">
+              <span class="listtitle">消息可信度：</span>
+              <span class="listtitle1">{{ xintableData.reliability }}</span>
+            </div>
+            <div class="list5">
+              <span class="listtitle">推送单位：</span>
+              <span class="listtitle1">{{ xintableData.pushUnit }}</span>
+            </div>
+          </div>
+          <div class="list3">
+             <div class="list4">
+              <span class="listtitle">推送次数：</span>
+              <span class="listtitle1">{{ xintableData.pushTime }}</span>
+            </div>
+            <div class="list5">
+              <span class="listtitle">数据来源：</span>
+              <span class="listtitle1">{{ xintableData.dataSource }}</span>
+            </div>
           </div>
         </div>
       </div>
+      <!-- <el-table
+           :row-class-name="tableRowClassName"
+        :row-key="getRowKeys"
+        ref="multiTable"
+        :data="xintableData"
+        style="width: 100%"
+        size="mini"
+        class="tableStyle qwqw"
+      >
+        <el-table-column label="创建时间" prop="createTime"> </el-table-column>
+        <el-table-column label="诈骗时间" prop="fraudTime"></el-table-column>
+        <el-table-column label="预警等级" prop="earlyGrade"> </el-table-column>
+        <el-table-column label="诈骗类型" prop="fraudType"></el-table-column>
+      </el-table> -->
+
+      <!-- <el-table
+           :row-class-name="tableRowClassName"
+        :row-key="getRowKeys"
+        ref="multiTable"
+        :data="xintableData"
+        style="width: 100%"
+        size="mini"
+        class="tableStyle qwqw"
+      >
+        <el-table-column label="诈骗域名" prop="fraudAddress">
+        </el-table-column>
+        <el-table-column label="诈骗地址所属国家" prop="domainName">
+        </el-table-column>
+        <el-table-column label="诈骗网站IP" prop="fraudIp"> </el-table-column>
+        <el-table-column
+          label="诈骗网站端口"
+          prop="fraudPort"
+        ></el-table-column>
+      </el-table> -->
+
+      <!-- <el-table
+           :row-class-name="tableRowClassName"
+        :row-key="getRowKeys"
+        ref="multiTable"
+        :data="xintableData"
+        style="width: 100%"
+        size="mini"
+        class="tableStyle qwqw"
+      >
+        <el-table-column label="受害人IP" prop="userIp"> </el-table-column>
+        <el-table-column label="受害人端口" prop="userPort"> </el-table-column>
+        <el-table-column label="受害人IP归属地" prop="userIpAscription">
+        </el-table-column>
+        <el-table-column label="用户名" prop="username"> </el-table-column>
+      </el-table> -->
+      <!-- <el-table
+           :row-class-name="tableRowClassName"
+        :row-key="getRowKeys"
+        ref="multiTable"
+        :data="xintableData"
+        style="width: 100%"
+        size="mini"
+        class="tableStyle qwqw"
+      >
+        <el-table-column label="地址" prop="address"> </el-table-column>
+        <el-table-column label="身份证号" prop="idCard"></el-table-column>
+        <el-table-column label="身份证归属地" prop="idCardAddress">
+        </el-table-column>
+        <el-table-column label="电话号码" prop="phone"> </el-table-column>
+      </el-table> -->
+      <!-- <el-table
+           :row-class-name="tableRowClassName"
+        :row-key="getRowKeys"
+        ref="multiTable"
+        :data="xintableData"
+        style="width: 100%"
+        size="mini"
+        class="tableStyle qwqw"
+      >
+        <el-table-column label="电话归属地" prop="phoneAddress">
+        </el-table-column>
+        <el-table-column label="银行卡号" prop="bankCard"> </el-table-column>
+        <el-table-column label="通话时长" prop="talkTime"> </el-table-column>
+        <el-table-column label="诈骗金额" prop="amount"></el-table-column>
+      </el-table> -->
+      <!-- <el-table
+           :row-class-name="tableRowClassName"
+        :row-key="getRowKeys"
+        ref="multiTable"
+        :data="xintableData"
+        style="width: 100%"
+        size="mini"
+        class="tableStyle qwqw"
+      >
+        <el-table-column label="消息可信度" prop="reliability">
+        </el-table-column>
+        <el-table-column label="推送单位" prop="pushUnit"> </el-table-column>
+        <el-table-column label="推送次数" prop="pushTime"> </el-table-column>
+        <el-table-column label="数据来源" prop="dataSource"> </el-table-column>
+      </el-table> -->
     </el-dialog>
     <!-- 添加 -->
     <el-dialog
@@ -437,7 +534,7 @@ export default {
         type: [{ required: true, message: "请选择类型", trigger: "change" }],
       },
       dialogadd: false,
-      ifziduan: false,
+      // ifziduan: false,
       chuzhinum: 0,
       chuzhisuccess: 0,
       loadingbut: false,
@@ -542,6 +639,56 @@ export default {
       textnum: [],
       probeTime: [],
       textnotNum: [],
+         xintableData: {
+        //创建时间：
+        createTime: '',
+        //诈骗时间：
+        fraudTime: '',
+        //预警等级
+        earlyGrade: '',
+        //诈骗类型
+        fraudType: '',
+        //诈骗域名：
+        fraudAddress: '',
+        //诈骗地址所属国家：
+        domainName: '',
+        // 诈骗网站IP：
+        fraudIp: '',
+        // 诈骗网站端口：
+        fraudPort: '',
+        //受害人IP：
+        userIp: '',
+        // 受害人端口：
+        userPort: '',
+        // 受害人IP归属地：
+        userIpAscription: '',
+        // 用户名：
+        username: '',
+// 地址：
+        address:'',
+        // 身份证号：
+        idCard:'',
+        // 身份证归属地：
+        idCardAddress:'',
+        // 电话号码：
+        phone:'',
+        // 电话归属地：
+        phoneAddress:'',
+        // 银行卡号：
+        bankCard:'',
+        // 通话时长：
+        talkTime:'',
+        // 诈骗金额：
+        amount:'',
+        // 消息可信度：
+        reliability:'',
+        // 推送单位：
+        pushUnit:'',
+        // 推送次数：
+        pushTime:'',
+        // 数据来源：
+        dataSource:'',
+      },
       //添加弹窗
       addList: {
         url: null, //url
@@ -557,7 +704,7 @@ export default {
   },
   created() {
     // this.boceclist();
-    this.zongnum();
+    // this.zongnum();
     this.boceclist();
   },
 
@@ -729,25 +876,25 @@ export default {
         this.$message(res.message);
       }
     },
-    async zongnum() {
-      const list = {
-        bcState: this.newdomainSimpleVo.state,
-        type: this.newdomainSimpleVo.sourceType,
-        startCreateTime: this.whiteSearchList.startCreateTime,
-        endCreateTime: this.whiteSearchList.endCreateTime,
-        url: this.newdomainSimpleVo.url,
-        dataSource: this.newdomainSimpleVo.form,
-        isp: this.newdomainSimpleVo.Operator,
-        netWork: this.newdomainSimpleVo.environment,
-      };
-      const { data: res } = await this.$http.post("/getSuccessRate", list);
-      if (res.code == 200) {
-        // console.log(res.data);
-        this.chuzhinum = res.data;
-      } else if (res.code == 500) {
-        this.$message(res.message);
-      }
-    },
+    // async zongnum() {
+    //   const list = {
+    //     bcState: this.newdomainSimpleVo.state,
+    //     type: this.newdomainSimpleVo.sourceType,
+    //     startCreateTime: this.whiteSearchList.startCreateTime,
+    //     endCreateTime: this.whiteSearchList.endCreateTime,
+    //     url: this.newdomainSimpleVo.url,
+    //     dataSource: this.newdomainSimpleVo.form,
+    //     isp: this.newdomainSimpleVo.Operator,
+    //     netWork: this.newdomainSimpleVo.environment,
+    //   };
+    //   const { data: res } = await this.$http.post("/getSuccessRate", list);
+    //   if (res.code == 200) {
+    //     // console.log(res.data);
+    //     this.chuzhinum = res.data;
+    //   } else if (res.code == 500) {
+    //     this.$message(res.message);
+    //   }
+    // },
     //查讯
     async search() {
       let bcListVo = {
@@ -771,7 +918,7 @@ export default {
         this.tableData = res.data.content;
         this.total = res.data.totalElements;
         this.totalPages = res.data.totalPages;
-        this.zongnum();
+        // this.zongnum();
       } else if (res.code == 500) {
         this.$message(res.message);
       }
@@ -812,7 +959,7 @@ export default {
       this.url = val;
       this.loading = true;
       this.dialog = true;
-      this.gaikuang();
+      // this.gaikuang();
       // this.bocexiangqing();
       // this.$nextTick(() => {
       //   this.drawLine();
@@ -895,58 +1042,58 @@ export default {
     },
     // =======================
     //弹窗概况
-    async gaikuang() {
-      this.bocexiangqing();
-      const { data: res } = await this.$http.get("/getBcTestByUrl", {
-        params: { url: this.url },
-      });
-      if (res.code == 200) {
-        this.gailan.url = res.data.url;
-        this.gailan.type = res.data.type;
-        this.gailan.kehuduan = res.data.clientTotal;
-        this.gailan.boceci = res.data.completeTotal;
-      } else if (res.code == 500) {
-        this.$message(res.message);
-      }
-    },
+    // async gaikuang() {
+    //   this.bocexiangqing();
+    //   const { data: res } = await this.$http.get("/getBcTestByUrl", {
+    //     params: { url: this.url },
+    //   });
+    //   if (res.code == 200) {
+    //     this.gailan.url = res.data.url;
+    //     this.gailan.type = res.data.type;
+    //     this.gailan.kehuduan = res.data.clientTotal;
+    //     this.gailan.boceci = res.data.completeTotal;
+    //   } else if (res.code == 500) {
+    //     this.$message(res.message);
+    //   }
+    // },
     //查看拨测详情列表
-    async bocexiangqing() {
-      this.textnum = [];
-      this.probeTime = [];
-      this.textnotNum = [];
-      let bcTestVo = {
-        url: this.url,
-        startCreateTime: this.whiteSearchList1.startCreateTime1,
-        endCreateTime: this.whiteSearchList1.endCreateTime1,
-        mypageable: {
-          pageNum: this.mypageable1.pageNum1,
-          pageSize: this.mypageable1.pageSize1,
-        },
-      };
-      const { data: res } = await this.$http.post("/getBcTestEntity", bcTestVo);
-      if (res.code == 200) {
-        this.tableData1 = res.data.page.content;
-        this.total1 = res.data.page.totalElements;
-        this.totalPages1 = res.data.page.totalPages;
-        res.data.list.forEach((item) => {
-          this.textnum.push(item.num);
-          this.probeTime.push(item.probeTime);
-          this.textnotNum.push(item.notNum);
-        });
+    // async bocexiangqing() {
+    //   this.textnum = [];
+    //   this.probeTime = [];
+    //   this.textnotNum = [];
+    //   let bcTestVo = {
+    //     url: this.url,
+    //     startCreateTime: this.whiteSearchList1.startCreateTime1,
+    //     endCreateTime: this.whiteSearchList1.endCreateTime1,
+    //     mypageable: {
+    //       pageNum: this.mypageable1.pageNum1,
+    //       pageSize: this.mypageable1.pageSize1,
+    //     },
+    //   };
+    //   const { data: res } = await this.$http.post("/getBcTestEntity", bcTestVo);
+    //   if (res.code == 200) {
+    //     this.tableData1 = res.data.page.content;
+    //     this.total1 = res.data.page.totalElements;
+    //     this.totalPages1 = res.data.page.totalPages;
+    //     res.data.list.forEach((item) => {
+    //       this.textnum.push(item.num);
+    //       this.probeTime.push(item.probeTime);
+    //       this.textnotNum.push(item.notNum);
+    //     });
 
-        this.$nextTick(() => {
-          this.drawLine();
-        });
-        this.loading = false;
-      } else if (res.code == 500) {
-        this.loading = false;
-        this.$message(res.message);
-      }
-      //  else {
-      //   this.$message("无数据");
+    //     this.$nextTick(() => {
+    //       this.drawLine();
+    //     });
+    //     this.loading = false;
+    //   } else if (res.code == 500) {
+    //     this.loading = false;
+    //     this.$message(res.message);
+    //   }
+    //   //  else {
+    //   //   this.$message("无数据");
 
-      // }
-    },
+    //   // }
+    // },
     async gailanxiazai() {
       this.loadingbuttext1 = "...加载中";
       this.loadingbut = true;
@@ -1192,7 +1339,7 @@ export default {
     },
     handleCurrentChange1(val) {
       this.mypageable1.pageNum1 = val;
-      this.bocexiangqing();
+      // this.bocexiangqing();
     },
     zP(val) {
       if (val == "dk") {
@@ -1253,7 +1400,7 @@ export default {
 
 .bottom {
   width: 100%;
-  height: 3.75rem /* 60/16 */ /* 40/16 */;
+  height: 40px /* 60/16 */ /* 40/16 */;
 
   .ss_l {
     float: left;
@@ -1277,8 +1424,8 @@ export default {
   padding: 0 20px;
 }
 .gailan {
-  width: 100%;
-  height: 50rem /* 800/16 */;
+  width: 99%;
+  height: 760px /* 800/16 */;
   color: #fff;
   padding: 10px 20px;
   box-sizing: border-box;
@@ -1309,16 +1456,16 @@ export default {
 }
 .bottom1 {
   width: 100%;
-  height: 2.75rem /* 60/16 */ /* 40/16 */;
+  height: 40px/* 60/16 */ /* 40/16 */;
   box-sizing: border-box;
   .ss1 {
     float: right;
-    margin-right: 2.875rem /* 46/16 */;
+    // margin-right: 2.875rem /* 46/16 */;
   }
 }
-.dialogInfo /deep/ .el-table__row {
-  height: 35px !important;
-}
+// .dialogInfo /deep/ .el-table__row {
+//   height: 35px !important;
+// }
 .wentitle {
   width: 100%;
   height: 30px;
@@ -1337,6 +1484,60 @@ export default {
 }
 /deep/ .el-date-editor--datetime {
   width: 23.5rem;
+}
+.xiangqinglist {
+  // background-color: red;
+  width: 100%;
+  height: 600px;
+  box-sizing: border-box;
+ .list1:nth-child(1)  {
+    margin-top: 0;
+  }
+  .list1 {
+    // flex-flow: column;
+    height: 90px;
+    width: 100%;
+    // background-color: #fff;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    .list2 {
+      width: 100%;
+      height: 50%;
+      // background: url(../assets/img/shouye/矩形.png) no-repeat;
+      background-size: 100% 100%;
+    }
+    .list3 {
+      width: 100%;
+      height: 50%;
+      // background-color: blue;
+      // background: url(../assets/img/shouye/边框.png) no-repeat;
+      background-size: 100% 100%;
+    }
+    .list4 {
+      width: 57%;
+      height: 100%;
+      float: left;
+      align-items: center;
+      display: -webkit-flex;
+    }
+    .list5 {
+      width: 43%;
+      height: 100%;
+      float: left;
+      align-items: center;
+      display: -webkit-flex;
+    }
+    .listtitle {
+      font-size: 12px;
+      color: #94a4a7;
+      padding-left: 20px;
+      box-sizing: border-box;
+    }
+    .listtitle1 {
+      font-size: 12px;
+      color: #fff;
+    }
+  }
 }
 
 </style>

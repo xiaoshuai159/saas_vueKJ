@@ -41,11 +41,18 @@ const routes = [
         path: '/domain',
         name: 'domain',
         meta: {
-          title: '黑样本上传'
+          title: '黑样本应用-反制'
         },
         component: () => import('../views/domain')
       },
-
+      {
+        path: '/getWarning',
+        name: 'getWarning',
+        meta: {
+          title: '黑样本应用-预警'
+        },
+        component: () => import('../views/getWarning')
+      },
       {
         path: '/getUploadDomain',
         // name:'search_bak',
@@ -74,13 +81,13 @@ const routes = [
         component: () => import("../views/boce")
       },
       {
-        path: '/tongJiResults',
+        path: '/getDiscover',
         // name:'search_bak',
-        name: 'tongJiResults',
+        name: 'getDiscover',
         meta: {
-          title: '黑样本应用'
+          title: '黑样本整合-展示'
         },
-        component: () => import("../views/tongJiResults")
+        component: () => import("../views/getDiscover")
       },
        
       {
@@ -126,19 +133,21 @@ const router = new VueRouter({
   routes
 })
 
-// })
-// 前置守卫
-// router.beforeEach((to, from, next) => {
-//   if (to.path === '/login') return next()
-//   const user = window.sessionStorage.getItem('isLogin')
-//   if (user == 'true') return next()
-//   next('/login')
-// })
+
 
 // 解决ElementUI导航栏中的vue-router在3.0版本以上重复点菜单报错问题
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
 }
+
+// 前置守卫
+router.beforeEach((to, from, next) => {
+  if (to.path === '/') return next()
+  const user = window.sessionStorage.getItem('isLogin')
+  if (user == 'true') return next()
+alert('请登录')
+next("/")
+})
 
 export default router

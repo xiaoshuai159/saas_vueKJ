@@ -39,7 +39,7 @@ export default {
           children: null,
           menuType: 1,
           menuUrl: "/shouye",
-          pid: -1
+   
         },
         {
           // icon: "el-icon-pie-chart",
@@ -48,24 +48,24 @@ export default {
           menuType: 0,
           menuUrl: "/numhei",
           name: "numhei",
-          pid: 3,
+    
           // img: Images.logoUrl1,
           children: [
             {
-              index: "domain",
+              index: "getUploadDomain",
               menuName: "黑样本上传",
-              name: "domain",
+              name: "getUploadDomain",
               menuType: 1,
               children: null,
-              menuUrl: "/domain",
+              menuUrl: "/getUploadDomain",
             },
             {
-              index: "getUploadDomain",
+              index: "getDiscover",
               menuName: "黑样本展示",
-              name: "getUploadDomain",
+              name: "getDiscover",
               children: null,
               menuType: 1,
-              menuUrl: "/getUploadDomain",
+              menuUrl: "/getDiscover",
             },
           ],
         },
@@ -81,13 +81,31 @@ export default {
         },
            {
           // icon: "el-icon-pie-chart",
-          index: "404",
+          index: "two",
           menuName: "黑样本应用",
-          name: "404",
+          name: "two",
           children: null,
-          menuType: 1,
-          menuUrl: "/404",
+          menuType: 0,
+          menuUrl: "/two",
           // img: Images.logoUrl,
+             children: [
+            {
+              index: "domain",
+              menuName: "黑样本反制",
+              name: "domain",
+              menuType: 1,
+              children: null,
+              menuUrl: "/domain",
+            },
+            // {
+            //   index: "getWarning",
+            //   menuName: "黑样本预警",
+            //   name: "getWarning",
+            //   children: null,
+            //   menuType: 1,
+            //   menuUrl: "/getWarning",
+            // },
+          ],
         },
         {
           // icon: "el-icon-pie-chart",
@@ -218,7 +236,7 @@ let  res=[]
   width: 0;
 }
 .sidebar-el-menu:not(.el-menu--collapse) {
-  width: 15rem;
+  width: 200px;
 }
 .sidebar > ul {
   height: 100%;

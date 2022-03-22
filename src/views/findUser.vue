@@ -744,7 +744,7 @@ export default {
 }
 .bottom {
   width: 100%;
-  height: 3.75rem;
+  height: 40px;
 }
 .right {
   float: right;

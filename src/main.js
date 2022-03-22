@@ -11,7 +11,7 @@ import preventClick from './utils/controlClickState'
 import formatDate from './utils/formatDate'
 import * as echarts from 'echarts'
 import dayjss from 'dayjs'
-
+import './lib/lib-flexible'
 
 Vue.prototype.$echarts = echarts
 // Vue.prototype.$=jquery

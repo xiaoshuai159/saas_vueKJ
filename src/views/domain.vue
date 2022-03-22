@@ -1,7 +1,7 @@
 <template>
   <div class="right_main_under">
     <!-- 统计图表 -->
-    <div class="tubiao" v-if="getRole1('tongJiTreatment')">
+    <!-- <div class="tubiao" v-if="getRole1('tongJiTreatment')">
       <div>
         <el-form size="mini" style="margin: 0 0 0 5rem">
           <el-form-item>
@@ -38,74 +38,75 @@
           ></div>
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- +++++++++++++++++?列表 -->
     <div class="search_select_form">
-      <template>
-        <el-form
-          :inline="true"
-          :model="formInline"
-          class="demo-form-inline"
-          size="mini"
-        >
-          <el-form-item label="URL">
+      <div class="suaixuan">
+        <template>
+          <el-form
+            :inline="true"
+            :model="formInline"
+            class="demo-form-inline"
+            size="mini"
+          >
+            <!-- <el-form-item label="URL">
             <el-input
               placeholder="url"
               v-model="newdomainSimpleVo.url"
               @clear="url_clearFun(newdomainSimpleVo.url)"
             >
             </el-input>
-          </el-form-item>
-          <!-- 数据来源 -->
-          <el-form-item label="数据来源">
-            <el-select
-              v-model="newdomainSimpleVo.sourceType"
-              placeholder="数据来源"
-              clearable
-              @clear="sourceType_clearFun(newdomainSimpleVo.sourceType)"
-            >
-              <el-option
-                v-for="item in selectData.sourceTypeData"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+          </el-form-item> -->
+            <!-- 处置时间 -->
+            <el-form-item label="处置时间">
+              <el-date-picker
+                v-model="newdomainSimpleVo.dateValue_find"
+                type="daterange"
+                :change="dataCreate_change(newdomainSimpleVo.dateValue_find)"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                :default-time="['00:00:00', '23:59:59']"
               >
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <!-- 处置时间 -->
-          <el-form-item label="处置时间">
-            <el-date-picker
-              v-model="newdomainSimpleVo.dateValue_find"
-              type="daterange"
-              :change="dataCreate_change(newdomainSimpleVo.dateValue_find)"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              value-format="yyyy-MM-dd HH:mm:ss"
-              :default-time="['00:00:00', '23:59:59']"
-            >
-            </el-date-picker>
-          </el-form-item>
+              </el-date-picker>
+            </el-form-item>
+            <!-- 数据来源 -->
+            <el-form-item label="处置方">
+              <el-select
+                v-model="newdomainSimpleVo.sourceType"
+                placeholder="处置方"
+                clearable
+                @clear="sourceType_clearFun(newdomainSimpleVo.sourceType)"
+              >
+                <el-option
+                  v-for="item in selectData.sourceTypeData"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
 
-          <!-- 诈骗类型 -->
-          <el-form-item label="诈骗类型">
-            <el-select
-              v-model="newdomainSimpleVo.modelType1"
-              placeholder="诈骗类型"
-              clearable
-              @clear="modelType1_clearFun(newdomainSimpleVo.modelType1)"
-            >
-              <el-option
-                v-for="item in selectData.model_typeData"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+            <!-- 诈骗类型 -->
+            <el-form-item label="诈骗类型">
+              <el-select
+                v-model="newdomainSimpleVo.modelType1"
+                placeholder="诈骗类型"
+                clearable
+                @clear="modelType1_clearFun(newdomainSimpleVo.modelType1)"
               >
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <!-- 二级分类 -->
+                <el-option
+                  v-for="item in selectData.model_typeData"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <!-- 二级分类
           <el-form-item label="二级分类">
             <el-select
               v-model="newdomainSimpleVo.classification"
@@ -123,25 +124,25 @@
               >
               </el-option>
             </el-select>
-          </el-form-item>
-          <!-- 状态 -->
-          <el-form-item label="状态">
-            <el-select
-              v-model="newdomainSimpleVo.state"
-              placeholder="状态"
-              clearable
-              @clear="state_clearFun(newdomainSimpleVo.state)"
-            >
-              <el-option
-                v-for="item in selectData.stateTypeData"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+          </el-form-item> -->
+            <!-- 状态 -->
+            <el-form-item label="处置状态">
+              <el-select
+                v-model="newdomainSimpleVo.state"
+                placeholder="处置状态"
+                clearable
+                @clear="state_clearFun(newdomainSimpleVo.state)"
               >
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="协议">
+                <el-option
+                  v-for="item in selectData.stateTypeData"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <!-- <el-form-item label="协议">
             <el-select
               v-model="newdomainSimpleVo.protocol"
               placeholder="协议"
@@ -156,8 +157,8 @@
               >
               </el-option>
             </el-select>
-          </el-form-item>
-          <el-form-item label="是否授权">
+          </el-form-item> -->
+            <!-- <el-form-item label="是否授权">
             <el-select
               v-model="newdomainSimpleVo.authorize"
               placeholder="是否授权"
@@ -172,50 +173,56 @@
               >
               </el-option>
             </el-select>
-          </el-form-item>
-          <!-- <el-form-item label="今日处置量">
+          </el-form-item> -->
+            <!-- <el-form-item label="今日处置量">
 <el-input v-model="dayliang"></el-input>
           </el-form-item> -->
-          <el-form-item>
-            <el-button
-              type="primary"
-              size="mini"
-              @click.native.stop="searchTabData"
-              v-prevent-click
-              >查询</el-button
-            >
-            <el-button type="primary" size="mini" @click.native="resetFun"
-              >重置</el-button
-            >
-            <!-- :loading="isLoading" -->
-            <el-button
-              v-if="getRole1('downloadDomain')"
-              type="primary"
-              size="mini"
-              @click.native.stop="put"
-              :loading="loadingbut"
-            >
-              {{ loadingbuttext }}</el-button
-            >
-            <el-button
-              v-if="getRole1('authorize')"
-              type="primary"
-              size="mini"
-              @click.native.stop="newauthorization"
-              >一键授权</el-button
-            >
-            <!-- </template> -->
-          </el-form-item>
-        </el-form>
-      </template>
+            <el-form-item>
+              <el-button
+                type="primary"
+                size="mini"
+                @click.native.stop="searchTabData"
+                v-prevent-click
+                >查询</el-button
+              >
+              <el-button type="primary" size="mini" @click.native="resetFun"
+                >重置</el-button
+              >
+              <!-- :loading="isLoading" -->
+              <el-button
+                v-if="getRole1('downloadDomain')"
+                type="primary"
+                size="mini"
+                @click.native.stop="put"
+                :loading="loadingbut"
+              >
+                {{ loadingbuttext }}</el-button
+              >
+              <el-button
+                v-if="getRole1('authorize')"
+                type="primary"
+                size="mini"
+                @click.native.stop="newauthorization"
+                >一键授权</el-button
+              >
+              <!-- </template> -->
+            </el-form-item>
+          </el-form>
+        </template>
+      </div>
+      <div class="zongliang">
+        <span class="title_num">每天总量拦截:</span>
+        <span class="title_num">当月总量拦截:</span>
+        <span class="title_num">全年总量拦截:</span>
+      </div>
     </div>
-    <div class="shguliang">
+    <!-- <div class="shguliang">
       <span>今日总量： {{ this.dayliang }}</span>
       <span> 处置总量： {{ this.dayliangchuzhi }} </span>
-      <!-- 周五 -->
+      
       <span> 今日拦截量： {{ this.daylanjieliang }}</span>
       <span>累计总拦截量：{{ this.daylanjienum }}</span>
-    </div>
+    </div> -->
     <!-- //列表 -->
 
     <el-table
@@ -227,8 +234,6 @@
       size="mini"
       class="tableStyle"
       @selection-change="handleSelectionChange"
-      :row-style="{ height: 0 }"
-      :cell-style="{ padding: 0 }"
     >
       <el-table-column type="selection" min-widt="5%"> </el-table-column>
       <el-table-column label="id" prop="id" v-if="isLoading"> </el-table-column>
@@ -236,15 +241,10 @@
       </el-table-column>
       <!--  -->
       <!-- ----------------- -->
-      <el-table-column
-        label="URL"
-        min-width="20%"
-        v-if="getlist1('url')"
-        show-overflow-tooltip
-      >
+      <el-table-column label="URL" min-width="20%" show-overflow-tooltip>
+        <!-- v-if="getlist1('url')" -->
         <template slot-scope="scope">
           <el-popconfirm
-            v-if="getRole1('getUrl')"
             confirm-button-text="看截图"
             cancel-button-text="去访问"
             confirm-button-type="Primary"
@@ -253,12 +253,12 @@
             @cancel="qufangwen(scope.row.url)"
             :hide-icon="true"
           >
+            <!--v-if="getRole1('getUrl')" -->
             <el-button type="text" slot="reference" class="urlcolor">{{
               scope.row.url
             }}</el-button>
           </el-popconfirm>
           <el-popconfirm
-            v-if="!getRole1('getUrl')"
             confirm-button-text="看截图"
             cancel-button-text="去访问"
             confirm-button-type="Primary"
@@ -266,6 +266,7 @@
             @cancel="qufangwen(scope.row.url)"
             :hide-icon="true"
           >
+            <!-- v-if="!getRole1('getUrl')" -->
             <el-button type="text" slot="reference" class="urlcolor">{{
               scope.row.url
             }}</el-button>
@@ -273,40 +274,33 @@
         </template>
       </el-table-column>
       <!-- ----------------- -->
-      <el-table-column
-        label="诈骗类型"
-        min-width="10%"
-        v-if="getlist1('type')"
-        show-overflow-tooltip
-      >
+      <el-table-column label="诈骗类型" min-width="10%" show-overflow-tooltip>
+        <!-- v-if="getlist1('type')" -->
         <template slot-scope="scope">
           {{ zP(scope.row.type) }}
         </template>
       </el-table-column>
-      <el-table-column
-        label="协议"
-        prop="protocol"
-        min-width="10%"
-        v-if="getlist1('protocol')"
-      >
+      <el-table-column label="协议" prop="protocol" min-width="10%">
+        <!-- v-if="getlist1('protocol')" -->
       </el-table-column>
-      <el-table-column label="状态" min-width="7%" v-if="getlist1('status')">
+      <el-table-column
+        label="处置状态"
+        min-width="7%"
+        v-if="getlist1('status')"
+      >
         <template slot-scope="scope">
           {{ scope.row.status == 0 ? "处置中" : "已处置" }}
         </template>
       </el-table-column>
-      <el-table-column
-        label="处置时间"
-        min-width="10%"
-        v-if="getlist1('treatmentTime')"
-      >
+      <el-table-column label="处置时间" min-width="10%">
+        <!-- v-if="getlist1('treatmentTime')" -->
         <template slot-scope="scope">
           <span v-if="scope.row.treatmentTime">
             {{ ql(scope.row.treatmentTime) }}</span
           >
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         label="二级分类"
         min-width="17%"
         prop="category"
@@ -315,28 +309,23 @@
         <template slot-scope="scope">
           {{ geterji(scope.row.category) }}
         </template>
-      </el-table-column>
-      <el-table-column
+      </el-table-column> -->
+      <!-- <el-table-column
         label="处置后拦截量"
         prop="visits"
         min-width="10%"
-        v-if="getlist1('visits')"
+       
       >
-      </el-table-column>
-      <el-table-column
-        label="数据来源"
-        min-width="10%"
-        v-if="getlist1('dataSource')"
-      >
+        v-if="getlist1('visits')" 
+      </el-table-column>  -->
+      <el-table-column label="处置方" min-width="10%">
+        <!-- v-if="getlist1('dataSource')" -->
         <template slot-scope="scope">
           {{ laiyuan(scope.row.dataSource) }}
         </template>
       </el-table-column>
-      <el-table-column
-        label="是否授权"
-        min-width="7%"
-        v-if="getlist1('authorize')"
-      >
+      <el-table-column label="处置状态" min-width="7%">
+        <!-- v-if="getlist1('authorize')" -->
         <template slot-scope="scope">
           {{ scope.row.authorize == "0" ? "未授权" : "已授权" }}
         </template>
@@ -376,9 +365,9 @@
 <script>
 import getRole from "@/utils/promission.js";
 import getList from "@/utils/poresslist.js";
-import dayjs from 'dayjs';
-import erji from "@/utils/twotype.js"
-import zPtype from "@/utils/type.js"
+import dayjs from "dayjs";
+import erji from "@/utils/twotype.js";
+import zPtype from "@/utils/type.js";
 export default {
   // inject: ["reload"],
   name: "search",
@@ -539,15 +528,13 @@ export default {
   },
   computed: {},
   created() {
- 
     this.getTabData();
-  
+
     this.echartslist();
-    this.daychuzhiliang();
-    this.dayzong();
+    // this.daychuzhiliang();
+    // this.dayzong();
     this.daylanjienumliang();
     this.daylanjiezong();
- 
   },
   mounted() {
     // setTimeout(() => {
@@ -557,12 +544,12 @@ export default {
   },
   methods: {
     //二级分类
-    geterji(data){
-     return erji(data)
+    geterji(data) {
+      return erji(data);
     },
     //类型
-    zP(data){
-      return zPtype(data)
+    zP(data) {
+      return zPtype(data);
     },
     getRole1(data) {
       return getRole(data);
@@ -577,50 +564,56 @@ export default {
 
     // },
     // 处置总数量
-    async dayzong() {
-      let list = {
-        endTreatmentTime: this.whiteSearchList.endCreateTime,
-        startTreatmentTime: this.whiteSearchList.startCreateTime,
-      };
-      const { data: res } = await this.$http.post(
-        "/treatment/getSumDomain",
-        list
-      );
-      if (res.code == 200) {
-        let sum = 0;
-        // let sumtype = 0;
-        for (var i = 0; i < res.data.length; i++) {
-          sum += res.data[i].sumStatus;
-          // sumtype += res.data[i].status;
-        }
-        this.dayliangchuzhi = sum;
-        // this.daytydpe = sumtype;
-      } else if (res.code == 500) {
-        this.$message(res.message);
-      }
-    },
+    // async dayzong() {
+    //   let list = {
+    //     endTreatmentTime: this.whiteSearchList.endCreateTime,
+    //     startTreatmentTime: this.whiteSearchList.startCreateTime,
+    //   };
+    //   const { data: res } = await this.$http.post(
+    //     "/treatment/getSumDomain",
+    //     list
+    //   );
+    //   if (res.code == 200) {
+    //     let sum = 0;
+    //     // let sumtype = 0;
+    //     for (var i = 0; i < res.data.length; i++) {
+    //       sum += res.data[i].sumStatus;
+    //       // sumtype += res.data[i].status;
+    //     }
+    //     this.dayliangchuzhi = sum;
+    //     // this.daytydpe = sumtype;
+    //   } else if (res.code == 500) {
+    //     this.$message(res.message);
+    //   }
+    // },
     // 当天处置数量
-    async daychuzhiliang() {
-      const { data: res } = await this.$http.post(
-        "/treatment/getSumDomainToday"
-      );
-      if (res.code == 200) {
-        let sum1 = 0;
+    // async daychuzhiliang() {
+    //   const { data: res } = await this.$http.post(
+    //     "/treatment/getSumDomainToday"
+    //   );
+    //   if (res.code == 200) {
+    //     let sum1 = 0;
 
-        for (var i = 0; i < res.data.length; i++) {
-          sum1 += res.data[i].sumStatus;
-        }
+    //     for (var i = 0; i < res.data.length; i++) {
+    //       sum1 += res.data[i].sumStatus;
+    //     }
 
-        this.dayliang = sum1;
-      } else if (res.code == 500) {
-        this.$message(res.message);
-      }
-    },
+    //     this.dayliang = sum1;
+    //   } else if (res.code == 500) {
+    //     this.$message(res.message);
+    //   }
+    // },
     //拦截量总量   //时间有问题
     async daylanjiezong() {
       const list = {
-        endTreatmentTime:this.whiteSearchList.endCreateTime==null?this.whiteSearchList.endCreateTime: dayjs(this.whiteSearchList.endCreateTime).format('YYYY/MM/DD'),
-        startTreatmentTime:this.whiteSearchList.startCreateTime==null?this.whiteSearchList.startCreateTime: dayjs(this.whiteSearchList.startCreateTime).format('YYYY/MM/DD'),
+        endTreatmentTime:
+          this.whiteSearchList.endCreateTime == null
+            ? this.whiteSearchList.endCreateTime
+            : dayjs(this.whiteSearchList.endCreateTime).format("YYYY/MM/DD"),
+        startTreatmentTime:
+          this.whiteSearchList.startCreateTime == null
+            ? this.whiteSearchList.startCreateTime
+            : dayjs(this.whiteSearchList.startCreateTime).format("YYYY/MM/DD"),
       };
       // console.log(list);
       const { data: res } = await this.$http.get(
@@ -964,74 +957,74 @@ export default {
       }
     },
     //图表数据查询
-    async chaxun1() {
-      // (this.qutest = []),
-      //   (this.qutest1 = []),
-      //   (this.qutest2 = []),
-      //   (this.zhutest1 = []),
-      //   (this.zhutest2 = []);
-      //    this.zhutest3 = [];
-      //    this.restest = [];
+    // async chaxun1() {
+    //   // (this.qutest = []),
+    //   //   (this.qutest1 = []),
+    //   //   (this.qutest2 = []),
+    //   //   (this.zhutest1 = []),
+    //   //   (this.zhutest2 = []);
+    //   //    this.zhutest3 = [];
+    //   //    this.restest = [];
 
-      let charecharts1 = {
-        startTreatmentTime:
-          this.whiteSearchList1.startCreateTime1 != null
-            ? this.whiteSearchList1.startCreateTime1.substring(
-                0,
-                this.whiteSearchList1.startCreateTime1.length - 9
-              )
-            : null,
-        endTreatmentTime:
-          this.whiteSearchList1.endCreateTime1 != null
-            ? this.whiteSearchList1.endCreateTime1.substring(
-                0,
-                this.whiteSearchList1.startCreateTime1.length - 9
-              )
-            : null,
-      };
-      //       let charecharts1 = {
-      //   startTreatmentTime: this.whiteSearchList1.startCreateTime1.substring(
-      //     0,
-      //     this.whiteSearchList1.startCreateTime1.length - 9
-      //   ),
-      //   endTreatmentTime: this.whiteSearchList1.endCreateTime1.substring(
-      //     0,
-      //     this.whiteSearchList1.startCreateTime1.length - 9
-      //   )
-      // };
-      const { data: res } = await this.$http.post(
-        "/treatment/tongJiTreatment",
-        charecharts1
-      );
-      if (res.code == 200) {
-        console.log(res);
-        (this.qutest = []),
-          (this.qutest1 = []),
-          (this.qutest2 = []),
-          (this.zhutest1 = []),
-          (this.zhutest2 = []);
-        this.zhutest3 = [];
-        this.restest = [];
-        res.data.tjList.forEach((item) => {
-          this.qutest.push(item.treatmentTime1);
-          this.qutest1.push(item.urlCount);
-          this.qutest2.push(item.visitsSum);
-        });
-        res.data.sonList.forEach((item) => {
-          this.zhutest1.push(item.type);
-          this.zhutest2.push(item.urlCount2);
-          this.zhutest3.push(item.typeVisits);
-        });
-        // console.log(this.zhutest1);
+    //   let charecharts1 = {
+    //     startTreatmentTime:
+    //       this.whiteSearchList1.startCreateTime1 != null
+    //         ? this.whiteSearchList1.startCreateTime1.substring(
+    //             0,
+    //             this.whiteSearchList1.startCreateTime1.length - 9
+    //           )
+    //         : null,
+    //     endTreatmentTime:
+    //       this.whiteSearchList1.endCreateTime1 != null
+    //         ? this.whiteSearchList1.endCreateTime1.substring(
+    //             0,
+    //             this.whiteSearchList1.startCreateTime1.length - 9
+    //           )
+    //         : null,
+    //   };
+    //   //       let charecharts1 = {
+    //   //   startTreatmentTime: this.whiteSearchList1.startCreateTime1.substring(
+    //   //     0,
+    //   //     this.whiteSearchList1.startCreateTime1.length - 9
+    //   //   ),
+    //   //   endTreatmentTime: this.whiteSearchList1.endCreateTime1.substring(
+    //   //     0,
+    //   //     this.whiteSearchList1.startCreateTime1.length - 9
+    //   //   )
+    //   // };
+    //   const { data: res } = await this.$http.post(
+    //     "/treatment/tongJiTreatment",
+    //     charecharts1
+    //   );
+    //   if (res.code == 200) {
+    //     console.log(res);
+    //     (this.qutest = []),
+    //       (this.qutest1 = []),
+    //       (this.qutest2 = []),
+    //       (this.zhutest1 = []),
+    //       (this.zhutest2 = []);
+    //     this.zhutest3 = [];
+    //     this.restest = [];
+    //     res.data.tjList.forEach((item) => {
+    //       this.qutest.push(item.treatmentTime1);
+    //       this.qutest1.push(item.urlCount);
+    //       this.qutest2.push(item.visitsSum);
+    //     });
+    //     res.data.sonList.forEach((item) => {
+    //       this.zhutest1.push(item.type);
+    //       this.zhutest2.push(item.urlCount2);
+    //       this.zhutest3.push(item.typeVisits);
+    //     });
+    //     // console.log(this.zhutest1);
 
-        setTimeout(() => {
-          this.drawLine();
-          this.Columnar();
-        }, 500);
-      } else if (res.code == 500) {
-        this.$message(res.message);
-      }
-    },
+    //     setTimeout(() => {
+    //       this.drawLine();
+    //       this.Columnar();
+    //     }, 500);
+    //   } else if (res.code == 500) {
+    //     this.$message(res.message);
+    //   }
+    // },
     //初始化获取数据
     async getTabData() {
       let mypageable = {
@@ -1097,8 +1090,8 @@ export default {
       );
       if (res.code == 200) {
         // console.log(res);
-        this.dayzong();
-        this.daylanjiezong();
+        // this.dayzong();
+        // this.daylanjiezong();
         this.mypageable.pageNum = 1;
 
         // if (res.data.content.length > 0) {
@@ -1162,8 +1155,8 @@ export default {
         pageSize: 10,
       };
       this.getTabData();
-      this.dayzong();
-      this.daylanjiezong();
+      // this.dayzong();
+      // this.daylanjiezong();
     },
     handleSelectionChange(val) {
       this.tableDatalist = val;
@@ -1349,9 +1342,7 @@ export default {
         this.newdomainSimpleVo.authorize = null;
       }
     },
-   
-   
-   
+
     //处置时间去零
     ql(val) {
       let c = val;
@@ -1413,7 +1404,7 @@ export default {
 }
 .bottom {
   width: 100%;
-  height: 3.75rem /* 60/16 */ /* 40/16 */;
+  height: 40px /* 60/16 */ /* 40/16 */;
 
   .ss_l {
     float: left;
@@ -1535,5 +1526,24 @@ export default {
 .shguliang span {
   flex: 1;
   font-size: 20px;
+}
+.suaixuan {
+  width: 70%;
+  height: 100px;
+  float: left;
+}
+.zongliang {
+  width: 30%;
+  height: 100px;
+  float: right;
+  padding-left: 10%;
+  box-sizing: border-box;
+}
+.title_num {
+  display: block;
+
+  color: #fff;
+  font-size: 18px;
+  margin-top: 5px;
 }
 </style>
