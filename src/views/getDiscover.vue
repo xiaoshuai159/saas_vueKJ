@@ -41,7 +41,7 @@
             </el-select>
           </el-form-item>
           <!-- 二级分类 -->
-          <el-form-item label="类型">
+          <!-- <el-form-item label="类型">
             <el-select
               v-model="newdomainSimpleVo.classification"
               placeholder="类型"
@@ -58,9 +58,9 @@
               >
               </el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <!-- 级别 -->
-          <el-form-item label="级别">
+          <!-- <el-form-item label="级别">
             <el-select
               v-model="newdomainSimpleVo.jibie"
               placeholder="级别"
@@ -75,14 +75,14 @@
               >
               </el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <!-- 域名/URL -->
-          <el-form-item label="域名/URL">
+          <!-- <el-form-item label="域名/URL">
             <el-input
               v-model="newdomainSimpleVo.domain"
               placeholder="域名/URL"
             ></el-input>
-          </el-form-item>
+          </el-form-item> -->
           <!-- 主域名 -->
           <!-- <el-form-item label="主域名">
                 <el-input
@@ -126,11 +126,12 @@
     <!-- //列表 -->
 
     <el-table
+      :row-class-name="tableRowClassName"
       :row-key="getRowKeys"
       ref="multipleTable"
       :data="tableData"
       style="width: 100%"
-      max-height="600px"
+        height="calc(100% - 18%)"
       size="mini"
       class="tableStyle"
       @selection-change="handleSelectionChange"
@@ -138,22 +139,24 @@
       <!-- <el-table-column type="selection" min-width="5%"> </el-table-column> -->
       <!-- <el-table-column label="序号" prop="id" >
       </el-table-column> -->
-      <el-table-column label="日期" prop="discoverDate"> </el-table-column>
-      <el-table-column label="来源" prop="discoverDate"> </el-table-column>
-      <el-table-column label="类型" prop="type" show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column label="级别" prop="jibie" show-overflow-tooltip>
-      </el-table-column>
-      <!-- <el-table-column label="类型" prop=""> </el-table-column> -->
-      <el-table-column
+      <el-table-column label="录入时间" prop="discoverDate"> </el-table-column>
+         <el-table-column
         label="域名/URL"
         prop="url"
         width="400"
         show-overflow-tooltip
       >
       </el-table-column>
+      <el-table-column label="来源" prop="discoverDate"> </el-table-column>
+      <el-table-column label="类型" prop="type" show-overflow-tooltip>
+      </el-table-column>
+   
+      <!-- <el-table-column label="类型" prop=""> </el-table-column> -->
+   
       <el-table-column label="主域名" prop="domesticForeign"> </el-table-column>
       <el-table-column label="网站名称" prop="keepRecord"> </el-table-column>
+         <el-table-column label="级别" prop="jibie" show-overflow-tooltip>
+      </el-table-column>
     </el-table>
     <!-- //分页 -->
     <div class="bottom">
@@ -162,7 +165,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="mypageable.pageNum"
-          :page-sizes="[10, 20, 30, 40]"
+                :page-sizes="[15, 30, 45]"
           :page-size="mypageable.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
@@ -171,58 +174,7 @@
         </el-pagination>
       </div>
     </div>
-    <!-- 访问量 -->
-    <!-- 
-    <el-dialog
-      :title="'访问详情——' + this.yuming"
-      :visible.sync="dialogTableVisible"
-      class="dialogInfo"
-      width="75%"
-      style="color: #fff"
-      :before-close="handleClose"
-      :close-on-click-modal="false"
-    >
-      <el-table
-        :data="gridData"
-        class="tableStyle"
-        element-loading-text="拼命加载中"
-        element-loading-spinner="el-icon-loading"
-        element-loading-background="rgba(0, 0, 0, 0.8)"
-        v-loading="loading"
-        :row-style="{ height: 0 }"
-        :cell-style="{ padding: 0 }"
-      >
-        <el-table-column prop="discoverTime" label="访问时间"></el-table-column>
-        <el-table-column label="源IP">
-          <template slot-scope="scope">
-            {{ zhuanip(scope.row.sourceIp) }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="sourcePort" label="源端口"></el-table-column>
-        <el-table-column prop="sourceAddress" label="归属地"></el-table-column>
-        <el-table-column label="目标IP">
-          <template slot-scope="scope">
-            {{ zhuanip(scope.row.targetIp) }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="targetPort" label="目标端口"></el-table-column>
-      </el-table>
   
-      <div class="bottom1">
-        <div class="ss1">
-      
-          <el-pagination
-            @current-change="handleCurrentChange1"
-            :current-page.sync="mypageable1.pageNum1"
-            :page-size="mypageable1.pageSize1"
-            layout="total, prev, pager, next"
-            :total="total1"
-            class="pagePagination"
-          >
-          </el-pagination>
-        </div>
-      </div>
-    </el-dialog> -->
   </div>
 </template>
 
@@ -277,7 +229,7 @@ export default {
 
       mypageable: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 15,
       },
       mypageable1: {
         pageNum1: 1,
@@ -466,7 +418,7 @@ export default {
       } else {
         this.$message("无数据");
         this.mypageable.pageNum = 1;
-        this.mypageable.pageSize = 10;
+        this.mypageable.pageSize = 15;
         this.getTabData();
         this.resetFun();
       }
@@ -654,6 +606,14 @@ export default {
     getRowKeys(row) {
       return row.id;
     },
+     tableRowClassName({ rowIndex }) {
+      if (rowIndex % 2 === 0) {
+        return 'warning-row'
+      } else if (rowIndex % 2 === 1) {
+        return 'success-row'
+      }
+      return ''
+    },
 
     // 转ip
     zhuanip(num) {
@@ -683,13 +643,13 @@ export default {
   background-color: #192d45;
 }
 /deep/.el-table--enable-row-hover .el-table__body tr:hover > td {
-  background-color: #03112359;
+  background-color: transparent;
 }
 
 /deep/.el-table--border::after,
 .el-table--group::after,
 .el-table::before {
-  background-color: #192d45 !important;
+  background-color: transparent !important;
 }
 .el-pagination {
   text-align: right;

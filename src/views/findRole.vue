@@ -317,7 +317,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="mypageable.pageNum"
-          :page-sizes="[10, 20, 30, 40]"
+          :page-sizes="[15, 30, 45]"
           :page-size="mypageable.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
@@ -384,7 +384,7 @@ export default {
       },
       mypageable: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 15,
       },
       total: 1,
       totalPages: "",

@@ -1,44 +1,5 @@
 <template>
   <div class="right_main_under">
-    <!-- 统计图表 -->
-    <!-- <div class="tubiao" v-if="getRole1('tongJiTreatment')">
-      <div>
-        <el-form size="mini" style="margin: 0 0 0 5rem">
-          <el-form-item>
-            <el-date-picker
-              v-model="newdomainSimpleVo.dateValue_find1"
-              type="daterange"
-              :change="dataCreate_change1(newdomainSimpleVo.dateValue_find1)"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              value-format="yyyy-MM-dd HH:mm:ss"
-              :default-time="['00:00:00', '23:59:59']"
-            >
-            </el-date-picker>
-            <el-button
-              style="margin-left: 1rem"
-              type="primary"
-              @click.native.stop="chaxun1"
-            >
-              查询</el-button
-            >
-          </el-form-item>
-        </el-form>
-      </div>
-      <div class="tubiao1">
-        <div class="left">
-          <div id="bar_qx" ref="chart" style="width:500px,height:200px"></div>
-        </div>
-        <div class="right">
-          <div
-            id="bar_zz"
-            ref="zhuchart"
-            style="width:500px,height:200px"
-          ></div>
-        </div>
-      </div>
-    </div> -->
     <!-- +++++++++++++++++?列表 -->
     <div class="search_select_form">
       <div class="suaixuan">
@@ -72,10 +33,10 @@
               </el-date-picker>
             </el-form-item>
             <!-- 数据来源 -->
-            <el-form-item label="处置方">
+            <el-form-item label="处置部门">
               <el-select
                 v-model="newdomainSimpleVo.sourceType"
-                placeholder="处置方"
+                placeholder="处置部门"
                 clearable
                 @clear="sourceType_clearFun(newdomainSimpleVo.sourceType)"
               >
@@ -90,10 +51,10 @@
             </el-form-item>
 
             <!-- 诈骗类型 -->
-            <el-form-item label="诈骗类型">
+            <el-form-item label="涉诈类型">
               <el-select
                 v-model="newdomainSimpleVo.modelType1"
-                placeholder="诈骗类型"
+                placeholder="涉诈类型"
                 clearable
                 @clear="modelType1_clearFun(newdomainSimpleVo.modelType1)"
               >
@@ -211,9 +172,18 @@
         </template>
       </div>
       <div class="zongliang">
-        <span class="title_num">每天总量拦截:</span>
-        <span class="title_num">当月总量拦截:</span>
-        <span class="title_num">全年总量拦截:</span>
+        <span class="title_num1">
+          <div class="tit">日拦截量</div>
+          <div class="tit1">5000</div>
+        </span>
+        <span class="title_num2">
+          <div class="tit">月拦截量</div>
+          <div class="tit1">150000</div>
+        </span>
+        <span class="title_num3">
+          <div class="tit">总拦截量</div>
+          <div class="tit1">150000</div>
+        </span>
       </div>
     </div>
     <!-- <div class="shguliang">
@@ -226,11 +196,12 @@
     <!-- //列表 -->
 
     <el-table
+      :row-class-name="tableRowClassName"
       :row-key="getRowKeys"
       ref="multipleTable"
       :data="tableData"
       style="width: 100%"
-      max-height="600px"
+      height="calc(100% - 20%)"
       size="mini"
       class="tableStyle"
       @selection-change="handleSelectionChange"
@@ -274,15 +245,13 @@
         </template>
       </el-table-column>
       <!-- ----------------- -->
-      <el-table-column label="诈骗类型" min-width="10%" show-overflow-tooltip>
+      <el-table-column label="涉诈类型" min-width="10%" show-overflow-tooltip>
         <!-- v-if="getlist1('type')" -->
         <template slot-scope="scope">
           {{ zP(scope.row.type) }}
         </template>
       </el-table-column>
-      <el-table-column label="协议" prop="protocol" min-width="10%">
-        <!-- v-if="getlist1('protocol')" -->
-      </el-table-column>
+
       <el-table-column
         label="处置状态"
         min-width="7%"
@@ -292,14 +261,7 @@
           {{ scope.row.status == 0 ? "处置中" : "已处置" }}
         </template>
       </el-table-column>
-      <el-table-column label="处置时间" min-width="10%">
-        <!-- v-if="getlist1('treatmentTime')" -->
-        <template slot-scope="scope">
-          <span v-if="scope.row.treatmentTime">
-            {{ ql(scope.row.treatmentTime) }}</span
-          >
-        </template>
-      </el-table-column>
+
       <!-- <el-table-column
         label="二级分类"
         min-width="17%"
@@ -318,11 +280,22 @@
       >
         v-if="getlist1('visits')" 
       </el-table-column>  -->
-      <el-table-column label="处置方" min-width="10%">
+      <el-table-column label="处置部门" min-width="10%">
         <!-- v-if="getlist1('dataSource')" -->
         <template slot-scope="scope">
           {{ laiyuan(scope.row.dataSource) }}
         </template>
+      </el-table-column>
+      <el-table-column label="处置时间" min-width="10%">
+        <!-- v-if="getlist1('treatmentTime')" -->
+        <template slot-scope="scope">
+          <span v-if="scope.row.treatmentTime">
+            {{ ql(scope.row.treatmentTime) }}</span
+          >
+        </template>
+      </el-table-column>
+      <el-table-column label="协议" prop="protocol" min-width="10%">
+        <!-- v-if="getlist1('protocol')" -->
       </el-table-column>
       <el-table-column label="处置状态" min-width="7%">
         <!-- v-if="getlist1('authorize')" -->
@@ -339,7 +312,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="mypageable.pageNum"
-          :page-sizes="[10, 20, 30, 40]"
+          :page-sizes="[15, 30, 45]"
           :page-size="mypageable.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
@@ -417,7 +390,7 @@ export default {
 
       mypageable: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 15,
       },
       total: 1,
       totalPages: "",
@@ -533,7 +506,7 @@ export default {
     this.echartslist();
     // this.daychuzhiliang();
     // this.dayzong();
-    this.daylanjienumliang();
+    // this.daylanjienumliang();
     this.daylanjiezong();
   },
   mounted() {
@@ -635,23 +608,23 @@ export default {
       }
     },
     //当天拦截量
-    async daylanjienumliang() {
-      const { data: res } = await this.$http.get(
-        "/treatment/getDomainVisitsToday"
-      );
-      if (res.code == 200) {
-        // console.log(res.data);
-        let sum1 = 0;
+    // async daylanjienumliang() {
+    //   const { data: res } = await this.$http.get(
+    //     "/treatment/getDomainVisitsToday"
+    //   );
+    //   if (res.code == 200) {
+    //     // console.log(res.data);
+    //     let sum1 = 0;
 
-        for (var i = 0; i < res.data.length; i++) {
-          sum1 += res.data[i].sumStatus;
-        }
+    //     for (var i = 0; i < res.data.length; i++) {
+    //       sum1 += res.data[i].sumStatus;
+    //     }
 
-        this.daylanjieliang = sum1;
-      } else if (res.code == 500) {
-        this.$message(res.message);
-      }
-    },
+    //     this.daylanjieliang = sum1;
+    //   } else if (res.code == 500) {
+    //     this.$message(res.message);
+    //   }
+    // },
     // +++++++++++++++++++++++++++++++++++++
     qufangwen(val) {
       // console.log(val);
@@ -1110,7 +1083,7 @@ export default {
       } else {
         this.$message("无数据");
         this.mypageable.pageNum = 1;
-        this.mypageable.pageSize = 10;
+        this.mypageable.pageSize = 15;
         this.getTabData();
         this.resetFun();
       }
@@ -1152,7 +1125,7 @@ export default {
 
       this.mypageable = {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 15,
       };
       this.getTabData();
       // this.dayzong();
@@ -1361,6 +1334,14 @@ export default {
         return "沈阳";
       }
     },
+    tableRowClassName({ rowIndex }) {
+      if (rowIndex % 2 === 0) {
+        return "warning-row";
+      } else if (rowIndex % 2 === 1) {
+        return "success-row";
+      }
+      return "";
+    },
   },
   filters: {
     sourceType: function (value) {
@@ -1386,18 +1367,19 @@ export default {
 </script>
 
 <style  scoped lang='less'>
+// 点击变黑
 /deep/ .el-table__fixed-right::before,
 .el-table__fixed::before {
   background-color: #192d45;
 }
-/deep/ .el-table__body tr:hover > td {
-  background-color: #03112359 !important;
+/deep/.el-table--enable-row-hover .el-table__body tr:hover > td {
+  background-color: transparent;
 }
 
 /deep/.el-table--border::after,
 .el-table--group::after,
 .el-table::before {
-  background-color: #192d45 !important;
+  background-color: transparent !important;
 }
 .el-pagination {
   text-align: right;
@@ -1463,7 +1445,8 @@ export default {
 //   overflow: auto;
 // }
 .urlcolor {
-  color: #909090;
+  color: rgb(83, 166, 243);
+ text-decoration:underline;
 }
 .tubiao {
   width: 100% /* 1558/16 */;
@@ -1528,22 +1511,52 @@ export default {
   font-size: 20px;
 }
 .suaixuan {
-  width: 70%;
+  width: 65%;
   height: 100px;
   float: left;
 }
 .zongliang {
-  width: 30%;
+  width: 35%;
   height: 100px;
   float: right;
-  padding-left: 10%;
+  // padding-left: 5%;
   box-sizing: border-box;
+  text-align: center;
 }
-.title_num {
+.title_num1,
+.title_num2,
+.title_num3 {
   display: block;
-
+  float: left;
+  width: 30%;
+  height: 60%;
+  margin-top: 20%;
   color: #fff;
   font-size: 18px;
   margin-top: 5px;
+  margin-left: 2%;
+  padding: 5px;
+  box-sizing: border-box;
+  font-size: 18px;
+}
+.tit{
+  height: 50%;
+
+}
+.tit1{
+  height: 50%;
+  
+}
+.title_num1 {
+  border: 2px solid rgba(25, 115, 163, 0.5);
+  box-shadow: 0 0 0.026042rem #1973a3 inset, 0 0 0.104167rem #1973a3;
+}
+.title_num2 {
+  border: 2px solid rgba(34, 98, 177, 0.5);
+  box-shadow: 0 0 0.026042rem #2262b1 inset, 0 0 0.104167rem #2262b1;
+}
+.title_num3 {
+  border: 2px solid rgba(18, 106, 230, 0.5);
+  box-shadow: 0 0 0.026042rem #126ae6 inset, 0 0 0.104167rem #126ae6;
 }
 </style>

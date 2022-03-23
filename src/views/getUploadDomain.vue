@@ -82,7 +82,7 @@
             <el-button type="primary" size="mini" @click.native="xiazai"
               >模板下载</el-button
             >
-            <el-button type="primary" size="mini" @click.native="shangchuan"
+            <el-button type="primary" size="mini" @click.native="uploadwj"
               >上传</el-button
             >
             <!-- </template> -->
@@ -93,47 +93,22 @@
 
     <!-- //列表 -->
     <el-table
+      :row-class-name="tableRowClassName"
       :row-key="getRowKeys"
       ref="multipleTable"
       :data="tableData"
       style="width: 100%"
-      max-height="600px"
+      height="calc(100% - 18%)"
       size="mini"
       class="tableStyle"
       @selection-change="handleSelectionChange"
     >
-      <!-- <el-table-column type="selection" :reserve-selection="true" width="55"> -->
-      <!-- </el-table-column> -->
-      <!-- <el-table-column label="id" prop="id" v-if="isLoading"> </el-table-column> -->
-      <el-table-column label="上传人" prop="url">
-        <!-- <template slot-scope="scope">
-          <a :href="scope.row.url" class="urlcolor" target="_blank">{{
-            scope.row.url
-          }}</a>
-        </template> -->
-      </el-table-column>
+      <el-table-column label="上传人" prop="url"> </el-table-column>
       <el-table-column label="上传来源" prop="type" show-overflow-tooltip>
-        <!-- <template slot-scope="scope">
-          {{ zP(scope.row.type) }}
-        </template> -->
       </el-table-column>
 
-      <el-table-column label="上传时间" prop="upload_time">
-        <!-- <template slot-scope="scope">
-          {{ time(scope.row.upload_time) }}
-        </template> -->
-      </el-table-column>
-   <el-table-column label="条数" prop="tiaoshu">
-        <!-- <template slot-scope="scope">
-          {{ time(scope.row.upload_time) }}
-        </template> -->
-      </el-table-column>
-      <!-- <el-table-column label="操作">
-        <el-button type="text" size="mini">模板下载</el-button>
-      </el-table-column>
-      <el-table-column label="上传">
-        <el-button type="text" size="mini">上传</el-button>
-      </el-table-column> -->
+      <el-table-column label="上传时间" prop="upload_time"> </el-table-column>
+      <el-table-column label="条数" prop="tiaoshu"> </el-table-column>
     </el-table>
 
     <!-- //分页 -->
@@ -143,7 +118,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="mypageable.pageNum"
-          :page-sizes="[10, 20, 30, 40]"
+          :page-sizes="[15, 30, 45]"
           :page-size="mypageable.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
@@ -153,15 +128,77 @@
       </div>
     </div>
 
-    <!-- 看截图 -->
+    <!-- 模板下载 -->
     <el-dialog
-      :title="kanjietutitle"
-      :visible.sync="newkanjietu"
-      width="45%"
+      :close-on-click-modal="false"
+      :title="loadingbuttext"
+      :visible.sync="mobanxiazai"
+      width="20%"
       height="40%"
-      :before-close="newkanjietuclose"
+      :before-close="mobanshangchuanclose"
+      class="dialogInfo"
     >
-      <img :src="this.jieURL" ref="img" alt="" class="img" />
+      <div style="width: 100%">
+        <el-form size="mini">
+          <el-select
+            v-model="listTemplate.moban"
+            placeholder="选择模板类型"
+            clearable
+            @clear="mobanxuanze_clearFun(listTemplate.moban)"
+          >
+            <el-option
+              v-for="item in selectData.moban"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
+        </el-form>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="mobanxiazai = false" size="mini"
+          >取 消</el-button
+        >
+        <el-button type="primary" @click="mobanerr" size="mini"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
+
+        <!-- 上传 -->
+    <el-dialog
+      :close-on-click-modal="false"
+      title="文件上传"
+      :visible.sync="shangchuan"
+      width="20%"
+      height="40%"
+      :before-close="shangchuanclose"
+      class="dialogInfo"
+    >
+      <div style="width: 100%">
+ <el-upload
+  class="upload-demo"
+  action="https://jsonplaceholder.typicode.com/posts/"
+  :on-preview="handlePreview"
+  :on-remove="handleRemove"
+  :before-remove="beforeRemove"
+  multiple
+  :limit="3"
+  :on-exceed="handleExceed"
+  :file-list="fileList">
+  <el-button size="mini" type="primary">点击上传</el-button>
+  <div slot="tip" class="el-upload__tip">上传文件</div>
+</el-upload>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="shangchuan = false" size="mini"
+          >取 消</el-button
+        >
+        <el-button type="primary" @click="wenjianshangchaun" size="mini"
+          >确 定</el-button
+        >
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -176,8 +213,8 @@ export default {
     return {
       loadingbuttext: "模板下载",
       loadingbut: false,
-      kanjietutitle: "截图",
-      newkanjietu: false,
+shangchuan:false,
+      mobanxiazai: false,
       jieURL: "",
       jietu1: "",
       newxinjietu: "",
@@ -222,7 +259,7 @@ export default {
       },
       mypageable: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 15,
       },
       total: 1,
       totalPages: "",
@@ -282,6 +319,28 @@ export default {
           { value: 0, label: "未授权" },
           { value: 1, label: "已授权" },
         ],
+        moban: [
+          {
+            value: "长安通信",
+            label: "长安通信",
+          },
+          {
+            value: "公安部",
+            label: "公安部",
+          },
+          {
+            value: "移动公司",
+            label: "移动公司",
+          },
+          {
+            value: "瑞斯",
+            label: "瑞斯",
+          },
+          {
+            value: "各个分局的涉案网址",
+            label: "各个分局的涉案网址",
+          },
+        ],
       },
 
       tableData: [
@@ -289,63 +348,96 @@ export default {
           url: "www.baidu.com",
           type: "长安通信",
           upload_time: "2022.3.22",
-          tiaoshu:'1000'
+          tiaoshu: "1000",
         },
         {
           url: "www.baidu.com",
           type: "公安部",
           upload_time: "2022.3.22",
-            tiaoshu:'1000'
+          tiaoshu: "1000",
         },
         {
           url: "www.baidu.com",
           type: "移动公司",
           upload_time: "2022.3.22",
-            tiaoshu:'1000'
+          tiaoshu: "1000",
         },
         {
           url: "www.baidu.com",
           type: "瑞斯",
           upload_time: "2022.3.22",
-            tiaoshu:'1000'
+          tiaoshu: "1000",
         },
         {
           url: "www.baidu.com",
           type: "各个分局的涉案网址",
           upload_time: "2022.3.22",
-            tiaoshu:'1000'
+          tiaoshu: "1000",
         },
         {
           url: "www.baidu.com",
           type: "长安通信",
           upload_time: "2022.3.22",
-            tiaoshu:'1000'
+          tiaoshu: "1000",
         },
         {
           url: "www.baidu.com",
           type: "公安部",
           upload_time: "2022.3.22",
-            tiaoshu:'1000'
+          tiaoshu: "1000",
         },
         {
           url: "www.baidu.com",
           type: "移动公司",
           upload_time: "2022.3.22",
-            tiaoshu:'1000'
+          tiaoshu: "1000",
         },
         {
           url: "www.baidu.com",
           type: "瑞斯",
           upload_time: "2022.3.22",
-            tiaoshu:'1000'
+          tiaoshu: "1000",
         },
         {
           url: "www.baidu.com",
           type: "各个分局的涉案网址",
           upload_time: "2022.3.22",
-            tiaoshu:'1000'
+          tiaoshu: "1000",
+        },
+        {
+          url: "www.baidu.com",
+          type: "各个分局的涉案网址",
+          upload_time: "2022.3.22",
+          tiaoshu: "1000",
+        },
+        {
+          url: "www.baidu.com",
+          type: "长安通信",
+          upload_time: "2022.3.22",
+          tiaoshu: "1000",
+        },
+        {
+          url: "www.baidu.com",
+          type: "公安部",
+          upload_time: "2022.3.22",
+          tiaoshu: "1000",
+        },
+        {
+          url: "www.baidu.com",
+          type: "移动公司",
+          upload_time: "2022.3.22",
+          tiaoshu: "1000",
+        },
+        {
+          url: "www.baidu.com",
+          type: "瑞斯",
+          upload_time: "2022.3.22",
+          tiaoshu: "1000",
         },
       ],
+      listTemplate: {
+        moban: null,
+      },
       tableDatalist: [],
       currentPage: 1,
       newurl: "",
@@ -361,204 +453,46 @@ export default {
       qutest2: [],
 
       whole: 0,
+       fileList: []
     };
   },
 
   created() {
     this.getTabData();
-    // this.$nextTick(() => {
-    //   this.open();
-    // });
-    // this.echartslist();
   },
   mounted() {
     this.use = JSON.parse(window.sessionStorage.getItem("one"));
 
-    this.drawLine();
+    // this.drawLine();
   },
   methods: {
+// 文件上传
+      handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+      handlePreview(file) {
+        console.log(file);
+      },
+      handleExceed(files, fileList) {
+        this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+      },
+      beforeRemove(file, fileList) {
+        return this.$confirm(`确定移除 ${ file.name }？`);
+      },
+// 文件上传
+    //模板下载
+    xiazai() {
+      this.listTemplate.moban = null;
+      this.mobanxiazai = true;
+    },
+    uploadwj(){
+        // this.listTemplate.moban = null;
+      this.shangchuan = true;
+    },
     getRole1(data) {
       return getRole(data);
-      // console.log( getRole(data));
-    },
-    //+++++++++++++++++++++++++++++曲线图
-    draw() {
-      // eslint-disable-next-line camelcase
-      var bar_qx = this.$refs.chart1;
-      // eslint-disable-next-line camelcase
-
-      let myChart = this.$echarts.init(bar_qx);
-      myChart.setOption(this.newsetOption());
-      // console.log(myChart);
-
-      // console.log(this.qutest);
-    },
-    newsetOption() {
-      let option = {
-        feature: {
-          saveAsImage: {
-            show: false,
-          },
-        },
-        title: {},
-        tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            lineStyle: {
-              color: "#66B3FF",
-            },
-          },
-        },
-        color: [" #fac858", "#EE6666"], //绿色  橙色
-        legend: {
-          data: [
-            {
-              name: "上传域名数",
-              textStyle: {
-                color: ["#fac858"],
-              },
-            },
-            {
-              name: "关联域名数",
-              textStyle: {
-                color: ["#EE6666"],
-              },
-              //  ["处置域名数", "域名访问量"]
-            },
-          ],
-        },
-        grid: {
-          y2: 140,
-        },
-
-        xAxis: {
-          type: "category",
-          boundaryGap: false,
-          data: this.qutest,
-          axisLabel: {
-            // rotate: -20,
-            //  让x轴文字方向为竖向
-            // interval: 0,
-          },
-          axisLine: {
-            lineStyle: {
-              color: "#fff",
-              width: 1,
-            },
-          },
-        },
-
-        yAxis: {
-          type: "value",
-          splitLine: {
-            lineStyle: {
-              color: ["#fff"],
-            },
-          },
-          nameTextStyle: {
-            color: ["#fff"],
-          },
-          axisLine: {
-            lineStyle: {
-              color: "#fff",
-              width: 1,
-            },
-          },
-        },
-
-        series: [
-          {
-            name: "上传域名数",
-            type: "line",
-
-            data: this.qutest1,
-            smooth: true,
-          },
-          {
-            name: "关联域名数",
-            type: "line",
-
-            data: this.qutest2,
-            smooth: true,
-          },
-        ],
-
-        grid: {
-          x: 60,
-          y: 40,
-          x2: 40,
-          y2: 40,
-          borderWidth: 1,
-        },
-      };
-
-      return option;
     },
 
-    //++++++++++++++++++++++++++++
-    //图表初次渲染
-    // 图表初次渲染
-    async echartslist() {
-      let charecharts = {
-        startUploadTime: this.whiteSearchList1.startCreateTime1,
-        endUploadTime: this.whiteSearchList1.endCreateTime1,
-      };
-      const { data: res } = await this.$http.post(
-        "treatment/tongJiUpload",
-        charecharts
-      );
-      if (res.code == 200) {
-        res.data.tongJiPojos.forEach((item) => {
-          // console.log(item);
-          this.qutest.push(item.uploadTime1); //时间
-          this.qutest1.push(item.urlCount);
-          this.qutest2.push(item.rcount);
-        });
-
-        // console.log(this.zhutest1);
-        setTimeout(() => {
-          this.draw();
-        }, 500);
-      } else {
-        alert("无数据");
-      }
-    },
-    //图表查询
-    async chaxun1() {
-      let charecharts1 = {
-        startUploadTime:
-          this.whiteSearchList1.startCreateTime1 != null
-            ? this.whiteSearchList1.startCreateTime1
-            : null,
-        endUploadTime:
-          this.whiteSearchList1.endCreateTime1 != null
-            ? this.whiteSearchList1.endCreateTime1
-            : null,
-      };
-      const { data: res } = await this.$http.post(
-        "/treatment/tongJiUpload",
-        charecharts1
-      );
-      if (res.code == 200) {
-        (this.qutest = []),
-          (this.qutest1 = []),
-          (this.qutest2 = []),
-          res.data.tongJiPojos.forEach((item) => {
-            this.qutest.push(item.uploadTime1); //时间
-            this.qutest1.push(item.urlCount);
-            this.qutest2.push(item.rcount);
-          });
-
-        // console.log(this.zhutest1);
-
-        setTimeout(() => {
-          this.draw();
-        }, 500);
-      } else {
-        alert("无数据");
-      }
-    },
-    //================
     eldialogout() {
       this.testData = [];
       this.testLink1 = [];
@@ -615,13 +549,13 @@ export default {
         if (res.data.content.length > 0) {
         } else {
           this.mypageable.pageNum = 1;
-          this.mypageable.pageSize = 10;
+          this.mypageable.pageSize = 15;
           this.getTabData();
         }
       } else {
         this.$message("无数据");
         this.mypageable.pageNum = 1;
-        this.mypageable.pageSize = 10;
+        this.mypageable.pageSize = 15;
         this.getTabData();
         this.resetFun();
       }
@@ -646,357 +580,53 @@ export default {
       this.tableDatalist = val;
     },
 
-    //关联URl
-    async authorizationURL() {
-      this.testData = [];
-      this.testLink1 = [];
-      let test1 = [];
-      let test2 = [];
-      let test3 = [];
-      let net = 100;
-      let zong = 0;
-      let test = [];
-      let test4 = [];
-      let newtestData = [];
-      let obj = {};
-      if (this.tableDatalist.length > 0) {
-        let arr = [];
-
-        this.tableDatalist.forEach((item) => {
-          arr.push(item.id);
-        });
-        this.isShow = true;
-        const { data: res } = await this.$http.post("/treatment/relation", {
-          data: arr,
-        });
-        // console.log(res);
-        // console.log(res);
-        // console.log(res);
-        if (res.code == 200) {
-          console.log(res);
-          // this.echarsURL = res.data;
-          // echarts  data
-          // console.log(res.code);
-          // ========================================== 原
-          // console.log(res);
-          Object.keys(res.data).forEach((item) => {
-            // console.log(typeof(this.echarsURL[0][item]));
-            test1.push({
-              name: item,
-              category: 0,
-            });
-            // console.log(    res.data[item]);
-            test3.push(
-              res.data[item].map((item1) => {
-                return {
-                  name: item1,
-                  category: 1,
-                };
-              })
-            );
-          });
-          test3.forEach((item, index) => {
-            if (item.length > net) {
-              test2.push(item.slice(0, net));
-            } else {
-              test2.push(item);
-            }
-          });
-          newtestData = test1.concat(...test2);
-          for (var i = 0; i < newtestData.length; i++) {
-            if (!obj[newtestData[i].name]) {
-              this.testData.push(newtestData[i]);
-              obj[newtestData[i].name] = true;
-            }
-          }
-          //  console.log(test2);
-
-          // console.log(this.testData);
-          // ==========================================线
-
-          for (var key in res.data) {
-            zong += res.data[key].length;
-            let a = key;
-            //    console.log(res[key]);
-            test4.push(
-              res.data[key].map((item, index) => {
-                return {
-                  source: a,
-                  target: item,
-                };
-              })
-            );
-          }
-          test4.forEach((item, index) => {
-            if (item.length > net) {
-              test.push(item.slice(0, net));
-            } else {
-              test.push(item);
-            }
-          });
-          // console.log(zong)
-          this.whole = zong;
-          this.testLink.push(...test);
-          this.testLink.forEach((item1) => {
-            this.testLink1.push(...item1);
-          });
-          // console.log(this.testLink1);
-          // ++++++++++++++++++++++++++++++++++++++++++++++
-          // console.log(this.echarsURL);
-          this.drawLine();
-        } else {
-          this.message("操作失败");
-        }
-      } else {
-        this.$message("请选择");
-      }
-    },
     //弹窗关闭
-    // handleClose(done) {
+
     handleClose() {
-      // this.$confirm("确认关闭？")
-      //   .then((_) => {
-      //     done();
-      //   })
-      //   .catch((_) => {});
       this.isShow = false;
       this.$refs.multipleTable.clearSelection(); //清除选中的数据
     },
-    //echars
-    drawLine() {
-      const that = this;
-      // 基于准备好的dom，初始化echarts实例
-      // let myChart = this.$echarts.init(document.getElementById("myChart"));
-      // eslint-disable-next-line camelcase
-      var bar_dvn = this.$refs.chart;
-      // eslint-disable-next-line camelcase
-      if (bar_dvn) {
-        // console.log('bar_dv不为空');
-        let myChart = this.$echarts.init(bar_dvn);
 
-        // myChart.resize(); //自适应大小
-        myChart.setOption(this.setOption());
-        myChart.on("click", function (param) {
-          // console.log(param);
-          that.jietu1 = param.data.name; // 截图
-          that.net().unbind();
-          // that.newkanjietu = true;
-          //   this.jieURL = "";
-        });
-        // console.log(this.setOption());
-      }
-      // myChart.resize(); //自适应大小
-      // myChart.setOption(this.setOption());
-    },
-    //截图
-    async net() {
-      let pic = this.jietu1;
-      // "/treatment/getUrl" + "?fileName=" + val
-      const { data: res } = await this.$http.post(
-        "/treatment/getImageByUrl" + "?url=" + pic
-      );
-      if (res.data == null) {
-        this.newkanjietu = false;
-        this.$message("无图片");
-      } else {
-        this.newkanjietu = true;
-        this.jieURL = res.data;
-      }
-    },
-    setOption() {
-      this.testData.forEach(function (node) {
-        node.label = {
-          show: node.category == 0,
-        };
-      });
-      let option = {
-        // title: {
-        //   // text: "关联URL",
-        // },
-        // grid: {
-        //   x: 400,
-        //   y: 20,
-        //   x2: 20,
-        //   y2: 25,
-        // },
-        title: {
-          text: "关联" + this.whole + "个",
-          top: "top",
-          right: "center",
-          //                textStyle:{
-          //         //文字颜色
-
-          //         //字体风格,‘normal‘,‘italic‘,‘oblique‘
-          //         fontStyle:'‘italic‘',
-          //         //字体粗细 ‘normal‘,‘bold‘,‘bolder‘,‘lighter‘,100 | 200 | 300 | 400...
-          //         fontWeight:'‘bold‘',
-          //         //字体系列
-          //         fontFamily:'sans-serif',
-          //         //字体大小
-          // 　　　　 fontSize:25
-          // 　　　　 }
-        },
-        tooltip: {
-          formatter: function (x) {
-            return x.data.name; //设置提示框的内容和格式 节点和边都显示name属性
-          },
-        }, //提示框
-        animationDurationUpdate: 1500,
-
-        animationEasingUpdate: "quinticInOut",
-        series: [
-          {
-            type: "graph",
-            layout: "force", //    采用力引导布局  .//circular  采用环形布局
-            categories: this.categoryArray,
-
-            // symbolSize: 50, //倘若该属性不在link里，则其表示节点的大小；否则即为线两端标记的大小
-            symbolSize: (value, params) => {
-              switch (params.data.category) {
-                case 0:
-                  return 30;
-                case 1:
-                  return 10;
-              }
-            },
-            roam: true, //鼠标缩放功能
-            label: {
-              // show: true, //是否显示标签
-              formatter: "{b}",
-            },
-            focusNodeAdjacency: true, //鼠标移到节点上时突出显示结点以及邻节点和边
-            edgeSymbol: ["circle", "none"], //circle  关系两边的展现形式，也即图中线两端的展现形式。arrow为箭头
-            edgeSymbolSize: [4, 10],
-            draggable: true,
-            edgeLabel: {
-              fontSize: 20, //关系（也即线）上的标签字体大小
-            },
-            force: {
-              // repulsion: 50, //节点之间的斥力因子。支持数组表达斥力范围，值越大斥力越大。
-              // gravity: 0.03, //节点受到的向中心的引力因子。该值越大节点越往中心点靠拢。
-              // edgeLength: 80, //边的两个节点之间的距离，这个距离也会受 repulsion。[10, 50] 。值越小则长度越长
-              // layoutAnimation: true,
-
-              repulsion: 80,
-              gravity: 0.01,
-              edgeLength: 120,
-            },
-
-            //全局颜色，图例、节点、边的颜色都是从这里取，按照之前划分的种类依序选取
-
-            data: this.testData,
-            links: this.testLink1,
-
-            lineStyle: {
-              opacity: 0.9,
-              width: 2,
-              curveness: 0,
-            },
-          },
-        ],
-        legend: [
-          {
-            x: "left", //图例位置
-            data: ["上传URL", "处置URL"], //关系图中需要与series中的categories的name保持一致
-          },
-        ],
-        color: ["#c23531", "#2f4554"],
-      };
-      return option;
-    },
-    // open() {
-    //   this.$nextTick(() => {
-    //     this.drawLine();
-    //   });
-    // },
-
-    //
     mousedown() {
       // console.log(data.name);
     },
     //模板下载
-    async put() {
-      this.loadingbuttext = "...加载中";
-      this.loadingbut = true;
-      const { data: res } = await this.$http.post(
-        "/treatment/downloadTemplate"
-      );
-      // console.log(res);
-      if (res.code == 200) {
-        this.loadingbuttext = "模板下载";
-        this.loadingbut = false;
-        let newurl = res.expandData.url;
-        let eleLink = document.createElement("a");
-        eleLink.download = name;
-        eleLink.href = newurl;
-        eleLink.click();
-        eleLink.remove();
-      } else {
-        this.$message(res.message);
-      }
-    },
-    //上传成功
-    successSendFile(res) {
-      // this.loading=true
-      if (res.code == 200) {
-        setTimeout(() => {
-          this.$message.success("上传成功");
-
-          this.getTabData();
-        }, 1000);
-      } else if (res.code == 500) {
-        this.$message(res.message);
-      }
-    },
-    //删除
-    beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`);
-    },
-    //上传
-    handleExceed(files, fileList) {
-      this.$message.warning(
-        `当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
-          files.length + fileList.length
-        } 个文件`
-      );
-    },
-    //下载
-    // async downloadInfo() {
-    //   let seniorData = {
-    //     domainFeedbackVo: this.domainFeedbackVo,
-    //     domainSimpleVo: this.domainSimpleVo,
-    //     domainTimeVo: this.domainTimeVo,
-    //     mypageable: this.mypageable,
-    //   };
-
+    // async put() {
+    //   this.loadingbuttext = "...加载中";
+    //   this.loadingbut = true;
     //   const { data: res } = await this.$http.post(
-    //     "/domain/downloadDomain",
-    //     seniorData
+    //     "/treatment/downloadTemplate"
     //   );
+    //   // console.log(res);
     //   if (res.code == 200) {
-    //     //
-    //     // window.location.href = res.expandData.url
-    //     // window.open(URL)
-
-    //     let url = res.expandData.url;
-    //     // var a = document.createElement('a');
-    //     // const hostname = document.location.hostname
-    //     // // const down = window.location.origin
-    //     // // a.href =`${down}/task/download_file/?task_id=${id}&is_login=true`
-    //     // // a.href =`localhost:8080${url}`
-    //     // a.href =`${url}`
-    //     // a.click();
-
-    //     // debugger
-    //     // const down = window.location.origin
-    //     // let down = BASE_URL
+    //     this.loadingbuttext = "模板下载";
+    //     this.loadingbut = false;
+    //     let newurl = res.expandData.url;
     //     let eleLink = document.createElement("a");
     //     eleLink.download = name;
-    //     eleLink.href = url;
+    //     eleLink.href = newurl;
     //     eleLink.click();
     //     eleLink.remove();
+    //   } else {
+    //     this.$message(res.message);
     //   }
     // },
+    // 模板下载
+    mobanerr(){
+      this.mobanxiazai=false
+    },
+      // 模板上传关闭
+    mobanshangchuanclose() {
+      this.mobanxiazai = false;
+    },
+    //文件上传
+    wenjianshangchaun(){
+      this.shangchuan=false
+    },
+     //文件上传关闭
+shangchuanclose(){
+   this.shangchuan=false
+},
     handleSizeChange(val) {
       this.mypageable.pageSize = val;
       this.getTabData();
@@ -1114,62 +744,42 @@ export default {
         this.whiteSearchList1.endCreateTime1 = null;
       }
     },
-    newkanjietuclose() {
-      this.newkanjietu = false;
-      this.jieURL = "";
+  
+    mobanxuanze_clearFun(val) {
+      if (val == "") {
+        this.listTemplate.moban = null;
+      }
     },
     //上传时间
     time(val) {
       return this.$times(val).format("YYYY-MM-DD HH:mm:ss");
     },
-    //格式化数据
-    // formatType(row, column) {
-    //   var data = row[column.property];
-    //   // var data = row["domainEntity"]['model_type1'];
-    //   if (data == undefined) {
-    //     return "";
-    //   } else {
-    //     let arr = this.selectData.model_typeData;
-    //     if (column.property == "model_type1") {
-    //       for (let i = 0; i < arr.length; i++) {
-    //         if (data == arr[i].value) {
-    //           return arr[i].label;
-    //         }
-    //       }
-    //     }
-    //     if (column.property == "model_type2") {
-    //       //获取父类
-    //       let father = row["model_type1"];
-    //       for (let i = 0; i < arr.length; i++) {
-    //         if (father == arr[i].value) {
-    //           let childArr = arr[i].children;
-    //           for (let j = 0; j < childArr.length; j++) {
-    //             if (data == childArr[j].value) {
-    //               return childArr[j].label;
-    //             }
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
-    // },
+    tableRowClassName({ rowIndex }) {
+      if (rowIndex % 2 === 0) {
+        return "warning-row";
+      } else if (rowIndex % 2 === 1) {
+        return "success-row";
+      }
+      return "";
+    },
   },
 };
 </script>
 
 <style  scoped lang='less'>
+// 点击变黑
 /deep/ .el-table__fixed-right::before,
 .el-table__fixed::before {
   background-color: #192d45;
 }
 /deep/.el-table--enable-row-hover .el-table__body tr:hover > td {
-  background-color: #03112359;
+  background-color: transparent;
 }
 
 /deep/.el-table--border::after,
 .el-table--group::after,
 .el-table::before {
-  background-color: #192d45 !important;
+  background-color: transparent !important;
 }
 .el-pagination {
   text-align: right;
@@ -1266,4 +876,9 @@ export default {
   width: 100%;
   height: 100%;
 }
+/deep/ .el-upload {
+  width: 100% !important;
+  background:transparent !important ;
+}
+
 </style>

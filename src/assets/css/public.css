@@ -1,3 +1,4 @@
+@import '../../common/font.css';
 .label-qu {
   width: 6.875rem /* 110/16 */;
 }
@@ -7,13 +8,13 @@
   padding: 20px;
   box-sizing: border-box;
   position: relative;
+  font-family: "siyuanheiti";
   /*统计的form*/
   /* form 表单项背景字体修改*/
 }
 .right_main_under .el-button--primary {
   color: #ecf5ff;
   background-color: #409eff80;
-  border-color: #1a5da0;
 }
 .right_main_under .el-button--success {
   color: #ecf5ff;
@@ -64,7 +65,7 @@
 }
 .right_main_under .static_form .el-input__inner {
   background-color: #01162d00;
-  border: 1px solid #143572;
+  border: 1px solid #58647a;
   color: #fdf6ec;
 }
 .right_main_under .static_form .el-button--primary {
@@ -90,7 +91,7 @@
   color: #fdf6ec;
 }
 .right_main_under .tableStyle {
-  /* 选中某行时的背景色*/
+  background-color: transparent;
   /*鼠标移入某行时的背景色*/
   /* table 加fix 鼠标移入某行时的背景色 */
 }
@@ -101,10 +102,9 @@
   border-bottom: 0;
 }
 .right_main_under .tableStyle tr {
-  background-color: #01162d !important;
-  border-color: #2b3440;
-  color: #909399;
-  height: 40.8px;
+  background-color: #01162d;
+  height: 50px;
+  color: #fff;
 }
 .right_main_under .tableStyle td {
   border-bottom: 1px solid #07293f;
@@ -121,10 +121,10 @@
   display: table-cell !important;
 }
 .right_main_under .tableStyle .warning-row {
-  background: oldlace;
+  background: #0b304e;
 }
 .right_main_under .tableStyle .success-row {
-  background: #01162d;
+  background: #08263d;
 }
 .right_main_under .tableStyle .el-table__body {
   width: 100% !important;
@@ -180,16 +180,16 @@
   text-align: left;
 }
 .right_main_under .tableStyle .el-table__body tr.current-row > td {
-  background-color: #03112359 !important;
+  background-color: transparent !important;
 }
 .right_main_under .tableStyle .el-table--enable-row-hover .el-table__body tr:hover > td {
-  background-color: #03112359;
+  background-color: transparent;
 }
 .right_main_under .tableStyle .el-table__body tr.hover-row.current-row > td,
 .right_main_under .tableStyle .el-table__body tr.hover-row.el-table__row--striped.current-row > td,
 .right_main_under .tableStyle .el-table__body tr.hover-row.el-table__row--striped > td,
 .right_main_under .tableStyle .el-table__body tr.hover-row > td {
-  background-color: #03112359;
+  background-color: transparent;
 }
 .right_main_under .tableStyle .el-table--border::after,
 .right_main_under .tableStyle .el-table--group::after,
@@ -261,7 +261,10 @@
   color: #05f2f2;
 }
 .right_main_under .pagePagination .el-pagination__total {
-  color: #7e8e9e;
+  color: #fff;
+}
+.right_main_under .pagePagination .el-pagination__jump {
+  color: #fff;
 }
 .right_main_under .pagePagination .el-pager li.active {
   color: #05f2f2;

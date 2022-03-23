@@ -24,7 +24,23 @@
             >
             </el-date-picker>
           </el-form-item>
-
+    <!-- 来源 -->
+          <el-form-item label="来源">
+                <el-select
+              v-model="list_num.ly"
+              placeholder="来源"
+              clearable
+              @clear="laiyuan_clearFun(list_num.ly)"
+            >
+              <el-option
+                v-for="item in selectData.laiyuanlist"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
           <!-- 是否存活 -->
           <el-form-item label="是否存活">
             <el-select
@@ -77,13 +93,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <!-- 服务器IP同源标记 -->
-          <!-- <el-form-item label="服务器IP同源标记">
-            <el-input
-              v-model="list_num.ty"
-              placeholder="服务器IP同源标记"
-            ></el-input>
-          </el-form-item> -->
+      
           <!-- 是否跳转 -->
           <el-form-item label="是否跳转">
             <el-select
@@ -138,22 +148,26 @@
     </div>
 
     <el-table
-      :row-key="getRowKeys"
+      :row-class-name="tableRowClassName"
+    
       ref="multipleTable"
       :data="tableData"
       style="width: 100%"
-      max-height="600px"
+      height="calc(100% - 18%)"
       size="mini"
       class="tableStyle"
-      @selection-change="handleSelectionChange"
+    
     >
       <!-- <el-table-column type="selection" :reserve-selection="true" width="55">
       </el-table-column> -->
       <!-- <el-table-column label="id" prop="id" v-if="isLoading"> </el-table-column> -->
 
       <el-table-column label="域名" prop="ym" show-overflow-tooltip>
+         
       </el-table-column>
-       <el-table-column label="是否存活" prop="cunhuo"> </el-table-column>
+       <el-table-column label="录入时间" prop="sj" show-overflow-tooltip> </el-table-column>
+         <el-table-column label="来源" prop="ly" > </el-table-column>
+      <el-table-column label="是否存活" prop="cunhuo"> </el-table-column>
       <el-table-column label="是否备案" prop="ba"> </el-table-column>
       <el-table-column label="境内外识别" prop="ly"> </el-table-column>
       <el-table-column label="是否跳转" prop="tz" show-overflow-tooltip>
@@ -162,9 +176,24 @@
       <!-- <el-table-column label="服务器IP同源标记" prop="ty"> </el-table-column> -->
       <el-table-column label="是否使用cdn" prop="ifcdn" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column label="Cdn(IP)" prop="ip"> </el-table-column>
-      <el-table-column label="cdn公司" prop="gs"> </el-table-column>
+      <!-- <el-table-column label="Cdn(IP)" prop="ip"> </el-table-column> -->
+      <!-- <el-table-column label="cdn公司" prop="gs"> </el-table-column> -->
     </el-table>
+    <div class="bottom">
+      <div class="ss">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="mypageable.pageNum"
+          :page-sizes="[15, 30, 45]"
+          :page-size="mypageable.pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+          class="pagePagination pageRight"
+        >
+        </el-pagination>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -179,7 +208,8 @@ export default {
         tz: null, //是否跳转
         cdn: null, //是否使用cdn
         cunhou: null, //是否存活
-        dateValue_find: null,
+        dateValue_find: null, //时间
+        ly:null,//来源
       },
       whiteSearchList: {
         startUploadTime: "",
@@ -240,12 +270,35 @@ export default {
           { value: 0, label: "是" },
           { value: 1, label: "否" },
         ],
+        laiyuanlist:[
+            {
+            value: "长安通信",
+            label: "长安通信",
+          },
+          {
+            value: "公安部",
+            label: "公安部",
+          },
+          {
+            value: "移动公司",
+            label: "移动公司",
+          },
+          {
+            value: "瑞斯",
+            label: "瑞斯",
+          },
+          {
+            value: "各个分局的涉案网址",
+            label: "各个分局的涉案网址",
+          },
+        ]
       },
       tableData: [
         {
           ym: "网址1",
+          sj:'2022.3.23',
           ba: "是",
-          cunhuo:'是',
+          cunhuo: "是",
           ly: "境外",
           tz: "是",
           tzh: "www.12.com",
@@ -266,6 +319,9 @@ export default {
   methods: {
     getRole1(data) {
       return getRole(data);
+    },
+    handleSizeChange(val) {
+      this.mypageable.pageSize = val;
     },
     // 诈骗类型
     modelType1_clearFun(val) {
@@ -295,6 +351,11 @@ export default {
         this.list_num.cunhou = null;
       }
     },
+    laiyuan_clearFun(val) {
+      if (val == "") {
+        this.list_num.ly = null;
+      }
+    },
     //上传时间
     dataCreate_change(val) {
       if (val && val != "") {
@@ -304,22 +365,58 @@ export default {
         this.whiteSearchList.startUploadTime = null;
         this.whiteSearchList.endUploadTime = null;
       }
+    },    handleCurrentChange(val) {
+      this.mypageable.pageNum = val;
+
+    
+    },
+    tableRowClassName({ rowIndex }) {
+      if (rowIndex % 2 === 0) {
+        return "warning-row";
+      } else if (rowIndex % 2 === 1) {
+        return "success-row";
+      }
+      return "";
     },
   },
 };
 </script>
 
 <style  scoped lang='less'>
+// 点击变黑
 /deep/ .el-table__fixed-right::before,
 .el-table__fixed::before {
   background-color: #192d45;
 }
 /deep/.el-table--enable-row-hover .el-table__body tr:hover > td {
-  background-color: #03112359;
+  background-color: transparent;
 }
+
 /deep/.el-table--border::after,
 .el-table--group::after,
 .el-table::before {
-  background-color: #192d45 !important;
+  background-color: transparent !important;
+}
+.bottom {
+  width: 100%;
+  height: 40px /* 60/16 */ /* 40/16 */;
+
+  .ss_l {
+    float: left;
+    margin-top: 13px;
+    span {
+      margin-left: 1.25rem /* 10/16 */;
+      margin-right: 1.25rem /* 20/16 */;
+      a {
+        color: #fff;
+      }
+      a:hover {
+        color: red;
+      }
+    }
+  }
+  .ss {
+    float: right;
+  }
 }
 </style>

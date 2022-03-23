@@ -1,3 +1,5 @@
+@import '../../common/font.css';
+//label宽度
 //label宽度
 .label-qu{
   width: 6.875rem /* 110/16 */;
@@ -10,12 +12,12 @@
   padding: 20px;
   box-sizing: border-box;
   position: relative;
-
+  font-family: "siyuanheiti";
   //按钮
   .el-button--primary {
     color: #ecf5ff;
     background-color: #409eff80;
-    border-color: #1a5da0;
+    // border-color: #1a5da0;
   }
 
   .el-button--success {
@@ -79,7 +81,7 @@
     }
     .el-input__inner {
       background-color: #01162d00;
-      border: 1px solid #143572;
+      border: 1px solid #58647a;
       color: #fdf6ec;
     }
 
@@ -117,6 +119,7 @@
 
   //表格样式
   .tableStyle {
+    background-color: transparent;
     th {
       background-color: #07293f;
       // border: 0;
@@ -127,11 +130,11 @@
     }
 
     tr {
-      background-color: #01162d !important;
-      border-color: #2b3440;
-      color: #909399;
-      height: 40.8px;
-
+      background-color: #01162d ;
+      // border-color: #2b3440;
+      // color: #909399;
+      height: 50px;
+      color: #fff;
     }
 
     td {
@@ -167,11 +170,13 @@
     }
 
     .warning-row {
-      background: oldlace;
+      background: #0b304e;
+      // background: rgba(241, 245, 248, 0.1);
     }
 
     .success-row {
-      background: #01162d;
+      background:  #08263d;
+    
     }
 
     .el-table__body {
@@ -246,18 +251,18 @@
       background-color: #01162d;
       text-align: left;
     }
-/* 选中某行时的背景色*/
+// /* 选中某行时的背景色*/
 .el-table__body tr.current-row > td {
-  background-color: #03112359 !important;
+  background-color: transparent !important;
 }
 
 /*鼠标移入某行时的背景色*/
 .el-table--enable-row-hover .el-table__body tr:hover > td {
-  background-color: #03112359;
+  background-color: transparent;
 }
 /* table 加fix 鼠标移入某行时的背景色 */
 .el-table__body tr.hover-row.current-row>td,.el-table__body tr.hover-row.el-table__row--striped.current-row>td,.el-table__body tr.hover-row.el-table__row--striped>td,.el-table__body tr.hover-row>td {
-  background-color: #03112359;
+  background-color: transparent;
 }
 
     //底部空白条
@@ -350,9 +355,11 @@
   }
 
   .el-pagination__total {
-    color: #7e8e9e;
+    color: #fff;
   }
-
+  .el-pagination__jump{
+    color: #fff;
+  }
   .el-pager li.active {
     color: #05f2f2;
   }
