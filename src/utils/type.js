@@ -3,7 +3,7 @@ export default function zP(val) {
     case "DK":
       return "贷款"
     case "SD":
-      "刷单返利类"
+     return "刷单返利类"
     // //break;
     case "GJF":
       return "冒充公检法及政府机关类"

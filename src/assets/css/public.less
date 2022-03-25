@@ -103,7 +103,8 @@
   /* form 表单项背景字体修改*/
   .search_select_form {
     .el-form-item__label {
-      color: rgb(191, 203, 217);
+      color:#fff;
+      font-family:"siyuanheiti" ;
     }
 
     .el-date-editor .el-range-input,
@@ -170,12 +171,12 @@
     }
 
     .warning-row {
-      background: #0b304e;
+      background: rgba(10, 48, 79,.9);
       // background: rgba(241, 245, 248, 0.1);
     }
 
     .success-row {
-      background:  #08263d;
+      background:  rgba(8, 38, 61,.9);
     
     }
 
@@ -186,6 +187,7 @@
     //给列表加滚动条
     .el-table__body-wrapper {
       overflow-y: scroll;
+      background-color: rgba(8, 38, 61,.6);
     }
 
     .el-table__body-wrapper::-webkit-scrollbar {
@@ -289,10 +291,10 @@
     margin-top: 5px;
   }
 
-  // 下拉选择
+  // 下拉选择  el-input__inner 颜色
   .el-input__inner {
-    background-color: #234861bf;
-    border: 1px solid #394865;
+    background-color: rgba(35, 72, 97, 0.3);
+    border: 1px solid #576f9e;
     color: #fdf6ec;
   }
 
@@ -314,7 +316,7 @@
 
     .el-dialog__body{
       border-top: 0;
-      border-bottom: 0;
+      // border-bottom: 0;
     }
     .el-dialog__footer {
       border-top: 0;
@@ -343,11 +345,12 @@
   .btn-prev,
   .btn-next {
     background: center center no-repeat transparent;
-    color: #7e8e9e;
+    color: #fff;
   }
 
   .el-pager li {
     background-color: transparent;
+    color: #fff;
   }
 
   .el-pager li:hover {
@@ -366,7 +369,7 @@
 
   .el-pager li.btn-quicknext,
   .el-pager li.btn-quickprev {
-    color: #7e8e9e;
+    color: #fff;
   }
 
   .el-input__inner {

@@ -9,19 +9,20 @@
           size="mini"
         >
           <!-- 发现日期 -->
-           <el-form-item label="日期">
+          <el-form-item label="日期">
             <el-date-picker
               v-model="newdomainSimpleVo.dateValue_find"
-              type="datetimerange"
+              type="daterange"
               :change="dataCreate_change(newdomainSimpleVo.dateValue_find)"
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-              value-format="yyyy-MM-dd HH:mm:ss"
-              align="right"
+              value-format="yyyy-MM-dd"
               size="mini"
-              :default-time="['00:00:00', '23:59:59']"
+             
             >
+             <!-- HH:mm:ss
+             :default-time="['00:00:00', '23:59:59']" -->
             </el-date-picker>
           </el-form-item>
           <el-form-item label="来源">
@@ -32,7 +33,7 @@
               @clear="sourceType_record(newdomainSimpleVo.source)"
             >
               <el-option
-                v-for="item in selectData.sourceTypeData"
+                v-for="item in selectData.moban_typeData"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -91,7 +92,7 @@
             ></el-input>
           
           </el-form-item> -->
-           <!-- 主域名 -->
+          <!-- 主域名 -->
           <!-- <el-form-item label="网站名称">
                 <el-input
               v-model="newdomainSimpleVo.record"
@@ -99,7 +100,7 @@
             ></el-input>
           
           </el-form-item> -->
-      
+
           <el-form-item>
             <el-button
               type="primary"
@@ -131,31 +132,31 @@
       ref="multipleTable"
       :data="tableData"
       style="width: 100%"
-        height="calc(100% - 18%)"
+      height="calc(100% - 18%)"
       size="mini"
       class="tableStyle"
-      @selection-change="handleSelectionChange"
     >
+      <!-- @selection-change="handleSelectionChange" -->
       <!-- <el-table-column type="selection" min-width="5%"> </el-table-column> -->
       <!-- <el-table-column label="序号" prop="id" >
       </el-table-column> -->
-      <el-table-column label="录入时间" prop="discoverDate"> </el-table-column>
-         <el-table-column
+      <el-table-column label="录入时间" prop="uploadTime"> </el-table-column>
+      <el-table-column
         label="域名/URL"
         prop="url"
         width="400"
         show-overflow-tooltip
       >
       </el-table-column>
-      <el-table-column label="来源" prop="discoverDate"> </el-table-column>
+      <el-table-column label="来源" prop="dataSource"> </el-table-column>
       <el-table-column label="类型" prop="type" show-overflow-tooltip>
       </el-table-column>
-   
+
       <!-- <el-table-column label="类型" prop=""> </el-table-column> -->
-   
-      <el-table-column label="主域名" prop="domesticForeign"> </el-table-column>
-      <el-table-column label="网站名称" prop="keepRecord"> </el-table-column>
-         <el-table-column label="级别" prop="jibie" show-overflow-tooltip>
+
+      <el-table-column label="主域名" prop="domainName"> </el-table-column>
+      <el-table-column label="网站名称" prop="websiteName"> </el-table-column>
+      <el-table-column label="级别" prop="level" show-overflow-tooltip>
       </el-table-column>
     </el-table>
     <!-- //分页 -->
@@ -165,7 +166,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="mypageable.pageNum"
-                :page-sizes="[15, 30, 45]"
+          :page-sizes="[15, 30, 45]"
           :page-size="mypageable.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
@@ -174,7 +175,6 @@
         </el-pagination>
       </div>
     </div>
-  
   </div>
 </template>
 
@@ -209,15 +209,15 @@ export default {
         region: "",
       },
       newdomainSimpleVo: {
-        xuhao:null,//序号
+        xuhao: null, //序号
         source: null, //来源
         classification: null, //类型
         jibie: null, //级别
         domain: null, //域名/URL
-        dateValue_find:null , //日期
+        dateValue_find: null, //日期
         // ip: null, //主域名
         // record: null, //网站名称
-            // dateValue_find: null, //发现日期
+        // dateValue_find: null, //发现日期
         // visits: null, //部署
         // cda:null, //cda
       },
@@ -327,6 +327,28 @@ export default {
           { value: 0, label: "是" },
           { value: 1, label: "否" },
         ],
+        moban_typeData: [
+          {
+            value: "长安通信",
+            label: "长安通信",
+          },
+          {
+            value: "公安部",
+            label: "公安部",
+          },
+          {
+            value: "移动公司",
+            label: "移动公司",
+          },
+          {
+            value: "瑞斯",
+            label: "瑞斯",
+          },
+          {
+            value: "各个分局的涉案网址",
+            label: "各个分局的涉案网址",
+          },
+        ],
       },
       tableData: [
         // {
@@ -361,20 +383,19 @@ export default {
     },
     //初始化获取数据
     async getTabData() {
-      let getlist = {
-        startDiscoverDate: this.whiteSearchList.startCreateTime,
-        endDiscoverDate: this.whiteSearchList.endCreateTime,
+      let bcListVo = {
+        dataSource: this.newdomainSimpleVo.source,
+        endDate: this.whiteSearchList.endCreateTime,
+        level: null,
         mypageable: this.mypageable,
-        ifForeign: this.newdomainSimpleVo.record,
-        ifRecord: this.newdomainSimpleVo.ip,
-        url: this.newdomainSimpleVo.domain,
-        // 二级分类
-        category: this.newdomainSimpleVo.classification,
-        visits: this.newdomainSimpleVo.visits,
+        startDate: this.whiteSearchList.startCreateTime,
+        type: null,
+        url: null,
+        // ————————————————————————————————————————————————
       };
       const { data: res } = await this.$http.post(
-        "/discover/getDiscover",
-        getlist
+        "/black/obtainBlackList",
+        bcListVo
       );
       // console.log(res);
       if (res.code == 200) {
@@ -387,95 +408,58 @@ export default {
     },
     //查询
     async searchTabData() {
-      let getlist = {
-        startDiscoverDate: this.whiteSearchList.startCreateTime,
-        endDiscoverDate: this.whiteSearchList.endCreateTime,
-        // mypageable: this.mypageable,
-        mypageable: {
-          pageNum: 1,
-          pageSize: this.mypageable.pageSize,
-        },
-        url: this.newdomainSimpleVo.domain,
-        visits: this.newdomainSimpleVo.visits,
-        ifRecord: this.newdomainSimpleVo.ip,
-        url: this.newdomainSimpleVo.domain,
-        ifForeign: this.newdomainSimpleVo.record,
-        // 二级分类
-        category: this.newdomainSimpleVo.classification,
-      };
-      const { data: res } = await this.$http.post(
-        "/discover/getDiscover",
-        getlist
-      );
-      // console.log(res);
-      if (res.code == 200) {
-        this.mypageable.pageNum = 1;
-        this.tableData = res.data.content;
-        this.total = res.data.totalElements;
-        this.totalPages = res.data.totalPages;
-      } else if (res.code == 500) {
-        this.$message(res.message);
-      } else {
-        this.$message("无数据");
-        this.mypageable.pageNum = 1;
-        this.mypageable.pageSize = 15;
-        this.getTabData();
-        this.resetFun();
-      }
+     this.mypageable.pageNum=1
+      this.getTabData();
     },
 
     //重置方法
     resetFun() {
       this.newdomainSimpleVo = {
-        domain: null, //域名
-        dateValue_find: null, //时间
-        ip: null,
-        classification: null,
-        record: null,
-        visits: null,
-        classification: null,
+        source: null, //来源
+      
       };
       this.whiteSearchList = {
         startCreateTime: null,
         endCreateTime: null,
       };
+           this.mypageable.pageNum=1
       this.getTabData();
     },
-    handleSelectionChange(val) {
-      this.tableDatalist = val;
-    },
+    // handleSelectionChange(val) {
+    //   this.tableDatalist = val;
+    // },
     //下载
-    async put() {
-      if (this.tableDatalist.length > 0) {
-        let arr = [];
-        this.tableDatalist.forEach((item) => {
-          arr.push(item.id);
-        });
-        (this.loadingbuttext = "...加载中"), (this.loadingbut = true);
-        const { data: res } = await this.$http.post("/discover/downloadRaw", {
-          data: arr,
-        });
+    // async put() {
+    //   if (this.tableDatalist.length > 0) {
+    //     let arr = [];
+    //     this.tableDatalist.forEach((item) => {
+    //       arr.push(item.id);
+    //     });
+    //     (this.loadingbuttext = "...加载中"), (this.loadingbut = true);
+    //     const { data: res } = await this.$http.post("/discover/downloadRaw", {
+    //       data: arr,
+    //     });
 
-        if (res.code == 200) {
-          (this.loadingbuttext = "下载"), (this.loadingbut = false);
-          let newurl = res.expandData.url;
-          let eleLink = document.createElement("a");
-          eleLink.download = name;
-          // const down = window.location.origin
-          // eleLink.href = "http://172.31.1.61:8080" + newurl;
-          // const down = window.location.origin
-          eleLink.href = newurl;
-          // console.log(eleLink);
-          eleLink.click();
-          eleLink.remove();
-          this.$refs.multipleTable.clearSelection();
-        } else if (res.code == 500) {
-          this.$message(res.message);
-        }
-      } else {
-        this.$message("请勾选");
-      }
-    },
+    //     if (res.code == 200) {
+    //       (this.loadingbuttext = "下载"), (this.loadingbut = false);
+    //       let newurl = res.expandData.url;
+    //       let eleLink = document.createElement("a");
+    //       eleLink.download = name;
+    //       // const down = window.location.origin
+    //       // eleLink.href = "http://172.31.1.61:8080" + newurl;
+    //       // const down = window.location.origin
+    //       eleLink.href = newurl;
+    //       // console.log(eleLink);
+    //       eleLink.click();
+    //       eleLink.remove();
+    //       this.$refs.multipleTable.clearSelection();
+    //     } else if (res.code == 500) {
+    //       this.$message(res.message);
+    //     }
+    //   } else {
+    //     this.$message("请勾选");
+    //   }
+    // },
     //  <!-- 周五 -->   //访问量
     // async fangwenl(val) {
     //   (this.gridData = []), (this.loading = true);
@@ -606,13 +590,13 @@ export default {
     getRowKeys(row) {
       return row.id;
     },
-     tableRowClassName({ rowIndex }) {
+    tableRowClassName({ rowIndex }) {
       if (rowIndex % 2 === 0) {
-        return 'warning-row'
+        return "warning-row";
       } else if (rowIndex % 2 === 1) {
-        return 'success-row'
+        return "success-row";
       }
-      return ''
+      return "";
     },
 
     // 转ip
@@ -656,7 +640,7 @@ export default {
 }
 .bottom {
   width: 100%;
-  height:40px /* 60/16 */ /* 40/16 */;
+  height: 40px /* 60/16 */ /* 40/16 */;
 
   .ss_l {
     float: left;

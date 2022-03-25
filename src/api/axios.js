@@ -24,16 +24,16 @@ instance.interceptors.response.use(function (response) {
   // error  => config (当前请求 的配置) request(请求) response(响应)
   if (error.response && error.response.status === 403) {
     // 将path换成fullPath, 目的是丢失我们的参数
-    alert('连接超时，请重新登录')
-    router.push('/')
+    // alert('连接超时，请重新登录')
+    // router.push('/')
    
   }
   if (error.response && error.response.status === 404) {
     // 将path换成fullPath, 目的是丢失我们的参数
-    alert('404')
+    // alert('404')
     
 
-    router.push('/')
+    // router.push('/')
   }
   // if (error.response && error.response.status === 500) {
   //   // 将path换成fullPath, 目的是丢失我们的参数

@@ -91,7 +91,7 @@ export default {
              children: [
             {
               index: "domain",
-              menuName: "黑样本反制",
+              menuName: "黑样本处置",
               name: "domain",
               menuType: 1,
               children: null,

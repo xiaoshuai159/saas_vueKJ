@@ -80,7 +80,8 @@
   background-color: #01162d00;
 }
 .right_main_under .search_select_form .el-form-item__label {
-  color: #bfcbd9;
+  color: #fff;
+  font-family: "siyuanheiti";
 }
 .right_main_under .search_select_form .el-date-editor .el-range-input,
 .right_main_under .search_select_form .el-date-editor .el-range-separator {
@@ -121,16 +122,17 @@
   display: table-cell !important;
 }
 .right_main_under .tableStyle .warning-row {
-  background: #0b304e;
+  background: rgba(10, 48, 79, 0.9);
 }
 .right_main_under .tableStyle .success-row {
-  background: #08263d;
+  background: rgba(8, 38, 61, 0.9);
 }
 .right_main_under .tableStyle .el-table__body {
   width: 100% !important;
 }
 .right_main_under .tableStyle .el-table__body-wrapper {
   overflow-y: scroll;
+  background-color: rgba(8, 38, 61, 0.6);
 }
 .right_main_under .tableStyle .el-table__body-wrapper::-webkit-scrollbar {
   /*width: 0;宽度为0隐藏*/
@@ -208,8 +210,8 @@
   margin-top: 5px;
 }
 .right_main_under .el-input__inner {
-  background-color: #234861bf;
-  border: 1px solid #394865;
+  background-color: rgba(35, 72, 97, 0.3);
+  border: 1px solid #576f9e;
   color: #fdf6ec;
 }
 .right_main_under .el-range-editor.is-active,
@@ -227,7 +229,6 @@
 }
 .right_main_under .dialogInfo .el-dialog__body {
   border-top: 0;
-  border-bottom: 0;
 }
 .right_main_under .dialogInfo .el-dialog__footer {
   border-top: 0;
@@ -252,10 +253,11 @@
 .right_main_under .pagePagination .btn-prev,
 .right_main_under .pagePagination .btn-next {
   background: center center no-repeat transparent;
-  color: #7e8e9e;
+  color: #fff;
 }
 .right_main_under .pagePagination .el-pager li {
   background-color: transparent;
+  color: #fff;
 }
 .right_main_under .pagePagination .el-pager li:hover {
   color: #05f2f2;
@@ -271,7 +273,7 @@
 }
 .right_main_under .pagePagination .el-pager li.btn-quicknext,
 .right_main_under .pagePagination .el-pager li.btn-quickprev {
-  color: #7e8e9e;
+  color: #fff;
 }
 .right_main_under .pagePagination .el-input__inner {
   background-color: rgba(238, 238, 238, 0);

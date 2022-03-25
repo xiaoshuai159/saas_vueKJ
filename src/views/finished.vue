@@ -12,21 +12,20 @@
           <el-form-item label="上传时间">
             <el-date-picker
               v-model="list_num.dateValue_find"
-              type="datetimerange"
+              type="daterange"
               :change="dataCreate_change(list_num.dateValue_find)"
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               value-format="yyyy-MM-dd HH:mm:ss"
-              align="right"
               size="mini"
               :default-time="['00:00:00', '23:59:59']"
             >
             </el-date-picker>
           </el-form-item>
-    <!-- 来源 -->
+          <!-- 来源 -->
           <el-form-item label="来源">
-                <el-select
+            <el-select
               v-model="list_num.ly"
               placeholder="来源"
               clearable
@@ -93,7 +92,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-      
+
           <!-- 是否跳转 -->
           <el-form-item label="是否跳转">
             <el-select
@@ -149,32 +148,30 @@
 
     <el-table
       :row-class-name="tableRowClassName"
-    
       ref="multipleTable"
       :data="tableData"
       style="width: 100%"
       height="calc(100% - 18%)"
       size="mini"
       class="tableStyle"
-    
     >
       <!-- <el-table-column type="selection" :reserve-selection="true" width="55">
       </el-table-column> -->
       <!-- <el-table-column label="id" prop="id" v-if="isLoading"> </el-table-column> -->
 
-      <el-table-column label="域名" prop="ym" show-overflow-tooltip>
-         
+      <el-table-column label="域名" prop="url" show-overflow-tooltip>
       </el-table-column>
-       <el-table-column label="录入时间" prop="sj" show-overflow-tooltip> </el-table-column>
-         <el-table-column label="来源" prop="ly" > </el-table-column>
-      <el-table-column label="是否存活" prop="cunhuo"> </el-table-column>
-      <el-table-column label="是否备案" prop="ba"> </el-table-column>
-      <el-table-column label="境内外识别" prop="ly"> </el-table-column>
-      <el-table-column label="是否跳转" prop="tz" show-overflow-tooltip>
+      <el-table-column label="录入时间" prop="creatTime" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column label="跳转后网址" prop="tzh"> </el-table-column>
+      <el-table-column label="来源" prop="dataSource"> </el-table-column>
+      <el-table-column label="是否存活" prop="ifSurvival"> </el-table-column>
+      <el-table-column label="是否备案" prop="ifRecord"> </el-table-column>
+      <el-table-column label="境内外识别" prop="ifForeign"> </el-table-column>
+      <el-table-column label="是否跳转" prop="ifJump" show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column label="跳转后网址" prop="cdnUrl"> </el-table-column>
       <!-- <el-table-column label="服务器IP同源标记" prop="ty"> </el-table-column> -->
-      <el-table-column label="是否使用cdn" prop="ifcdn" show-overflow-tooltip>
+      <el-table-column label="是否使用cdn" prop="ifCdn" show-overflow-tooltip>
       </el-table-column>
       <!-- <el-table-column label="Cdn(IP)" prop="ip"> </el-table-column> -->
       <!-- <el-table-column label="cdn公司" prop="gs"> </el-table-column> -->
@@ -209,11 +206,11 @@ export default {
         cdn: null, //是否使用cdn
         cunhou: null, //是否存活
         dateValue_find: null, //时间
-        ly:null,//来源
+        ly: null, //来源
       },
       whiteSearchList: {
-        startUploadTime: "",
-        endUploadTime: "",
+        startUploadTime: null,
+        endUploadTime: null,
       },
       //下拉框的选项数据
       selectData: {
@@ -270,8 +267,8 @@ export default {
           { value: 0, label: "是" },
           { value: 1, label: "否" },
         ],
-        laiyuanlist:[
-            {
+        laiyuanlist: [
+          {
             value: "长安通信",
             label: "长安通信",
           },
@@ -291,37 +288,71 @@ export default {
             value: "各个分局的涉案网址",
             label: "各个分局的涉案网址",
           },
-        ]
+        ],
       },
-      tableData: [
-        {
-          ym: "网址1",
-          sj:'2022.3.23',
-          ba: "是",
-          cunhuo: "是",
-          ly: "境外",
-          tz: "是",
-          tzh: "www.12.com",
-          ty: "12.33.12.1 ",
-          ifcdn: "是",
-          ip: "12.333.42.",
-          gs: "长安公司",
-        },
-      ],
+      tableData: [],
       mypageable: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 15,
       },
       total: 1,
       totalPages: "",
     };
   },
+  created() {
+    this.chuliList();
+  },
   methods: {
-    getRole1(data) {
-      return getRole(data);
+    //初始化列表
+    async chuliList() {
+      // let discoverProcessDTO = {
+     let   discoverProcessDTO={
+          alive: this.list_num.cunhou,
+          cdn: this.list_num.cdn,
+          dataSource: this.list_num.ly,
+          endDate: this.whiteSearchList.endUploadTime,
+          jump: this.list_num.tz,
+          outside: this.list_num.jinneiwai,
+          record: this.list_num.modelType1,
+          startDate: this.whiteSearchList.startUploadTime,
+            mypageable: this.mypageable,
+        };
+      
+      // };
+      const { data: res } = await this.$http.post(
+        "/process/getProcessPage",
+        discoverProcessDTO
+      );
+      if (res.code == 200) {
+        this.tableData = res.data.content;
+        this.total = res.data.totalElements;
+        this.totalPages = res.data.totalPages;
+      }
+    },
+    //查询
+    searchTabData() {
+      this.mypageable.pageNum = 1;
+      this.chuliList();
+    },
+    //重置
+    resetFun() {
+      this.list_num.cunhou = null;
+      this.list_num.cdn = null;
+      this.list_num.ly = null;
+      this.list_num.tz = null;
+      this.list_num.jinneiwai = null;
+      this.list_num.modelType1 = null;
+      this.list_num.dateValue_find = null;
+      this.whiteSearchList = {
+        startUploadTime: null,
+        endUploadTime: null,
+      };
+      this.mypageable.pageNum = 1;
+      this.chuliList();
     },
     handleSizeChange(val) {
       this.mypageable.pageSize = val;
+      this.chuliList();
     },
     // 诈骗类型
     modelType1_clearFun(val) {
@@ -365,10 +396,10 @@ export default {
         this.whiteSearchList.startUploadTime = null;
         this.whiteSearchList.endUploadTime = null;
       }
-    },    handleCurrentChange(val) {
+    },
+    handleCurrentChange(val) {
       this.mypageable.pageNum = val;
-
-    
+      this.chuliList();
     },
     tableRowClassName({ rowIndex }) {
       if (rowIndex % 2 === 0) {

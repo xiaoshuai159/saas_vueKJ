@@ -3,8 +3,15 @@
     <div class="search_select_form">
       <template>
         <el-form :inline="true" class="demo-form-inline" size="mini">
+             <el-form-item label="域名">
+            <el-input
+              v-model="newdomainSimpleVo.url"
+              placeholder="url"
+              @clear="state_clearurl(newdomainSimpleVo.url)"
+            ></el-input>
+          </el-form-item>
           <!-- 处置时间 -->
-          <el-form-item label="处置时间">
+          <el-form-item label="拨测时间">
             <el-date-picker
               v-model="newdomainSimpleVo.dateValue_find"
               type="daterange"
@@ -18,7 +25,7 @@
             </el-date-picker>
           </el-form-item>
           <!-- 域名类型 -->
-          <el-form-item label="域名类型">
+          <!-- <el-form-item label="域名类型">
             <el-select
               v-model="newdomainSimpleVo.sourceType"
               placeholder="域名类型"
@@ -33,18 +40,18 @@
               >
               </el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
 
           <!-- 诈骗类型 -->
-          <el-form-item label="处置状态">
+          <el-form-item label="是否存活">
             <el-select
               v-model="newdomainSimpleVo.state"
-              placeholder="处置状态"
+              placeholder="是否存活"
               clearable
               @clear="state_clearFun(newdomainSimpleVo.state)"
             >
               <el-option
-                v-for="item in selectData.state"
+                v-for="item in selectData.ch_list"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -53,7 +60,7 @@
             </el-select>
           </el-form-item>
           <!-- 运营商 -->
-          <el-form-item label="运营商">
+          <!-- <el-form-item label="运营商">
             <el-select
               v-model="newdomainSimpleVo.Operator"
               placeholder="运营商"
@@ -68,9 +75,9 @@
               >
               </el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <!-- 网络环境 -->
-          <el-form-item label="网络环境">
+          <!-- <el-form-item label="网络环境">
             <el-select
               v-model="newdomainSimpleVo.environment"
               placeholder="网络环境"
@@ -85,17 +92,17 @@
               >
               </el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <!-- 数据来源 -->
 
           <!-- @clear="state_clearform(newdomainSimpleVo.form)" -->
 
-          <el-form-item label="数据来源">
+          <el-form-item label="处置部门">
             <el-select
               filterable
               clearable
               v-model="newdomainSimpleVo.form"
-              placeholder="数据来源"
+              placeholder="处置部门"
               @blur="selectBlur"
               @clear="selectClear"
               @change="selectChange"
@@ -109,13 +116,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="URL">
-            <el-input
-              v-model="newdomainSimpleVo.url"
-              placeholder="url"
-              @clear="state_clearurl(newdomainSimpleVo.url)"
-            ></el-input>
-          </el-form-item>
+       
           <el-form-item>
             <el-button type="primary" size="mini" @click.native="resetFun"
               >重置</el-button
@@ -153,7 +154,7 @@
       class="tableStyle"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column prop="operationState" label="域名"> </el-table-column>
+      <el-table-column    width="600"     prop="url"  label="域名" show-overflow-tooltip> </el-table-column>
       <el-table-column
         prop="url"
         label="处置部门"
@@ -169,7 +170,7 @@
 
       <el-table-column prop="id" label="id" v-if="ifziduan"> </el-table-column>
 
-      <el-table-column label="拨测详情" fixed="right" width="200">
+      <el-table-column label="拨测详情"  >
         <template slot-scope="scope">
           <el-button type="text" size="mini" @click="add(scope.row.url)"
             >详情</el-button
@@ -408,6 +409,10 @@ export default {
           { value: 0, label: "处置中" },
           { value: 1, label: "已处置" },
           { value: 2, label: "已失效" },
+        ],
+             ch_list: [
+          { value: 0, label: "是" },
+          { value: 1, label: "否" },
         ],
       },
       tableData: [],

@@ -22,42 +22,24 @@
           <el-form-item label="上传时间">
             <el-date-picker
               v-model="newdomainSimpleVo.dateValue_find"
-              type="datetimerange"
+              type="daterange"
               :change="dataCreate_change(newdomainSimpleVo.dateValue_find)"
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               value-format="yyyy-MM-dd HH:mm:ss"
-              align="right"
               size="mini"
               :default-time="['00:00:00', '23:59:59']"
             >
             </el-date-picker>
           </el-form-item>
-          <!-- 诈骗类型 -->
+          <!-- 上传来源 -->
           <el-form-item label="上传来源">
             <el-select
               v-model="newdomainSimpleVo.modelType1"
               placeholder="上传来源"
               clearable
               @clear="modelType1_clearFun(newdomainSimpleVo.modelType1)"
-            >
-              <el-option
-                v-for="item in selectData.model_typeData"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <!-- 诈骗类型 -->
-          <!-- <el-form-item label="模板类型选择">
-            <el-select
-              v-model="newdomainSimpleVo.mobanType1"
-              placeholder="模板类型选择"
-              clearable
-              @clear="moban_clearFun(newdomainSimpleVo.mobanType1)"
             >
               <el-option
                 v-for="item in selectData.moban_typeData"
@@ -67,7 +49,8 @@
               >
               </el-option>
             </el-select>
-          </el-form-item> -->
+          </el-form-item>
+
           <el-form-item>
             <el-button
               type="primary"
@@ -101,14 +84,17 @@
       height="calc(100% - 18%)"
       size="mini"
       class="tableStyle"
-      @selection-change="handleSelectionChange"
     >
-      <el-table-column label="上传人" prop="url"> </el-table-column>
-      <el-table-column label="上传来源" prop="type" show-overflow-tooltip>
+      <el-table-column label="上传人" prop="uploader"> </el-table-column>
+      <el-table-column
+        label="上传来源"
+        prop="data_source"
+        show-overflow-tooltip
+      >
       </el-table-column>
 
       <el-table-column label="上传时间" prop="upload_time"> </el-table-column>
-      <el-table-column label="条数" prop="tiaoshu"> </el-table-column>
+      <el-table-column label="条数" prop="total"> </el-table-column>
     </el-table>
 
     <!-- //分页 -->
@@ -166,10 +152,11 @@
       </span>
     </el-dialog>
 
-        <!-- 上传 -->
+    <!-- 上传 -->
     <el-dialog
       :close-on-click-modal="false"
       title="文件上传"
+      
       :visible.sync="shangchuan"
       width="20%"
       height="40%"
@@ -177,27 +164,28 @@
       class="dialogInfo"
     >
       <div style="width: 100%">
- <el-upload
-  class="upload-demo"
-  action="https://jsonplaceholder.typicode.com/posts/"
-  :on-preview="handlePreview"
-  :on-remove="handleRemove"
-  :before-remove="beforeRemove"
-  multiple
-  :limit="3"
-  :on-exceed="handleExceed"
-  :file-list="fileList">
-  <el-button size="mini" type="primary">点击上传</el-button>
-  <div slot="tip" class="el-upload__tip">上传文件</div>
-</el-upload>
+        <el-upload
+          class="upload-demo"
+          accept=".xlsx"
+          action="/black/uploadDomain"
+          :data="{ User: this.use }"
+          :before-remove="beforeRemove"
+          :on-success="successSendFile"
+          :on-exceed="handleExceed"
+          multiple
+          :limit="3"
+        >
+          <el-button size="mini" type="primary">点击上传</el-button>
+          <div slot="tip" class="el-upload__tip">上传文件</div>
+        </el-upload>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="shangchuan = false" size="mini"
           >取 消</el-button
         >
-        <el-button type="primary" @click="wenjianshangchaun" size="mini"
+        <!-- <el-button type="primary" @click="wenjianshangchaun" size="mini"
           >确 定</el-button
-        >
+        > -->
       </span>
     </el-dialog>
   </div>
@@ -213,7 +201,7 @@ export default {
     return {
       loadingbuttext: "模板下载",
       loadingbut: false,
-shangchuan:false,
+      shangchuan: false,
       mobanxiazai: false,
       jieURL: "",
       jietu1: "",
@@ -321,120 +309,29 @@ shangchuan:false,
         ],
         moban: [
           {
-            value: "长安通信",
+            value: "CA",
             label: "长安通信",
           },
           {
-            value: "公安部",
+            value: "GA",
             label: "公安部",
           },
           {
-            value: "移动公司",
+            value: "YD",
             label: "移动公司",
           },
           {
-            value: "瑞斯",
+            value: "NS",
             label: "瑞斯",
           },
           {
-            value: "各个分局的涉案网址",
+            value: "qt",
             label: "各个分局的涉案网址",
           },
         ],
       },
 
-      tableData: [
-        {
-          url: "www.baidu.com",
-          type: "长安通信",
-          upload_time: "2022.3.22",
-          tiaoshu: "1000",
-        },
-        {
-          url: "www.baidu.com",
-          type: "公安部",
-          upload_time: "2022.3.22",
-          tiaoshu: "1000",
-        },
-        {
-          url: "www.baidu.com",
-          type: "移动公司",
-          upload_time: "2022.3.22",
-          tiaoshu: "1000",
-        },
-        {
-          url: "www.baidu.com",
-          type: "瑞斯",
-          upload_time: "2022.3.22",
-          tiaoshu: "1000",
-        },
-        {
-          url: "www.baidu.com",
-          type: "各个分局的涉案网址",
-          upload_time: "2022.3.22",
-          tiaoshu: "1000",
-        },
-        {
-          url: "www.baidu.com",
-          type: "长安通信",
-          upload_time: "2022.3.22",
-          tiaoshu: "1000",
-        },
-        {
-          url: "www.baidu.com",
-          type: "公安部",
-          upload_time: "2022.3.22",
-          tiaoshu: "1000",
-        },
-        {
-          url: "www.baidu.com",
-          type: "移动公司",
-          upload_time: "2022.3.22",
-          tiaoshu: "1000",
-        },
-        {
-          url: "www.baidu.com",
-          type: "瑞斯",
-          upload_time: "2022.3.22",
-          tiaoshu: "1000",
-        },
-        {
-          url: "www.baidu.com",
-          type: "各个分局的涉案网址",
-          upload_time: "2022.3.22",
-          tiaoshu: "1000",
-        },
-        {
-          url: "www.baidu.com",
-          type: "各个分局的涉案网址",
-          upload_time: "2022.3.22",
-          tiaoshu: "1000",
-        },
-        {
-          url: "www.baidu.com",
-          type: "长安通信",
-          upload_time: "2022.3.22",
-          tiaoshu: "1000",
-        },
-        {
-          url: "www.baidu.com",
-          type: "公安部",
-          upload_time: "2022.3.22",
-          tiaoshu: "1000",
-        },
-        {
-          url: "www.baidu.com",
-          type: "移动公司",
-          upload_time: "2022.3.22",
-          tiaoshu: "1000",
-        },
-        {
-          url: "www.baidu.com",
-          type: "瑞斯",
-          upload_time: "2022.3.22",
-          tiaoshu: "1000",
-        },
-      ],
+      tableData: [],
       listTemplate: {
         moban: null,
       },
@@ -453,7 +350,7 @@ shangchuan:false,
       qutest2: [],
 
       whole: 0,
-       fileList: []
+      file: [],
     };
   },
 
@@ -466,27 +363,41 @@ shangchuan:false,
     // this.drawLine();
   },
   methods: {
-// 文件上传
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-      handlePreview(file) {
-        console.log(file);
-      },
-      handleExceed(files, fileList) {
-        this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
-      },
-      beforeRemove(file, fileList) {
-        return this.$confirm(`确定移除 ${ file.name }？`);
-      },
-// 文件上传
+    // 文件上传
+    successSendFile(res) {
+      // this.loading=true
+      if (res.code == 200) {
+        // setTimeout(() => {
+        this.$message.success("上传成功");
+
+        //   this.getTabData()
+        // }, 1000)
+      } else {
+        this.$message(res.message);
+      }
+    },
+    //删除
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`);
+    },
+    //上传
+    handleExceed(files, fileList) {
+      this.$message.warning(
+        `当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+          files.length + fileList.length
+        } 个文件`
+      );
+    },
+
+    // 文件上传
     //模板下载
     xiazai() {
       this.listTemplate.moban = null;
       this.mobanxiazai = true;
     },
-    uploadwj(){
-        // this.listTemplate.moban = null;
+    uploadwj() {
+      // this.listTemplate.moban = null;
+      this.file = [];
       this.shangchuan = true;
     },
     getRole1(data) {
@@ -496,7 +407,8 @@ shangchuan:false,
     eldialogout() {
       this.testData = [];
       this.testLink1 = [];
-      (this.isShow = false), this.$refs.multipleTable.clearSelection(); //清除选中的数据
+      this.isShow = false;
+      this.$refs.multipleTable.clearSelection(); //清除选中的数据
     },
     getRowKeys(row) {
       return row.id;
@@ -504,81 +416,46 @@ shangchuan:false,
     //初始化获取数据
     async getTabData() {
       let mypageable = {
-        protocol: this.newdomainSimpleVo.protocol,
-        uploadPerson: this.newdomainSimpleVo.uploadPerson,
-        status: this.newdomainSimpleVo.state,
-        type: this.newdomainSimpleVo.modelType1,
-        pageNum: this.mypageable.pageNum,
-        pageSize: this.mypageable.pageSize,
-        startUploadTime: this.whiteSearchList.startUploadTime,
-        endUploadTime: this.whiteSearchList.endUploadTime,
+        dataSource: this.newdomainSimpleVo.modelType1,
+        endDate: this.whiteSearchList.endUploadTime,
+        mypageable: this.mypageable,
+        startDate: this.whiteSearchList.startUploadTime,
+        uploader: this.newdomainSimpleVo.uploadPerson,
       };
 
       const { data: res } = await this.$http.post(
-        "/treatment/getUploadDomain2",
+        "/black/obtainUploadList",
         mypageable
       );
       if (res.code == 200) {
-        // this.tableData = res.data.content;
+        this.tableData = res.data.content;
         this.total = res.data.totalElements;
         this.totalPages = res.data.totalPages;
       }
     },
     //查询
     async searchTabData() {
-      let getTabDataList = {
-        protocol: this.newdomainSimpleVo.protocol,
-        uploadPerson: this.newdomainSimpleVo.uploadPerson,
-        status: this.newdomainSimpleVo.state,
-        type: this.newdomainSimpleVo.modelType1,
-        pageNum: this.mypageable.pageNum,
-        pageSize: this.mypageable.pageSize,
-        startUploadTime: this.whiteSearchList.startUploadTime,
-        endUploadTime: this.whiteSearchList.endUploadTime,
-      };
-
-      const { data: res } = await this.$http.post(
-        "/treatment/getUploadDomain2",
-        getTabDataList
-      );
-      if (res.code == 200) {
-        this.mypageable.pageNum = 1;
-        this.tableData = res.data.content;
-        this.total = res.data.totalElements;
-        this.totalPages = res.data.totalPages;
-        if (res.data.content.length > 0) {
-        } else {
-          this.mypageable.pageNum = 1;
-          this.mypageable.pageSize = 15;
-          this.getTabData();
-        }
-      } else {
-        this.$message("无数据");
-        this.mypageable.pageNum = 1;
-        this.mypageable.pageSize = 15;
-        this.getTabData();
-        this.resetFun();
-      }
+      this.mypageable.pageNum = 1;
+      this.getTabData();
     },
     //重置方法
     //点击重置无反应
     resetFun() {
       this.newdomainSimpleVo = {
-        modelType1: null, //modelType1
-        protocol: null, //协议
         uploadPerson: null, //上传人
-        state: null, //状态
+        modelType1: null, //上传来源
         dateValue_find: null, //处置时间
       };
       (this.whiteSearchList = {
         startUploadTime: null,
         endUploadTime: null,
       }),
-        this.getTabData();
+        (this.mypageable.pageNum = 1);
+      this.getTabData();
     },
-    handleSelectionChange(val) {
-      this.tableDatalist = val;
-    },
+    // handleSelectionChange(val) {
+    //   this.tableDatalist = val;
+    // },
 
     //弹窗关闭
 
@@ -612,21 +489,65 @@ shangchuan:false,
     //   }
     // },
     // 模板下载
-    mobanerr(){
-      this.mobanxiazai=false
+    async moban_typewen() {
+      if (this.listTemplate.moban == null) {
+        this.$message("请选择");
+      } else {
+        let list = {
+          dataSource: this.listTemplate.moban,
+        };
+        //     var params = new URLSearchParams();
+        // params.append('sourceType',this.listTemplate.moban);
+        const { data: res } = await this.$http.post(
+          "/black/downloadTemplate",
+          list
+        );
+        if (res.code == 200) {
+          let newurl = res.expandData.url;
+          let eleLink = document.createElement("a");
+          eleLink.download = name;
+          eleLink.href = newurl;
+          eleLink.click();
+          eleLink.remove();
+        }
+      }
     },
-      // 模板上传关闭
+    mobanerr() {
+      this.moban_typewen();
+      this.mobanxiazai = false;
+    },
+    // 模板上传关闭
     mobanshangchuanclose() {
       this.mobanxiazai = false;
     },
-    //文件上传
-    wenjianshangchaun(){
-      this.shangchuan=false
+    async wenjian() {
+      if (this.fileList.length > 0) {
+        let listfile = {
+          file: "",
+          User: this.use,
+        };
+        const { data: res } = await this.$http.post(
+          "/black/uploadDomain",
+          listfile
+        );
+        if (res.data == 200) {
+          this.$message(res.message);
+        } else {
+          this.$message(res.message);
+        }
+      } else {
+        this.$message("未选择文件");
+      }
     },
-     //文件上传关闭
-shangchuanclose(){
-   this.shangchuan=false
-},
+    //文件上传
+    wenjianshangchaun() {
+      this.wenjian();
+      this.shangchuan = false;
+    },
+    //文件上传关闭
+    shangchuanclose() {
+      this.shangchuan = false;
+    },
     handleSizeChange(val) {
       this.mypageable.pageSize = val;
       this.getTabData();
@@ -744,7 +665,7 @@ shangchuanclose(){
         this.whiteSearchList1.endCreateTime1 = null;
       }
     },
-  
+
     mobanxuanze_clearFun(val) {
       if (val == "") {
         this.listTemplate.moban = null;
@@ -878,7 +799,6 @@ shangchuanclose(){
 }
 /deep/ .el-upload {
   width: 100% !important;
-  background:transparent !important ;
+  background: transparent !important ;
 }
-
 </style>

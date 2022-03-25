@@ -86,14 +86,37 @@ export default {
 @import "./assets/css/main.css";
 @import "./assets/css/color-dark.css";
 @import "./assets/css/public.css";
-/* 隐藏滚动条 */
+
+
+/* //滚动条 */
 ::-webkit-scrollbar {
+  width: 0px;
+  height: 5px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+/*定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-track {
+  /* // -webkit-box-shadow: inset 0 0 3px #2fbcfc; */
+  border-radius: 5px;
+  background-color: #f5f5f5;
+}
+
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  /* // -webkit-box-shadow: inset 0 0 3px #2fbcfc; */
+  background-color: #23749c;
+}
+/* 隐藏滚动条 */
+/* ::-webkit-scrollbar {
   width: 0 !important;
 }
 ::-webkit-scrollbar {
   width: 0 !important;
   height: 0;
-}
+} */
 /* #app{
 overflow-y:scroll;
 overflow-x:hidden;

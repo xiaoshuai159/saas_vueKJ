@@ -150,7 +150,7 @@
                 >重置</el-button
               >
               <!-- :loading="isLoading" -->
-              <el-button
+              <!-- <el-button
                 v-if="getRole1('downloadDomain')"
                 type="primary"
                 size="mini"
@@ -158,14 +158,14 @@
                 :loading="loadingbut"
               >
                 {{ loadingbuttext }}</el-button
-              >
-              <el-button
+              > -->
+              <!-- <el-button
                 v-if="getRole1('authorize')"
                 type="primary"
                 size="mini"
                 @click.native.stop="newauthorization"
                 >一键授权</el-button
-              >
+              > -->
               <!-- </template> -->
             </el-form-item>
           </el-form>
@@ -174,7 +174,7 @@
       <div class="zongliang">
         <span class="title_num1">
           <div class="tit">日拦截量</div>
-          <div class="tit1">5000</div>
+          <div class="tit1">{{ this.dayliang }}</div>
         </span>
         <span class="title_num2">
           <div class="tit">月拦截量</div>
@@ -182,12 +182,12 @@
         </span>
         <span class="title_num3">
           <div class="tit">总拦截量</div>
-          <div class="tit1">150000</div>
+          <div class="tit1">{{ this.daylanjienum }}</div>
         </span>
       </div>
     </div>
     <!-- <div class="shguliang">
-      <span>今日总量： {{ this.dayliang }}</span>
+      <span>今日总量： </span>
       <span> 处置总量： {{ this.dayliangchuzhi }} </span>
       
       <span> 今日拦截量： {{ this.daylanjieliang }}</span>
@@ -206,13 +206,13 @@
       class="tableStyle"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" min-widt="5%"> </el-table-column>
+      <!-- <el-table-column type="selection" min-widt="5%"> </el-table-column> -->
       <el-table-column label="id" prop="id" v-if="isLoading"> </el-table-column>
       <el-table-column label="filename" prop="fileName" v-if="isLoading">
       </el-table-column>
       <!--  -->
       <!-- ----------------- -->
-      <el-table-column label="URL" min-width="20%" show-overflow-tooltip>
+      <el-table-column label="URL" min-width="30%"  show-overflow-tooltip >
         <!-- v-if="getlist1('url')" -->
         <template slot-scope="scope">
           <el-popconfirm
@@ -229,19 +229,19 @@
               scope.row.url
             }}</el-button>
           </el-popconfirm>
-          <el-popconfirm
+          <!-- <el-popconfirm
             confirm-button-text="看截图"
             cancel-button-text="去访问"
             confirm-button-type="Primary"
             cancel-button-type="Primary"
             @cancel="qufangwen(scope.row.url)"
             :hide-icon="true"
-          >
+          > -->
             <!-- v-if="!getRole1('getUrl')" -->
-            <el-button type="text" slot="reference" class="urlcolor">{{
+            <!-- <el-button type="text" slot="reference" class="urlcolor" >{{
               scope.row.url
-            }}</el-button>
-          </el-popconfirm>
+            }}</el-button> -->
+          <!-- </el-popconfirm> -->
         </template>
       </el-table-column>
       <!-- ----------------- -->
@@ -252,16 +252,16 @@
         </template>
       </el-table-column>
 
-      <el-table-column
+      <!-- <el-table-column
         label="处置状态"
         min-width="7%"
-        v-if="getlist1('status')"
+      
       >
         <template slot-scope="scope">
-          {{ scope.row.status == 0 ? "处置中" : "已处置" }}
+          {{ scope.row.status == 0 ? "未授权" : "已授权" }}
         </template>
-      </el-table-column>
-
+      </el-table-column> -->
+  <!-- v-if="getlist1('status')" -->
       <!-- <el-table-column
         label="二级分类"
         min-width="17%"
@@ -300,7 +300,7 @@
       <el-table-column label="处置状态" min-width="7%">
         <!-- v-if="getlist1('authorize')" -->
         <template slot-scope="scope">
-          {{ scope.row.authorize == "0" ? "未授权" : "已授权" }}
+          {{ scope.row.status == "0" ? "未授权" : "已授权" }}
         </template>
       </el-table-column>
     </el-table>
@@ -336,8 +336,8 @@
 </template>
 
 <script>
-import getRole from "@/utils/promission.js";
-import getList from "@/utils/poresslist.js";
+// import getRole from "@/utils/promission.js";
+// import getList from "@/utils/poresslist.js";
 import dayjs from "dayjs";
 import erji from "@/utils/twotype.js";
 import zPtype from "@/utils/type.js";
@@ -458,8 +458,9 @@ export default {
         ],
 
         stateTypeData: [
-          { value: 0, label: "处置中" },
-          { value: 1, label: "已处置" },
+          { value: 0, label: "未授权" },
+          { value: 1, label: "已授权" },
+      
         ],
         model_typeData: [
           { value: "DK", label: "贷款" },
@@ -504,9 +505,9 @@ export default {
     this.getTabData();
 
     this.echartslist();
-    // this.daychuzhiliang();
+    this.daychuzhiliang();
     // this.dayzong();
-    // this.daylanjienumliang();
+    this.daylanjienumliang();
     this.daylanjiezong();
   },
   mounted() {
@@ -524,14 +525,14 @@ export default {
     zP(data) {
       return zPtype(data);
     },
-    getRole1(data) {
-      return getRole(data);
-      // console.log( getRole(data));
-    },
-    getlist1(data) {
-      // console.log(data);
-      return getList(data);
-    },
+    // getRole1(data) {
+    //   return getRole(data);
+    //   // console.log( getRole(data));
+    // },
+    // getlist1(data) {
+    //   // console.log(data);
+    //   return getList(data);
+    // },
     // qu() {
     //   console.log(1);
 
@@ -559,35 +560,48 @@ export default {
     //     this.$message(res.message);
     //   }
     // },
+    //本月拦截量
+    async monthnum(){
+      const {data:res}=await this.$http.get('/treatment/getDomainVisitsMonth')
+      if(res.code==200){
+        console.log(res.data);
+      }
+    },
     // 当天处置数量
-    // async daychuzhiliang() {
-    //   const { data: res } = await this.$http.post(
-    //     "/treatment/getSumDomainToday"
-    //   );
-    //   if (res.code == 200) {
-    //     let sum1 = 0;
+    async daychuzhiliang() {
+      const { data: res } = await this.$http.get(
+        "/treatment/getSumDomainToday"
+      );
+      if (res.code == 200) {
+        let sum1 = 0;
 
-    //     for (var i = 0; i < res.data.length; i++) {
-    //       sum1 += res.data[i].sumStatus;
-    //     }
+        for (var i = 0; i < res.data.length; i++) {
+          sum1 += res.data[i].sumStatus;
+        }
 
-    //     this.dayliang = sum1;
-    //   } else if (res.code == 500) {
-    //     this.$message(res.message);
-    //   }
-    // },
+        this.dayliang = sum1;
+      } else if (res.code == 500) {
+        this.$message(res.message);
+      }
+    },
     //拦截量总量   //时间有问题
     async daylanjiezong() {
-      const list = {
-        endTreatmentTime:
-          this.whiteSearchList.endCreateTime == null
-            ? this.whiteSearchList.endCreateTime
-            : dayjs(this.whiteSearchList.endCreateTime).format("YYYY/MM/DD"),
-        startTreatmentTime:
-          this.whiteSearchList.startCreateTime == null
-            ? this.whiteSearchList.startCreateTime
-            : dayjs(this.whiteSearchList.startCreateTime).format("YYYY/MM/DD"),
-      };
+      // const list = {
+      //   endTreatmentTime:
+      //     this.whiteSearchList.endCreateTime == null
+      //       ? this.whiteSearchList.endCreateTime
+      //       : dayjs(this.whiteSearchList.endCreateTime).format("YYYY/MM/DD"),
+      //   startTreatmentTime:
+      //     this.whiteSearchList.startCreateTime == null
+      //       ? this.whiteSearchList.startCreateTime
+      //       : dayjs(this.whiteSearchList.startCreateTime).format("YYYY/MM/DD"),
+      // };
+      let list={
+        endTreatmentTime:"",
+        startTreatmentTime:'',
+        startUploadTime:'',
+        endUploadTime:'',
+      }
       // console.log(list);
       const { data: res } = await this.$http.get(
         "/treatment/getSumDomainVisits",
@@ -1549,14 +1563,14 @@ export default {
 }
 .title_num1 {
   border: 2px solid rgba(25, 115, 163, 0.5);
-  box-shadow: 0 0 0.026042rem #1973a3 inset, 0 0 0.104167rem #1973a3;
+  box-shadow: 0 0 20px #1973a3 inset, 0 0 10px #1973a3;
 }
 .title_num2 {
   border: 2px solid rgba(34, 98, 177, 0.5);
-  box-shadow: 0 0 0.026042rem #2262b1 inset, 0 0 0.104167rem #2262b1;
+  box-shadow: 0 0 20px #2262b1 inset, 0 0 10px #2262b1;
 }
 .title_num3 {
-  border: 2px solid rgba(18, 106, 230, 0.5);
-  box-shadow: 0 0 0.026042rem #126ae6 inset, 0 0 0.104167rem #126ae6;
+  border: 2px solid rgba(8, 89, 202, 0.5);
+  box-shadow: 0 0 20px #0859ca inset, 0 0 10px #0859ca;
 }
 </style>
