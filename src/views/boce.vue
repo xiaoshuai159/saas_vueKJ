@@ -3,7 +3,7 @@
     <div class="search_select_form">
       <template>
         <el-form :inline="true" class="demo-form-inline" size="mini">
-             <el-form-item label="域名">
+          <el-form-item label="域名">
             <el-input
               v-model="newdomainSimpleVo.url"
               placeholder="url"
@@ -116,7 +116,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-       
+
           <el-form-item>
             <el-button type="primary" size="mini" @click.native="resetFun"
               >重置</el-button
@@ -154,23 +154,24 @@
       class="tableStyle"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column    width="600"     prop="url"  label="域名" show-overflow-tooltip> </el-table-column>
       <el-table-column
+        width="600"
         prop="url"
-        label="处置部门"
+        label="域名"
         show-overflow-tooltip
-        width="200"
       >
       </el-table-column>
-      <el-table-column label="是否存活" prop="type" show-overflow-tooltip>
+      <el-table-column prop="dataSource" label="处置部门" width="200">
       </el-table-column>
+      <el-table-column label="是否存活" prop="ifSurvival"> </el-table-column>
       <el-table-column prop="handletime" label="拨测时间"> </el-table-column>
-        <el-table-column prop="handletime" label="拨测次数"> </el-table-column>
-          <el-table-column prop="handletime" label="拨测成功次数"> </el-table-column>
+      <el-table-column prop="completeTotal" label="拨测次数"> </el-table-column>
+      <el-table-column prop="successTotal" label="拨测成功次数">
+      </el-table-column>
 
       <el-table-column prop="id" label="id" v-if="ifziduan"> </el-table-column>
 
-      <el-table-column label="拨测详情"  >
+      <el-table-column label="拨测详情">
         <template slot-scope="scope">
           <el-button type="text" size="mini" @click="add(scope.row.url)"
             >详情</el-button
@@ -195,7 +196,7 @@
       </div>
     </div>
     <!-- 详情 -->
-       <el-dialog
+    <el-dialog
       title="详情"
       :visible.sync="dialog"
       width="90%"
@@ -410,18 +411,23 @@ export default {
           { value: 1, label: "已处置" },
           { value: 2, label: "已失效" },
         ],
-             ch_list: [
+        ch_list: [
           { value: 0, label: "是" },
           { value: 1, label: "否" },
         ],
       },
       tableData: [],
-        gailan: {
-        chakanurl: '',
-        type: '',
-        kehuduan: '',
-        boceci: '',
+      gailan: {
+        chakanurl: "",
+        type: "",
+        kehuduan: "",
+        boceci: "",
       },
+        whiteSearchList3: {
+        startCreateTime3: '',
+        endCreateTime3: '',
+      },
+
       tableData1: [
         // {
         //   clientId: 12, //       客户端id
@@ -447,7 +453,7 @@ export default {
       textnum: [],
       probeTime: [],
       textnotNum: [],
-  
+
       //添加弹窗
       addList: {
         url: null, //url
@@ -663,6 +669,7 @@ export default {
         isp: this.newdomainSimpleVo.Operator,
         netWork: this.newdomainSimpleVo.environment,
         dataSource: this.newdomainSimpleVo.form,
+        ifSurvival: this.newdomainSimpleVo.state,
         mypageable: {
           // pageNum: this.mypageable.pageNum,
           pageNum: 1,
@@ -716,11 +723,22 @@ export default {
       this.url = val;
       this.loading = true;
       this.dialog = true;
+       this.mypageable1.pageNum1 = 1
+          this.whiteSearchList1.startCreateTime1 = ''
+      this.whiteSearchList1.endCreateTime1 = ''
+      this.whiteSearchList3.startCreateTime3 = ''
+      this.whiteSearchList3.endCreateTime3 = ''
+    
+      this.tcboctime = null
+      this.textnum = []
+      this.probeTime = []
+      this.textnotNum = []
+
       this.gaikuang();
-      this.bocexiangqing();
-      this.$nextTick(() => {
-        this.drawLine();
-      });
+      // this.bocexiangqing();
+      // this.$nextTick(() => {
+      //   this.drawLine();
+      // });
     },
     //添加
     urlAdd() {
@@ -851,6 +869,44 @@ export default {
 
       // }
     },
+     async bocexiangqing1() {
+      this.textnum = []
+      this.probeTime = []
+      this.textnotNum = []
+      let bcTestVo = {
+        url: this.url,
+        startCreateTime: this.flagstates
+          ? this.whiteSearchList3.startCreateTime3
+          : this.whiteSearchList1.startCreateTime1,
+        endCreateTime: this.flagstates
+          ? this.whiteSearchList3.endCreateTime3
+          : this.whiteSearchList1.endCreateTime1,
+        mypageable: {
+          pageNum: this.mypageable1.pageNum1,
+          pageSize: this.mypageable1.pageSize1,
+        },
+      }
+      const { data: res } = await this.$http.post('/getBcTestEntity', bcTestVo)
+      if (res.code == 200) {
+        this.tableData1 = res.data.page.content
+        this.total1 = res.data.page.totalElements
+        this.totalPages1 = res.data.page.totalPages
+        // res.data.list.forEach((item) => {
+        //   this.textnum.push(item.num)
+        //   this.probeTime.push(item.probeTime)
+        //   this.textnotNum.push(item.notNum)
+        // })
+
+        // this.$nextTick(() => {
+        //   this.drawLine()
+        // })
+        // this.loading = false
+      } else {
+        this.$message('无数据')
+        this.loading = false
+      }
+    },
+
     async gailanxiazai() {
       this.loadingbuttext1 = "...加载中";
       this.loadingbut = true;
@@ -877,10 +933,65 @@ export default {
       }
     },
     //确认
+    //确认
     async confirm() {
-      this.textnum = [];
-      this.probeTime = [];
-      this.textnotNum = [];
+      if (this.tcboctime == '') {
+        this.$message('请选择时间')
+      } else {
+        this.textnum = []
+        this.probeTime = []
+        this.textnotNum = []
+        this.mypageable1.pageNum1 = 1
+        this.whiteSearchList3.startCreateTime3 =
+          this.whiteSearchList1.startCreateTime1
+        this.whiteSearchList3.endCreateTime3 =
+          this.whiteSearchList1.endCreateTime1
+        let bcTestVo = {
+          url: this.url,
+          startCreateTime: this.whiteSearchList1.startCreateTime1,
+          endCreateTime: this.whiteSearchList1.endCreateTime1,
+          mypageable: {
+            pageNum: this.mypageable1.pageNum1,
+            pageSize: this.mypageable1.pageSize1,
+          },
+        }
+        const { data: res } = await this.$http.post(
+          '/getBcTestEntity',
+          bcTestVo
+        )
+        if (res.code == 200) {
+          this.tableData1 = res.data.page.content
+          this.total1 = res.data.page.totalElements
+          this.totalPages1 = res.data.page.totalPages
+          res.data.list.forEach((item) => {
+            this.textnum.push(item.num)
+            this.probeTime.push(item.probeTime)
+            this.textnotNum.push(item.notNum)
+          })
+
+          this.$nextTick(() => {
+            this.drawLine()
+          })
+          this.loading = false
+        } else {
+          this.$message('无数据')
+          this.loading = false
+        }
+      }
+    },
+
+    //重置
+     async conerr() {
+      this.flagstates = true
+      this.whiteSearchList1.startCreateTime1 = ''
+      this.whiteSearchList1.endCreateTime1 = ''
+      this.whiteSearchList3.startCreateTime3 = ''
+      this.whiteSearchList3.endCreateTime3 = ''
+      this.mypageable1.pageNum1 = 1
+      this.tcboctime = null
+      this.textnum = []
+      this.probeTime = []
+      this.textnotNum = []
       let bcTestVo = {
         url: this.url,
         startCreateTime: this.whiteSearchList1.startCreateTime1,
@@ -889,69 +1000,27 @@ export default {
           pageNum: this.mypageable1.pageNum1,
           pageSize: this.mypageable1.pageSize1,
         },
-      };
-      const { data: res } = await this.$http.post("/getBcTestEntity", bcTestVo);
+      }
+      const { data: res } = await this.$http.post('/getBcTestEntity', bcTestVo)
       if (res.code == 200) {
-        this.tableData1 = res.data.page.content;
-        this.total1 = res.data.page.totalElements;
-        this.totalPages1 = res.data.page.totalPages;
+        this.tableData1 = res.data.page.content
+        this.total1 = res.data.page.totalElements
+        this.totalPages1 = res.data.page.totalPages
         res.data.list.forEach((item) => {
-          this.textnum.push(item.num);
-          this.probeTime.push(item.probeTime);
-          this.textnotNum.push(item.notNum);
-        });
+          this.textnum.push(item.num)
+          this.probeTime.push(item.probeTime)
+          this.textnotNum.push(item.notNum)
+        })
 
         this.$nextTick(() => {
-          this.drawLine();
-        });
-        this.loading = false;
-      } else if (res.code == 500) {
-        this.loading = false;
-        this.$message(res.message);
+          this.drawLine()
+        })
+      } else {
+        this.$message('无数据')
+        this.loading = false
       }
-      // else {
-      //   this.$message("无数据");
-
-      // }
     },
-    //重置
-    async conerr() {
-      this.tcboctime = null;
-      this.textnum = [];
-      this.probeTime = [];
-      this.textnotNum = [];
-      let bcTestVo = {
-        url: this.url,
-        startCreateTime: "",
-        endCreateTime: "",
-        mypageable: {
-          pageNum: this.mypageable1.pageNum1,
-          pageSize: this.mypageable1.pageSize1,
-        },
-      };
-      const { data: res } = await this.$http.post("/getBcTestEntity", bcTestVo);
-      if (res.code == 200) {
-        this.tableData1 = res.data.page.content;
-        this.total1 = res.data.page.totalElements;
-        this.totalPages1 = res.data.page.totalPages;
-        res.data.list.forEach((item) => {
-          this.textnum.push(item.num);
-          this.probeTime.push(item.probeTime);
-          this.textnotNum.push(item.notNum);
-        });
 
-        this.$nextTick(() => {
-          this.drawLine();
-        });
-      } else if (res.code == 500) {
-        this.loading = false;
-        this.$message(res.message);
-      }
-      // else {
-      //   this.$message("无数据");
-
-      // }
-    },
     //拨测 ————开始
     async starts(val) {
       const { data: res } = await this.$http.get("/getBcStart", {
@@ -1088,7 +1157,7 @@ export default {
       //   this.getTableData();
     },
     handleSelectionChange() {
-        this.tableDatalist = val
+      this.tableDatalist = val;
     },
     handleClose1() {
       this.dialog = false;
@@ -1097,8 +1166,10 @@ export default {
       this.dialogadd = false;
     },
     handleCurrentChange1(val) {
-      this.mypageable1.pageNum1 = val;
-      // this.bocexiangqing();
+      this.mypageable1.pageNum1 = val
+
+      this.bocexiangqing1()
+
     },
     zP(val) {
       if (val == "dk") {
@@ -1200,7 +1271,6 @@ export default {
   padding: 0 20px;
 }
 
-
 .zhuzhuang {
   width: 100%;
   height: 30%;
@@ -1261,7 +1331,7 @@ export default {
     flex: 1;
     text-align: center;
     line-height: 40px;
-    font-family: 'siyuanheitinormal1';
+    font-family: "siyuanheitinormal1";
     .ziti {
       color: #fff !important;
     }

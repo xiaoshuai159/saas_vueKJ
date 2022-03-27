@@ -174,15 +174,15 @@
       <div class="zongliang">
         <span class="title_num1">
           <div class="tit">日拦截量</div>
-          <div class="tit1">{{ this.dayliang }}</div>
+          <div class="tit1">{{ this.daylanjieliang }}</div>
         </span>
         <span class="title_num2">
           <div class="tit">月拦截量</div>
-          <div class="tit1">150000</div>
+          <div class="tit1">{{ this.yuelanjieliang }}</div>
         </span>
         <span class="title_num3">
           <div class="tit">总拦截量</div>
-          <div class="tit1">{{ this.daylanjienum }}</div>
+          <div class="tit1">{{  this.zongliangchuzhi }}</div>
         </span>
       </div>
     </div>
@@ -379,7 +379,8 @@ export default {
         classification: null, //二级分类
       },
       dayliang: 0,
-      dayliangchuzhi: 0,
+      zongliangchuzhi: 0,
+      yuelanjieliang:0,
       daylanjieliang: 0,
       daylanjienum: 0,
       daytydpe: 0,
@@ -504,11 +505,12 @@ export default {
   created() {
     this.getTabData();
 
-    this.echartslist();
-    this.daychuzhiliang();
-    // this.dayzong();
+    // this.echartslist();
+    // this.daychuzhiliang();
+    this.dayzong();
     this.daylanjienumliang();
-    this.daylanjiezong();
+    this.yuelanjienumliang()
+    // this.daylanjiezong();
   },
   mounted() {
     // setTimeout(() => {
@@ -538,107 +540,68 @@ export default {
 
     // },
     // 处置总数量
-    // async dayzong() {
-    //   let list = {
-    //     endTreatmentTime: this.whiteSearchList.endCreateTime,
-    //     startTreatmentTime: this.whiteSearchList.startCreateTime,
-    //   };
-    //   const { data: res } = await this.$http.post(
-    //     "/treatment/getSumDomain",
-    //     list
-    //   );
-    //   if (res.code == 200) {
-    //     let sum = 0;
-    //     // let sumtype = 0;
-    //     for (var i = 0; i < res.data.length; i++) {
-    //       sum += res.data[i].sumStatus;
-    //       // sumtype += res.data[i].status;
-    //     }
-    //     this.dayliangchuzhi = sum;
-    //     // this.daytydpe = sumtype;
-    //   } else if (res.code == 500) {
-    //     this.$message(res.message);
-    //   }
-    // },
-    //本月拦截量
-    async monthnum(){
-      const {data:res}=await this.$http.get('/treatment/getDomainVisitsMonth')
-      if(res.code==200){
-        console.log(res.data);
-      }
-    },
-    // 当天处置数量
-    async daychuzhiliang() {
+    async dayzong() {
+      let list = {
+        endTreatmentTime: this.whiteSearchList.endCreateTime,
+        startTreatmentTime: this.whiteSearchList.startCreateTime,
+      };
       const { data: res } = await this.$http.get(
-        "/treatment/getSumDomainToday"
+        "/treatment/getSumDomainVisits",
+        list
       );
       if (res.code == 200) {
+        let sum = 0;
+        // let sumtype = 0;
+        for (var i = 0; i < res.data.length; i++) {
+          sum += res.data[i].sumStatus;
+          // sumtype += res.data[i].status;
+        }
+        this.zongliangchuzhi = sum;
+        // this.daytydpe = sumtype;
+      } else if (res.code == 500) {
+        this.$message(res.message);
+      }
+    },
+    //本月拦截量
+    async yuelanjienumliang() {
+   
+      const { data: res } = await this.$http.get(
+        "/treatment/getDomainVisitsMonth"
+      );
+      if (res.code == 200) {
+        
         let sum1 = 0;
 
         for (var i = 0; i < res.data.length; i++) {
           sum1 += res.data[i].sumStatus;
         }
 
-        this.dayliang = sum1;
+        this.yuelanjieliang = sum1;
       } else if (res.code == 500) {
         this.$message(res.message);
       }
     },
-    //拦截量总量   //时间有问题
-    async daylanjiezong() {
-      // const list = {
-      //   endTreatmentTime:
-      //     this.whiteSearchList.endCreateTime == null
-      //       ? this.whiteSearchList.endCreateTime
-      //       : dayjs(this.whiteSearchList.endCreateTime).format("YYYY/MM/DD"),
-      //   startTreatmentTime:
-      //     this.whiteSearchList.startCreateTime == null
-      //       ? this.whiteSearchList.startCreateTime
-      //       : dayjs(this.whiteSearchList.startCreateTime).format("YYYY/MM/DD"),
-      // };
-      let list={
-        endTreatmentTime:"",
-        startTreatmentTime:'',
-        startUploadTime:'',
-        endUploadTime:'',
-      }
-      // console.log(list);
+     
+  
+    //当天拦截量
+    async daylanjienumliang() {
+   
       const { data: res } = await this.$http.get(
-        "/treatment/getSumDomainVisits",
-        {
-          params: list,
-        }
+        "/treatment/getDomainVisitsToday"
       );
       if (res.code == 200) {
-        // console.log(res.data);
-        let sum = 0;
+        
+        let sum1 = 0;
 
         for (var i = 0; i < res.data.length; i++) {
-          sum += res.data[i].sumStatus;
+          sum1 += res.data[i].sumStatus;
         }
-        this.daylanjienum = sum;
+
+        this.daylanjieliang = sum1;
       } else if (res.code == 500) {
         this.$message(res.message);
       }
     },
-    //当天拦截量
-    // async daylanjienumliang() {
-    //   const { data: res } = await this.$http.get(
-    //     "/treatment/getDomainVisitsToday"
-    //   );
-    //   if (res.code == 200) {
-    //     // console.log(res.data);
-    //     let sum1 = 0;
-
-    //     for (var i = 0; i < res.data.length; i++) {
-    //       sum1 += res.data[i].sumStatus;
-    //     }
-
-    //     this.daylanjieliang = sum1;
-    //   } else if (res.code == 500) {
-    //     this.$message(res.message);
-    //   }
-    // },
     // +++++++++++++++++++++++++++++++++++++
     qufangwen(val) {
       // console.log(val);
@@ -669,280 +632,280 @@ export default {
     },
     //曲线图++++++++++++++++++++++++++++++++++++
     // ===================================
-    drawLine() {
-      // eslint-disable-next-line camelcase
-      var bar_qx = this.$refs.chart;
-      // eslint-disable-next-line camelcase
-      if (bar_qx) {
-        let myChart = this.$echarts.init(bar_qx);
-        myChart.setOption(this.setOption());
-        // console.log(myChart);
-      }
+    // drawLine() {
+    //   // eslint-disable-next-line camelcase
+    //   var bar_qx = this.$refs.chart;
+    //   // eslint-disable-next-line camelcase
+    //   if (bar_qx) {
+    //     let myChart = this.$echarts.init(bar_qx);
+    //     myChart.setOption(this.setOption());
+    //     // console.log(myChart);
+    //   }
 
-      // console.log(this.qutest);
-    },
-    setOption() {
-      let option = {
-        feature: {
-          saveAsImage: {
-            show: false,
-          },
-        },
-        title: {},
-        tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            lineStyle: {
-              color: "#66B3FF",
-            },
-          },
-        },
-        color: [" #fac858", "#EE6666"], //绿色  橙色
-        legend: {
-          data: [
-            {
-              name: "处置域名数",
-              textStyle: {
-                color: ["#fac858"],
-              },
-            },
-            {
-              name: "域名拦截量",
-              textStyle: {
-                color: ["#EE6666"],
-              },
-              //  ["处置域名数", "域名访问量"]
-            },
-          ],
-        },
-        grid: {
-          y2: 140,
-        },
+    //   // console.log(this.qutest);
+    // },
+    // setOption() {
+    //   let option = {
+    //     feature: {
+    //       saveAsImage: {
+    //         show: false,
+    //       },
+    //     },
+    //     title: {},
+    //     tooltip: {
+    //       trigger: "axis",
+    //       axisPointer: {
+    //         lineStyle: {
+    //           color: "#66B3FF",
+    //         },
+    //       },
+    //     },
+    //     color: [" #fac858", "#EE6666"], //绿色  橙色
+    //     legend: {
+    //       data: [
+    //         {
+    //           name: "处置域名数",
+    //           textStyle: {
+    //             color: ["#fac858"],
+    //           },
+    //         },
+    //         {
+    //           name: "域名拦截量",
+    //           textStyle: {
+    //             color: ["#EE6666"],
+    //           },
+    //           //  ["处置域名数", "域名访问量"]
+    //         },
+    //       ],
+    //     },
+    //     grid: {
+    //       y2: 140,
+    //     },
 
-        xAxis: {
-          type: "category",
-          boundaryGap: false,
-          data: this.qutest,
-          axisLabel: {
-            // rotate: -20,
-            //  让x轴文字方向为竖向
-            // interval: 0,
-          },
-          axisLine: {
-            lineStyle: {
-              color: "#fff",
-              width: 1,
-            },
-          },
-        },
+    //     xAxis: {
+    //       type: "category",
+    //       boundaryGap: false,
+    //       data: this.qutest,
+    //       axisLabel: {
+    //         // rotate: -20,
+    //         //  让x轴文字方向为竖向
+    //         // interval: 0,
+    //       },
+    //       axisLine: {
+    //         lineStyle: {
+    //           color: "#fff",
+    //           width: 1,
+    //         },
+    //       },
+    //     },
 
-        yAxis: {
-          type: "value",
-          splitLine: {
-            lineStyle: {
-              color: ["#fff"],
-            },
-          },
-          nameTextStyle: {
-            color: ["#fff"],
-          },
-          axisLine: {
-            lineStyle: {
-              color: "#fff",
-              width: 1,
-            },
-          },
-        },
-        series: [
-          {
-            name: "处置域名数",
-            type: "line",
+    //     yAxis: {
+    //       type: "value",
+    //       splitLine: {
+    //         lineStyle: {
+    //           color: ["#fff"],
+    //         },
+    //       },
+    //       nameTextStyle: {
+    //         color: ["#fff"],
+    //       },
+    //       axisLine: {
+    //         lineStyle: {
+    //           color: "#fff",
+    //           width: 1,
+    //         },
+    //       },
+    //     },
+    //     series: [
+    //       {
+    //         name: "处置域名数",
+    //         type: "line",
 
-            data: this.qutest1,
-            smooth: true,
-          },
-          {
-            name: "域名拦截量",
-            type: "line",
+    //         data: this.qutest1,
+    //         smooth: true,
+    //       },
+    //       {
+    //         name: "域名拦截量",
+    //         type: "line",
 
-            data: this.qutest2,
-            smooth: true,
-          },
-        ],
+    //         data: this.qutest2,
+    //         smooth: true,
+    //       },
+    //     ],
 
-        grid: {
-          x: 60,
-          y: 40,
-          x2: 40,
-          y2: 40,
-          borderWidth: 1,
-        },
-      };
+    //     grid: {
+    //       x: 60,
+    //       y: 40,
+    //       x2: 40,
+    //       y2: 40,
+    //       borderWidth: 1,
+    //     },
+    //   };
 
-      return option;
-    },
+    //   return option;
+    // },
     // 曲线图++++++++++++++++++++++++++++++++++++
     //柱状图----------------------------------------
-    Columnar() {
-      // eslint-disable-next-line camelcase
-      var bar_zz = this.$refs.zhuchart;
-      // eslint-disable-next-line camelcase
-      if (bar_zz) {
-        let myChart = this.$echarts.init(bar_zz);
+    // Columnar() {
+    //   // eslint-disable-next-line camelcase
+    //   var bar_zz = this.$refs.zhuchart;
+    //   // eslint-disable-next-line camelcase
+    //   if (bar_zz) {
+    //     let myChart = this.$echarts.init(bar_zz);
 
-        myChart.setOption(this.zhusetOption());
-      }
-    },
-    zhusetOption() {
-      this.zhutest1.forEach((item) => {
-        if (item == "DK") {
-          this.restest.push("网络贷款");
-        } else if (item == "SD") {
-          this.restest.push("兼职刷单");
-        } else if (item == "GJF") {
-          this.restest.push("冒充公务单位");
-        } else if (item == "LC") {
-          this.restest.push("投资理财");
-        } else if (item == "GW") {
-          this.restest.push("网络购物");
-        } else if (item == "QT") {
-          this.restest.push("未分类");
-        }
-      });
-      // console.log(this.restest);
-      let option = {
-        //下载
-        toolbox: {
-          show: true,
-          // feature: {
-          //   mark: { show: true },
-          //   saveAsImage: { show: true },
-          // },
-        },
-        tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            // 坐标轴指示器，坐标轴触发有效
-            type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
-          },
-        },
-        title: {},
-        grid: {
-          x: 60,
-          y: 40,
-          x2: 40,
-          y2: 40,
-          borderWidth: 1,
-        },
-        color: [" #fac858", "#EE6666"], //绿色  橙色
-        legend: {
-          data: [
-            {
-              name: "处置域名数",
-              textStyle: {
-                color: ["#fac858"],
-              },
-            },
-            {
-              name: "域名拦截量",
-              textStyle: {
-                color: ["#EE6666"],
-              },
-              //  ["处置域名数", "域名访问量"]
-            },
-          ],
-        },
-        xAxis: {
-          type: "category",
-          // data:this.zhutest2,
-          data: this.restest,
+    //     myChart.setOption(this.zhusetOption());
+    //   }
+    // },
+    // zhusetOption() {
+    //   this.zhutest1.forEach((item) => {
+    //     if (item == "DK") {
+    //       this.restest.push("网络贷款");
+    //     } else if (item == "SD") {
+    //       this.restest.push("兼职刷单");
+    //     } else if (item == "GJF") {
+    //       this.restest.push("冒充公务单位");
+    //     } else if (item == "LC") {
+    //       this.restest.push("投资理财");
+    //     } else if (item == "GW") {
+    //       this.restest.push("网络购物");
+    //     } else if (item == "QT") {
+    //       this.restest.push("未分类");
+    //     }
+    //   });
+    //   // console.log(this.restest);
+    //   let option = {
+    //     //下载
+    //     toolbox: {
+    //       show: true,
+    //       // feature: {
+    //       //   mark: { show: true },
+    //       //   saveAsImage: { show: true },
+    //       // },
+    //     },
+    //     tooltip: {
+    //       trigger: "axis",
+    //       axisPointer: {
+    //         // 坐标轴指示器，坐标轴触发有效
+    //         type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
+    //       },
+    //     },
+    //     title: {},
+    //     grid: {
+    //       x: 60,
+    //       y: 40,
+    //       x2: 40,
+    //       y2: 40,
+    //       borderWidth: 1,
+    //     },
+    //     color: [" #fac858", "#EE6666"], //绿色  橙色
+    //     legend: {
+    //       data: [
+    //         {
+    //           name: "处置域名数",
+    //           textStyle: {
+    //             color: ["#fac858"],
+    //           },
+    //         },
+    //         {
+    //           name: "域名拦截量",
+    //           textStyle: {
+    //             color: ["#EE6666"],
+    //           },
+    //           //  ["处置域名数", "域名访问量"]
+    //         },
+    //       ],
+    //     },
+    //     xAxis: {
+    //       type: "category",
+    //       // data:this.zhutest2,
+    //       data: this.restest,
 
-          axisLabel: {
-            // rotate: -30,
-            //  让x轴文字方向为竖向
-            interval: 0,
-          },
-          axisLine: {
-            lineStyle: {
-              color: "#fff",
-              width: 1,
-            },
-          },
-        },
-        yAxis: {
-          type: "value",
-          splitLine: {
-            lineStyle: {
-              color: ["#fff"],
-            },
-          },
-          nameTextStyle: {
-            color: ["#fff"],
-          },
-          axisLine: {
-            lineStyle: {
-              color: "#fff",
-              width: 1,
-            },
-          },
-        },
-        series: [
-          {
-            data: this.zhutest2,
-            type: "bar",
-            color: "#fac858",
-            barWidth: 20,
-            name: "处置域名数",
-          },
-          {
-            data: this.zhutest3,
-            type: "bar",
+    //       axisLabel: {
+    //         // rotate: -30,
+    //         //  让x轴文字方向为竖向
+    //         interval: 0,
+    //       },
+    //       axisLine: {
+    //         lineStyle: {
+    //           color: "#fff",
+    //           width: 1,
+    //         },
+    //       },
+    //     },
+    //     yAxis: {
+    //       type: "value",
+    //       splitLine: {
+    //         lineStyle: {
+    //           color: ["#fff"],
+    //         },
+    //       },
+    //       nameTextStyle: {
+    //         color: ["#fff"],
+    //       },
+    //       axisLine: {
+    //         lineStyle: {
+    //           color: "#fff",
+    //           width: 1,
+    //         },
+    //       },
+    //     },
+    //     series: [
+    //       {
+    //         data: this.zhutest2,
+    //         type: "bar",
+    //         color: "#fac858",
+    //         barWidth: 20,
+    //         name: "处置域名数",
+    //       },
+    //       {
+    //         data: this.zhutest3,
+    //         type: "bar",
 
-            barWidth: 20,
-            name: "域名拦截量",
-            color: "#EE6666",
-          },
-        ],
-      };
-      return option;
-    },
+    //         barWidth: 20,
+    //         name: "域名拦截量",
+    //         color: "#EE6666",
+    //       },
+    //     ],
+    //   };
+    //   return option;
+    // },
 
     // 图表初次渲染
-    async echartslist() {
-      let charecharts = {
-        startTreatmentTime: this.whiteSearchList1.startCreateTime1.substring(
-          0,
-          this.whiteSearchList1.startCreateTime1.length - 9
-        ),
-        endTreatmentTime: this.whiteSearchList1.endCreateTime1.substring(
-          0,
-          this.whiteSearchList1.startCreateTime1.length - 9
-        ),
-      };
-      const { data: res } = await this.$http.post(
-        "/treatment/tongJiTreatment",
-        charecharts
-      );
-      if (res.code == 200) {
-        res.data.tjList.forEach((item) => {
-          this.qutest.push(item.treatmentTime1);
-          this.qutest1.push(item.urlCount);
-          this.qutest2.push(item.visitsSum);
-        });
-        res.data.sonList.forEach((item) => {
-          this.zhutest1.push(item.type);
-          this.zhutest2.push(item.urlCount2);
-          this.zhutest3.push(item.typeVisits);
-        });
-        // console.log(this.zhutest1);
-        setTimeout(() => {
-          this.drawLine();
-          this.Columnar();
-        }, 500);
-      } else if (res.code == 500) {
-        this.$message(res.message);
-      }
-    },
+    // async echartslist() {
+    //   let charecharts = {
+    //     startTreatmentTime: this.whiteSearchList1.startCreateTime1.substring(
+    //       0,
+    //       this.whiteSearchList1.startCreateTime1.length - 9
+    //     ),
+    //     endTreatmentTime: this.whiteSearchList1.endCreateTime1.substring(
+    //       0,
+    //       this.whiteSearchList1.startCreateTime1.length - 9
+    //     ),
+    //   };
+    //   const { data: res } = await this.$http.post(
+    //     "/treatment/tongJiTreatment",
+    //     charecharts
+    //   );
+    //   if (res.code == 200) {
+    //     res.data.tjList.forEach((item) => {
+    //       this.qutest.push(item.treatmentTime1);
+    //       this.qutest1.push(item.urlCount);
+    //       this.qutest2.push(item.visitsSum);
+    //     });
+    //     res.data.sonList.forEach((item) => {
+    //       this.zhutest1.push(item.type);
+    //       this.zhutest2.push(item.urlCount2);
+    //       this.zhutest3.push(item.typeVisits);
+    //     });
+    //     // console.log(this.zhutest1);
+    //     setTimeout(() => {
+    //       this.drawLine();
+    //       this.Columnar();
+    //     }, 500);
+    //   } else if (res.code == 500) {
+    //     this.$message(res.message);
+    //   }
+    // },
     //图表数据查询
     // async chaxun1() {
     //   // (this.qutest = []),
@@ -1149,40 +1112,40 @@ export default {
       this.tableDatalist = val;
     },
     //一键授权
-    async newauthorization() {
-      // console.log(this.tableDatalist);
-      if (this.tableDatalist.length > 0) {
-        let arr = [];
-        let authorarr = [];
-        this.tableDatalist.forEach((item) => {
-          arr.push(item.id);
-          authorarr.push(item.authorize);
-        });
-        if (authorarr.includes(1)) {
-          this.$message("选择中含有已授权，请重新选择");
-        } else {
-          const newarr = {
-            code: "null",
-            data: arr,
-            message: "null",
-          };
-          const { data: res } = await this.$http.post(
-            "/treatment/authorize",
-            newarr
-          );
-          if (res.code == 200) {
-            this.$message("授权修改成功");
-            // this.reload();
-            this.getTabData();
-            this.shuzuid = [];
-          } else if (res.data == 500) {
-            this.$message(res.message);
-          }
-        }
-      } else {
-        this.$message("请选择");
-      }
-    },
+    // async newauthorization() {
+    //   // console.log(this.tableDatalist);
+    //   if (this.tableDatalist.length > 0) {
+    //     let arr = [];
+    //     let authorarr = [];
+    //     this.tableDatalist.forEach((item) => {
+    //       arr.push(item.id);
+    //       authorarr.push(item.authorize);
+    //     });
+    //     if (authorarr.includes(1)) {
+    //       this.$message("选择中含有已授权，请重新选择");
+    //     } else {
+    //       const newarr = {
+    //         code: "null",
+    //         data: arr,
+    //         message: "null",
+    //       };
+    //       const { data: res } = await this.$http.post(
+    //         "/treatment/authorize",
+    //         newarr
+    //       );
+    //       if (res.code == 200) {
+    //         this.$message("授权修改成功");
+    //         // this.reload();
+    //         this.getTabData();
+    //         this.shuzuid = [];
+    //       } else if (res.data == 500) {
+    //         this.$message(res.message);
+    //       }
+    //     }
+    //   } else {
+    //     this.$message("请选择");
+    //   }
+    // },
     //导出
     async put() {
       this.loadingbuttext = "...加载中";

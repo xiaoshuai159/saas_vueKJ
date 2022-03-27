@@ -156,7 +156,6 @@
     <el-dialog
       :close-on-click-modal="false"
       title="文件上传"
-      
       :visible.sync="shangchuan"
       width="20%"
       height="40%"
@@ -165,6 +164,7 @@
     >
       <div style="width: 100%">
         <el-upload
+          ref="upload"
           class="upload-demo"
           accept=".xlsx"
           action="/black/uploadDomain"
@@ -369,8 +369,8 @@ export default {
       if (res.code == 200) {
         // setTimeout(() => {
         this.$message.success("上传成功");
-
-        //   this.getTabData()
+        this.getTabData();
+　　this.$refs.upload.clearFiles();
         // }, 1000)
       } else {
         this.$message(res.message);
