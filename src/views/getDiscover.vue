@@ -367,24 +367,24 @@ export default {
   created() {
     this.getTabData();
  
-this.saveJcInfo()
+// this.saveJcInfo()
   },
   mounted() {},
   methods: {
-   saveJcInfo(){
-	let info = {
-	 "dataSource": this.newdomainSimpleVo.source,
-        "endDate": this.whiteSearchList.endCreateTime,
-        "level": null,
-        "mypageable": this.mypageable,
-        "startDate": this.whiteSearchList.startCreateTime,
-        "type": null,
-        "url": null,
-	}
-	this.$apiFun.saveJcInfo(info).then((res) => {
-			console.log(res)
-	})
-},
+//    saveJcInfo(){
+// 	let info = {
+// 	 "dataSource": this.newdomainSimpleVo.source,
+//         "endDate": this.whiteSearchList.endCreateTime,
+//         "level": null,
+//         "mypageable": this.mypageable,
+//         "startDate": this.whiteSearchList.startCreateTime,
+//         "type": null,
+//         "url": null,
+// 	}
+// 	this.$apiFun.saveJcInfo(info).then((res) => {
+// 			console.log(res)
+// 	})
+// },
 
 
     //类型
