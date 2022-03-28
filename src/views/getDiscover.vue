@@ -17,12 +17,12 @@
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-              value-format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd HH:mm:ss"
               size="mini"
-             
+              :default-time="['00:00:00', '23:59:59']"
             >
-             <!-- HH:mm:ss
-             :default-time="['00:00:00', '23:59:59']" -->
+             <!-- 
+             -->
             </el-date-picker>
           </el-form-item>
           <el-form-item label="来源">
@@ -316,8 +316,9 @@ export default {
           { value: "QT", label: "其他类型" },
         ],
         authorize: [
-          { value: 0, label: "未授权" },
-          { value: 1, label: "已授权" },
+         { value: 0, label: '处置中' },
+          { value: 1, label: '已处置' },
+          { value: 2, label: '已失效' },
         ],
         ip_list: [
           { value: 0, label: "是" },

@@ -182,7 +182,7 @@
         </span>
         <span class="title_num3">
           <div class="tit">总拦截量</div>
-          <div class="tit1">{{  this.zongliangchuzhi }}</div>
+          <div class="tit1">{{ this.zongliangchuzhi }}</div>
         </span>
       </div>
     </div>
@@ -212,7 +212,7 @@
       </el-table-column>
       <!--  -->
       <!-- ----------------- -->
-      <el-table-column label="URL" min-width="30%"  show-overflow-tooltip >
+      <el-table-column label="URL" min-width="30%" show-overflow-tooltip>
         <!-- v-if="getlist1('url')" -->
         <template slot-scope="scope">
           <el-popconfirm
@@ -237,8 +237,8 @@
             @cancel="qufangwen(scope.row.url)"
             :hide-icon="true"
           > -->
-            <!-- v-if="!getRole1('getUrl')" -->
-            <!-- <el-button type="text" slot="reference" class="urlcolor" >{{
+          <!-- v-if="!getRole1('getUrl')" -->
+          <!-- <el-button type="text" slot="reference" class="urlcolor" >{{
               scope.row.url
             }}</el-button> -->
           <!-- </el-popconfirm> -->
@@ -261,7 +261,7 @@
           {{ scope.row.status == 0 ? "未授权" : "已授权" }}
         </template>
       </el-table-column> -->
-  <!-- v-if="getlist1('status')" -->
+      <!-- v-if="getlist1('status')" -->
       <!-- <el-table-column
         label="二级分类"
         min-width="17%"
@@ -300,7 +300,7 @@
       <el-table-column label="处置状态" min-width="7%">
         <!-- v-if="getlist1('authorize')" -->
         <template slot-scope="scope">
-          {{ scope.row.status == "0" ? "未处置" : "已处置" }}
+          {{ zt(scope.row.status) }}
         </template>
       </el-table-column>
     </el-table>
@@ -380,7 +380,7 @@ export default {
       },
       dayliang: 0,
       zongliangchuzhi: 0,
-      yuelanjieliang:0,
+      yuelanjieliang: 0,
       daylanjieliang: 0,
       daylanjienum: 0,
       daytydpe: 0,
@@ -451,17 +451,18 @@ export default {
           { value: "HTTPS", label: "HTTPS" },
         ],
         sourceTypeData: [
-          { value: "CA", label: "长安发现" },
-          { value: "BD", label: "本地上传" },
-          { value: "BXF", label: "部下发" },
-          { value: "AJ", label: "案件" },
+          { value: "CA", label: "长安" },
           { value: "SY", label: "沈阳" },
+          // { value: "BXF", label: "部下发" },
+            //  { value: "BD", label: "本地上传" },      
+          // { value: "AJ", label: "案件" },
         ],
+        
 
         stateTypeData: [
-          { value: 0, label: "未处置" },
+          { value: 0, label: "处置中" },
           { value: 1, label: "已处置" },
-      
+          { value: 2, label: "已失效" },
         ],
         model_typeData: [
           { value: "DK", label: "贷款" },
@@ -479,8 +480,9 @@ export default {
           { value: "YX", label: "网络游戏产品虚假交易类" },
           { value: "APP", label: "分发平台" },
           { value: "XZYM", label: "下载页面" },
-          { value: "OTHER", label: "其他类型诈骗" },
+       
         ],
+          //  { value: "OTHER", label: "其他类型诈骗" },
         authorize: [
           { value: 0, label: "未处置" },
           { value: 1, label: "已处置" },
@@ -509,7 +511,7 @@ export default {
     // this.daychuzhiliang();
     this.dayzong();
     this.daylanjienumliang();
-    this.yuelanjienumliang()
+    this.yuelanjienumliang();
     // this.daylanjiezong();
   },
   mounted() {
@@ -564,12 +566,10 @@ export default {
     },
     //本月拦截量
     async yuelanjienumliang() {
-   
       const { data: res } = await this.$http.get(
         "/treatment/getDomainVisitsMonth"
       );
       if (res.code == 200) {
-        
         let sum1 = 0;
 
         for (var i = 0; i < res.data.length; i++) {
@@ -581,16 +581,13 @@ export default {
         this.$message(res.message);
       }
     },
-     
-  
+
     //当天拦截量
     async daylanjienumliang() {
-   
       const { data: res } = await this.$http.get(
         "/treatment/getDomainVisitsToday"
       );
       if (res.code == 200) {
-        
         let sum1 = 0;
 
         for (var i = 0; i < res.data.length; i++) {
@@ -1039,30 +1036,17 @@ export default {
         getTabDataList
       );
       if (res.code == 200) {
-        // console.log(res);
-        // this.dayzong();
-        // this.daylanjiezong();
-        this.mypageable.pageNum = 1;
+        if (res.data.content.length > 0) {
+          this.mypageable.pageNum = 1;
 
-        // if (res.data.content.length > 0) {
-        // console.log(res.data.content);
-        this.tableData = res.data.content;
-        this.total = res.data.totalElements;
-        this.totalPages = res.data.totalPages;
-
-        // } else {
-        // this.mypageable.pageNum = 1;
-        // this.mypageable.pageSize = 10;
-        // this.getTabData();
-        // }
-      } else if (res.code == 500) {
-        this.$message(res.message);
+          this.tableData = res.data.content;
+          this.total = res.data.totalElements;
+          this.totalPages = res.data.totalPages;
+        } else {
+          this.$message("无数据");
+        }
       } else {
-        this.$message("无数据");
-        this.mypageable.pageNum = 1;
-        this.mypageable.pageSize = 15;
-        this.getTabData();
-        this.resetFun();
+        this.$message(res.message);
       }
     },
     // if (res.code == 200) {
@@ -1299,18 +1283,21 @@ export default {
       return c.substring(0, c.length - 9);
     },
     laiyuan(val) {
-      if (val == "BXF") {
-        return "部下发";
-      } else if (val == "AJ") {
-        return "案件";
-      } else if (val == "CA") {
+    if (val == "CA") {
         return "长安";
-      } else if (val == "BD") {
-        return "本地";
-      } else if (val == "SY") {
+      }  else if (val == "SY") {
         return "沈阳";
+      }else {
+        return val
       }
     },
+      //  if (val == "BXF") {
+      //   return "部下发";
+      // } else if (val == "AJ") {
+      //   return "案件";
+      // } else if (val == "BD") {
+        // return "本地";
+      // }
     tableRowClassName({ rowIndex }) {
       if (rowIndex % 2 === 0) {
         return "warning-row";
@@ -1318,6 +1305,15 @@ export default {
         return "success-row";
       }
       return "";
+    },
+    zt(val) {
+      if (val == 0) {
+        return "处置中";
+      } else if (val == 1) {
+        return "已处置";
+      } else if (val == 2) {
+        return "已失效";
+      }
     },
   },
   filters: {
@@ -1423,7 +1419,7 @@ export default {
 // }
 .urlcolor {
   color: rgb(83, 166, 243);
- text-decoration:underline;
+  text-decoration: underline;
 }
 .tubiao {
   width: 100% /* 1558/16 */;
@@ -1516,13 +1512,11 @@ export default {
   box-sizing: border-box;
   font-size: 18px;
 }
-.tit{
+.tit {
   height: 50%;
-
 }
-.tit1{
+.tit1 {
   height: 50%;
-  
 }
 .title_num1 {
   border: 2px solid rgba(25, 115, 163, 0.5);

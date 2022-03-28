@@ -26,7 +26,7 @@ export default function zP(val) {
     case "SZP":
       return "杀猪盘"
     case "DS":
-      "虚假购物、服务类"
+     return "虚假购物/服务类"
     // //break;
     case "JY":
       return "网络婚恋/交友类（非杀猪盘类）"
@@ -34,7 +34,7 @@ export default function zP(val) {
     case "ZX":
       return "虚假征信类"
     //break;
-    case "MC":
+    case "YX":
       return "网络游戏产品虚假交易类"
     //break;
     case "OTHER":

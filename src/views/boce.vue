@@ -118,12 +118,13 @@
           </el-form-item>
 
           <el-form-item>
+               <el-button type="primary" size="mini" @click.native="search"
+              >查询</el-button
+            >
             <el-button type="primary" size="mini" @click.native="resetFun"
               >重置</el-button
             >
-            <el-button type="primary" size="mini" @click.native="search"
-              >查询</el-button
-            >
+         
             <!-- <el-button
               type="primary"
               size="mini"
@@ -162,6 +163,9 @@
       >
       </el-table-column>
       <el-table-column prop="dataSource" label="处置部门" width="200">
+        <template slot-scope="scoped">
+          {{ly(scoped.row.dataSource)}}
+        </template>
       </el-table-column>
       <el-table-column label="是否存活" prop="ifSurvival"> </el-table-column>
       <el-table-column prop="handletime" label="拨测时间"> </el-table-column>
@@ -385,7 +389,7 @@ export default {
         ],
         formType: [
           { value: "CA", label: "长安处置" },
-          { value: "SY", label: "沈阳处置" },
+          { value: "SY", label: "运营商" },
         ],
         sourceTypeData: [
           { value: "dk", label: "贷款" },
@@ -1208,7 +1212,7 @@ export default {
       if (val == "CA") {
         return "长安处置";
       } else if (val == "SY") {
-        return "沈阳处置";
+        return "运营商";
       } else {
         return val;
       }
