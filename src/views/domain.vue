@@ -452,7 +452,7 @@ export default {
         ],
         sourceTypeData: [
           { value: "CA", label: "长安" },
-          { value: "SY", label: "沈阳" },
+          { value: "SY", label: "运营商" },
           // { value: "BXF", label: "部下发" },
             //  { value: "BD", label: "本地上传" },      
           // { value: "AJ", label: "案件" },
@@ -1286,7 +1286,7 @@ export default {
     if (val == "CA") {
         return "长安";
       }  else if (val == "SY") {
-        return "沈阳";
+        return "运营商";
       }else {
         return val
       }
