@@ -300,7 +300,7 @@
       <el-table-column label="处置状态" min-width="7%">
         <!-- v-if="getlist1('authorize')" -->
         <template slot-scope="scope">
-          {{ scope.row.status == "0" ? "未授权" : "已授权" }}
+          {{ scope.row.status == "0" ? "未处置" : "已处置" }}
         </template>
       </el-table-column>
     </el-table>
@@ -459,8 +459,8 @@ export default {
         ],
 
         stateTypeData: [
-          { value: 0, label: "未授权" },
-          { value: 1, label: "已授权" },
+          { value: 0, label: "未处置" },
+          { value: 1, label: "已处置" },
       
         ],
         model_typeData: [
@@ -482,8 +482,8 @@ export default {
           { value: "OTHER", label: "其他类型诈骗" },
         ],
         authorize: [
-          { value: 0, label: "未授权" },
-          { value: 1, label: "已授权" },
+          { value: 0, label: "未处置" },
+          { value: 1, label: "已处置" },
         ],
       },
       tableData: [],
