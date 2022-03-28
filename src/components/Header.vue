@@ -121,10 +121,10 @@
           @click="submitForm('newdomainSimpleVo')"
           type="primary"
           size="mini"
-            class="el-button-xitongerr"
+      
           >修 改</el-button
         >
-        <el-button   class="el-button-xitongup" type="primary" @click="err" size="mini">取 消</el-button>
+        <el-button   type="primary" @click="err" size="mini">取 消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -644,8 +644,10 @@ letter-spacing: 5px
 }
 
 .dialogInfo /deep/ .el-dialog {
-  background: #021c2d url(../assets/img/shouye/背景框.png) no-repeat;
-  background-size: 100% 100%;
+  border: 1px solid #224c77;
+    background-color:#01162d;
+  // background: #021c2d url(../assets/img/shouye/背景框.png) no-repeat;
+  // background-size: 100% 100%;
   padding: 10px;
    opacity: .85;
   box-sizing: border-box;
@@ -659,8 +661,10 @@ letter-spacing: 5px
   }
   .el-dialog__header {
     margin: 20px 50px 0px 40px;
-    background: url(../assets/img/shouye/标题矩形.png) no-repeat;
-    background-size: 100% 100%;
+    // background: url(../assets/img/shouye/标题矩形.png) no-repeat;
+  // background-color:#01162d;
+  // background-size: 100% 100%;
+  border-bottom: 1px solid #224c77;
   }
   .el-dialog__title,
   .gailan h3,

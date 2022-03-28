@@ -1,12 +1,13 @@
 import axios from 'axios'
-import https from 'https'
+// import https from 'https'
 import router from '@/router' // 引入路由对象实例
+import { Message } from 'element-ui'
 const instance = axios.create({
   headers: { 'Content-Type': 'application/json' },
   //忽略证书
-  httpsAgent: new https.Agent({  
-    rejectUnauthorized: false
-  })
+  // httpsAgent: new https.Agent({  
+  //   rejectUnauthorized: false
+  // })
   // timeout:10000
 })
 const  that=this
@@ -24,16 +25,16 @@ instance.interceptors.response.use(function (response) {
   // error  => config (当前请求 的配置) request(请求) response(响应)
   if (error.response && error.response.status === 403) {
     // 将path换成fullPath, 目的是丢失我们的参数
-    // alert('连接超时，请重新登录')
-    // router.push('/')
+    Message.error('连接超时，请重新登录')
+    router.push('/')
    
   }
   if (error.response && error.response.status === 404) {
     // 将path换成fullPath, 目的是丢失我们的参数
-    // alert('404')
-    
+   
+    Message.error('404')
 
-    // router.push('/')
+    router.push('/')
   }
   // if (error.response && error.response.status === 500) {
   //   // 将path换成fullPath, 目的是丢失我们的参数

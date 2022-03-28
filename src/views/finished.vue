@@ -164,14 +164,33 @@
       <el-table-column label="录入时间" prop="creatTime" show-overflow-tooltip>
       </el-table-column>
       <el-table-column label="来源" prop="dataSource"> </el-table-column>
-      <el-table-column label="是否存活" prop="ifSurvival"> </el-table-column>
-      <el-table-column label="是否备案" prop="ifRecord"> </el-table-column>
-      <el-table-column label="境内外识别" prop="ifForeign"> </el-table-column>
+      <el-table-column label="是否存活" prop="ifSurvival">
+        <template slot-scope="scope">
+            {{ scope.row.ifSurvival==0?'否':'是' }}
+        </template>
+         </el-table-column>
+      <el-table-column label="是否备案" prop="ifRecord">
+        
+            <template slot-scope="scope">
+            {{ scope.row.ifRecord==0?'否':'是' }}
+        </template>
+         </el-table-column>
+      <el-table-column label="境内外识别" prop="ifForeign">
+                  <template slot-scope="scope">
+            {{ scope.row.ifJump==0?'境内':'境外' }}
+        </template>
+         </el-table-column>
       <el-table-column label="是否跳转" prop="ifJump" show-overflow-tooltip>
+           <template slot-scope="scope">
+            {{ scope.row.ifJump==0?'否':'是' }}
+        </template>
       </el-table-column>
       <el-table-column label="跳转后网址" prop="cdnUrl"> </el-table-column>
       <!-- <el-table-column label="服务器IP同源标记" prop="ty"> </el-table-column> -->
       <el-table-column label="是否使用cdn" prop="ifCdn" show-overflow-tooltip>
+            <template slot-scope="scope">
+            {{ scope.row.ifCdn==0?'否':'是' }}
+        </template>
       </el-table-column>
       <!-- <el-table-column label="Cdn(IP)" prop="ip"> </el-table-column> -->
       <!-- <el-table-column label="cdn公司" prop="gs"> </el-table-column> -->

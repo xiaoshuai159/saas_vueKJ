@@ -370,7 +370,7 @@ export default {
         // setTimeout(() => {
         this.$message.success("上传成功");
         this.getTabData();
-　　this.$refs.upload.clearFiles();
+　     　this.$refs.upload.clearFiles();
         // }, 1000)
       } else {
         this.$message(res.message);
