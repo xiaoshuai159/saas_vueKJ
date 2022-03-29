@@ -1,5 +1,10 @@
 <template>
-  <div class="right_main_under">
+  <div class="right_main_under"
+    v-loading="loading"
+    element-loading-text="拼命加载中"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)"
+  >
     <div class="box">
       <!-- //筛选 -->
       <div class="search">
@@ -55,6 +60,7 @@
 export default {
   data() {
     return {
+      loading:false,
       formInline: {
         user: "",
         region: "",
@@ -78,8 +84,8 @@ export default {
             label: "瑞斯",
           },
           {
-            value: "各个分局的涉案网址",
-            label: "各个分局的涉案网址",
+            value: "分局",
+            label: "分局",
           },
           {
             value: "",
@@ -109,6 +115,7 @@ export default {
     async tongji() {
       this.qushi.xdata = [];
       this.qushi.ynum = [];
+      this.loading=true
       let list = {
         dataSource: this.typeList.sourceType,
       };
@@ -327,7 +334,7 @@ export default {
                       borderWidth: 1,
                       borderColor: "#c853ca",
                     }
-                  : this.typeList.sourceType == "各个分局的涉案网址"
+                  : this.typeList.sourceType == "分局"
                   ? {
                       //柱体的颜色
                       //右，下，左，上（1，0，0，0）表示从正右开始向左渐变
@@ -380,6 +387,7 @@ export default {
           },
         ],
       };
+      this.loading=false
       return option;
     },
   },

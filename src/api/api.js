@@ -1,5 +1,5 @@
 //引入刚才的http.js文件
-import https from './http.js';
+// import https from './http.js';
 	
 	//设置个对象，就不用一个个暴露了，直接暴露对象
 	let apiFun = {};

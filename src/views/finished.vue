@@ -166,30 +166,29 @@
       <el-table-column label="来源" prop="dataSource"> </el-table-column>
       <el-table-column label="是否存活" prop="ifSurvival">
         <template slot-scope="scope">
-            {{ scope.row.ifSurvival==0?'否':'是' }}
+          {{ scope.row.ifSurvival == 0 ? "否" : "是" }}
         </template>
-         </el-table-column>
+      </el-table-column>
       <el-table-column label="是否备案" prop="ifRecord">
-        
-            <template slot-scope="scope">
-            {{ scope.row.ifRecord==0?'否':'是' }}
+        <template slot-scope="scope">
+          {{ scope.row.ifRecord == 0 ? "否" : "是" }}
         </template>
-         </el-table-column>
+      </el-table-column>
       <el-table-column label="境内外识别" prop="ifForeign">
-                  <template slot-scope="scope">
-            {{ scope.row.ifJump==0?'境内':'境外' }}
+        <template slot-scope="scope">
+          {{ scope.row.ifJump == 0 ? "境内" : "境外" }}
         </template>
-         </el-table-column>
+      </el-table-column>
       <el-table-column label="是否跳转" prop="ifJump" show-overflow-tooltip>
-           <template slot-scope="scope">
-            {{ scope.row.ifJump==0?'否':'是' }}
+        <template slot-scope="scope">
+          {{ scope.row.ifJump == 0 ? "否" : "是" }}
         </template>
       </el-table-column>
       <el-table-column label="跳转后网址" prop="cdnUrl"> </el-table-column>
       <!-- <el-table-column label="服务器IP同源标记" prop="ty"> </el-table-column> -->
       <el-table-column label="是否使用cdn" prop="ifCdn" show-overflow-tooltip>
-            <template slot-scope="scope">
-            {{ scope.row.ifCdn==0?'否':'是' }}
+        <template slot-scope="scope">
+          {{ scope.row.ifCdn == 0 ? "否" : "是" }}
         </template>
       </el-table-column>
       <!-- <el-table-column label="Cdn(IP)" prop="ip"> </el-table-column> -->
@@ -248,7 +247,7 @@ export default {
           { value: "GJF", label: "冒充公检法及政府机关类" },
           { value: "LC", label: "投资理财" },
           { value: "GW", label: "网络购物" },
-          { value: "QT", label: "其他类型" },
+         
           { value: "KF", label: "冒充电商客服类" },
           { value: "JJGW", label: "冒充军警购物诈骗" },
           { value: "SZP", label: "杀猪盘" },
@@ -260,6 +259,7 @@ export default {
           { value: "APP_FF", label: "分发平台(APP签名分发)" },
           { value: "XZYM", label: "下载页面(带二维码的下载链接)" },
           { value: "OTHER", label: "其他类型诈骗" },
+           { value: "QT", label: "其他类型" },
         ],
 
         authorize: [
@@ -267,24 +267,24 @@ export default {
           { value: 1, label: "已授权" },
         ],
         balist: [
-          { value: 0, label: "是" },
-          { value: 1, label: "否" },
+          { value: 1, label: "是" },
+          { value: 0, label: "否" },
         ],
         jinneiwailist: [
           { value: 0, label: "境内" },
           { value: 1, label: "境外" },
         ],
         tzlist: [
-          { value: 0, label: "是" },
-          { value: 1, label: "否" },
+          { value: 1, label: "是" },
+          { value: 0, label: "否" },
         ],
         cdnlist: [
-          { value: 0, label: "是" },
-          { value: 1, label: "否" },
+          { value: 1, label: "是" },
+          { value: 0, label: "否" },
         ],
         cunhuolist: [
-          { value: 0, label: "是" },
-          { value: 1, label: "否" },
+          { value: 1, label: "是" },
+          { value: 0, label: "否" },
         ],
         laiyuanlist: [
           {
@@ -304,8 +304,8 @@ export default {
             label: "瑞斯",
           },
           {
-            value: "各个分局的涉案网址",
-            label: "各个分局的涉案网址",
+            value: "分局",
+            label: "分局",
           },
         ],
       },
@@ -325,18 +325,18 @@ export default {
     //初始化列表
     async chuliList() {
       // let discoverProcessDTO = {
-     let   discoverProcessDTO={
-          alive: this.list_num.cunhou,
-          cdn: this.list_num.cdn,
-          dataSource: this.list_num.ly,
-          endDate: this.whiteSearchList.endUploadTime,
-          jump: this.list_num.tz,
-          outside: this.list_num.jinneiwai,
-          record: this.list_num.modelType1,
-          startDate: this.whiteSearchList.startUploadTime,
-            mypageable: this.mypageable,
-        };
-      
+      let discoverProcessDTO = {
+        alive: this.list_num.cunhou,
+        cdn: this.list_num.cdn,
+        dataSource: this.list_num.ly,
+        endDate: this.whiteSearchList.endUploadTime,
+        jump: this.list_num.tz,
+        outside: this.list_num.jinneiwai,
+        record: this.list_num.modelType1,
+        startDate: this.whiteSearchList.startUploadTime,
+        mypageable: this.mypageable,
+      };
+
       // };
       const { data: res } = await this.$http.post(
         "/process/getProcessPage",

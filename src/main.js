@@ -12,8 +12,7 @@ import formatDate from './utils/formatDate'
 import * as echarts from 'echarts'
 import dayjss from 'dayjs'
 import './lib/lib-flexible'
-import apiFun from "@/api/api.js";
-Vue.prototype.$apiFun = apiFun;//请求接口api
+
 
 Vue.prototype.$echarts = echarts
 // Vue.prototype.$=jquery

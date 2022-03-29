@@ -24,23 +24,7 @@
             >
             </el-date-picker>
           </el-form-item>
-          <!-- 域名类型 -->
-          <!-- <el-form-item label="域名类型">
-            <el-select
-              v-model="newdomainSimpleVo.sourceType"
-              placeholder="域名类型"
-              clearable
-              @clear="sourceType_clearFun(newdomainSimpleVo.sourceType)"
-            >
-              <el-option
-                v-for="item in selectData.sourceTypeData"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item> -->
+     
 
           <!-- 诈骗类型 -->
           <el-form-item label="是否存活">
@@ -59,40 +43,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <!-- 运营商 -->
-          <!-- <el-form-item label="运营商">
-            <el-select
-              v-model="newdomainSimpleVo.Operator"
-              placeholder="运营商"
-              clearable
-              @clear="sourceType_Operator(newdomainSimpleVo.Operator)"
-            >
-              <el-option
-                v-for="item in selectData.OperatorList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item> -->
-          <!-- 网络环境 -->
-          <!-- <el-form-item label="网络环境">
-            <el-select
-              v-model="newdomainSimpleVo.environment"
-              placeholder="网络环境"
-              clearable
-              @clear="sourceType_environment(newdomainSimpleVo.environment)"
-            >
-              <el-option
-                v-for="item in selectData.environmentList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item> -->
+         
           <!-- 数据来源 -->
 
           <!-- @clear="state_clearform(newdomainSimpleVo.form)" -->
@@ -118,27 +69,14 @@
           </el-form-item>
 
           <el-form-item>
-               <el-button type="primary" size="mini" @click.native="search"
+               <el-button type="primary" size="mini" @click.native="searchlist_search"
               >查询</el-button
             >
             <el-button type="primary" size="mini" @click.native="resetFun"
               >重置</el-button
             >
          
-            <!-- <el-button
-              type="primary"
-              size="mini"
-              @click.native="download"
-              :loading="loadingbut"
-              >{{ loadingbuttext }}</el-button
-            > -->
-            <!-- 周五 -->
-            <!-- <el-button type="primary" size="mini" @click="urlAdd"
-              >添加</el-button
-            > -->
-            <!-- :loading="isLoading" -->
-
-            <!-- </template> -->
+          
           </el-form-item>
         </el-form>
       </template>
@@ -218,7 +156,7 @@
         <div class="gailanson">
           <span
             >URL:&nbsp;&nbsp;
-            <span class="ziti">{{ this.gailan.url }}</span></span
+            <span class="ziti" :title="this.gailan.url">{{ this.gailan.url }}</span></span
           >
           <span
             >诈骗类型:&nbsp;&nbsp;
@@ -239,7 +177,7 @@
           class="demo-form-inline search_select_form"
           size="mini"
         >
-          <!-- 处置时间 -->
+      
           <el-form-item label="拨测时间">
             <el-date-picker
               v-model="tcboctime"
@@ -270,7 +208,7 @@
             >
           </el-form-item>
         </el-form>
-        <!-- //柱状 -->
+      
         <div class="zhuzhuang">
           <div class="zhuzhuang1">
             <div
@@ -290,7 +228,7 @@
           :disabled="this.tableData1.length == 0"
           >{{ loadingbuttext1 }}</el-button
         >
-        <!-- //列表 -->
+        
         <el-table
           :row-class-name="tableRowClassName"
           ref="multipleTable"
@@ -311,10 +249,10 @@
           <el-table-column prop="ifVisit" label="是否可以访问">
           </el-table-column>
         </el-table>
-        <!-- //分页 -->
+     
         <div class="bottom1">
           <div class="ss1">
-            <!-- @size-change="handleSizeChange1" -->
+          
             <el-pagination
               @current-change="handleCurrentChange1"
               :current-page.sync="mypageable1.pageNum1"
@@ -388,7 +326,7 @@ export default {
           { value: "移动网", label: "移动网" },
         ],
         formType: [
-          { value: "CA", label: "长安处置" },
+          { value: "CA", label: "长安" },
           { value: "SY", label: "运营商" },
         ],
         sourceTypeData: [
@@ -663,7 +601,7 @@ export default {
     //   }
     // },
     //查讯
-    async search() {
+    async searchlist_search() {
       let bcListVo = {
         bcState: this.newdomainSimpleVo.state,
         type: this.newdomainSimpleVo.sourceType,
@@ -1336,8 +1274,13 @@ export default {
     text-align: center;
     line-height: 40px;
     font-family: "siyuanheitinormal1";
+     overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
     .ziti {
       color: #fff !important;
+      // display: inline-block;
+
     }
   }
 }

@@ -465,22 +465,24 @@ export default {
           { value: 2, label: "已失效" },
         ],
         model_typeData: [
-          { value: "DK", label: "贷款" },
-          { value: "SD", label: "刷单" },
-          { value: "GJF", label: "仿冒公检法" },
-          { value: "LC", label: "理财" },
-          { value: "GW", label: "网络购物" },
-          { value: "QT", label: "其他类型" },
-          { value: "JJGW", label: "冒充军警购物诈骗" },
-          { value: "SZP", label: "杀猪盘" },
-          { value: "DS", label: "虚假购物/服务类" },
-          { value: "JY", label: "网络婚恋/交友类" },
-          { value: "ZX", label: "虚假征信类" },
-          { value: "MC", label: "冒充领导/熟人类" },
-          { value: "YX", label: "网络游戏产品虚假交易类" },
-          { value: "APP", label: "分发平台" },
-          { value: "XZYM", label: "下载页面" },
        
+          { value: 'DK', label: '贷款' },
+          { value: 'SD', label: '刷单' },
+          { value: 'GJF', label: '仿冒公检法' },
+
+          // { value: "GW", label: "网络购物" },
+          { value: 'QT', label: '其他类型诈骗' },
+          { value: 'GW', label: '冒充电商客服类' },
+          { value: 'JJGW', label: '冒充军警购物诈骗' },
+          { value: 'SZP', label: '杀猪盘' },
+          { value: 'DS', label: '虚假购物/服务类' },
+          { value: 'JY', label: '网络婚恋/交友类' },
+          { value: 'ZX', label: '虚假征信类' },
+          { value: 'MC', label: '冒充领导/熟人类' },
+          { value: 'YX', label: '网络游戏产品虚假交易类' },
+          { value: 'APP', label: '分发平台' },
+          { value: 'XZYM', label: '下载页面' },
+      
         ],
           //  { value: "OTHER", label: "其他类型诈骗" },
         authorize: [
@@ -1043,7 +1045,7 @@ export default {
           this.total = res.data.totalElements;
           this.totalPages = res.data.totalPages;
         } else {
-          this.$message("无数据");
+          this.$message("暂无数据");
         }
       } else {
         this.$message(res.message);

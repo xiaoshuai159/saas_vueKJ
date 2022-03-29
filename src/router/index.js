@@ -100,14 +100,14 @@ const routes = [
       },
     
      
-      {
-        path: '/findUser',
-        name: 'findUser',
-        meta: {
-          title: '用户管理'
-        },
-        component: () => import('../views/findUser')
-      },
+      // {
+      //   path: '/findUser',
+      //   name: 'findUser',
+      //   meta: {
+      //     title: '用户管理'
+      //   },
+      //   component: () => import('../views/findUser')
+      // },
      
     ],
     component: Home
@@ -142,12 +142,12 @@ VueRouter.prototype.push = function push(location) {
 }
 
 // 前置守卫
-// router.beforeEach((to, from, next) => {
-//   if (to.path === '/') return next()
-//   const user = window.sessionStorage.getItem('isLogin')
-//   if (user == 'true') return next()
-// alert('请登录')
-// next("/")
-// })
+router.beforeEach((to, from, next) => {
+  if (to.path === '/') return next()
+  const user = window.sessionStorage.getItem('isLogin')
+  if (user == 'true') return next()
+alert('请登录')
+next("/")
+})
 
 export default router

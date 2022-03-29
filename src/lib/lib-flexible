@@ -71,7 +71,7 @@
         if (width / dpr > 540) {
             width = width * dpr;
         }
-        var rem = width / 10;
+        var rem = width / 51.2;
         // if (width / dpr < 1366) {
         //     width = 1366 * dpr;
         // }else if(width / dpr > 1366){
