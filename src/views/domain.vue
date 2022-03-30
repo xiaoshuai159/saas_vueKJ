@@ -10,14 +10,7 @@
             class="demo-form-inline"
             size="mini"
           >
-            <!-- <el-form-item label="URL">
-            <el-input
-              placeholder="url"
-              v-model="newdomainSimpleVo.url"
-              @clear="url_clearFun(newdomainSimpleVo.url)"
-            >
-            </el-input>
-          </el-form-item> -->
+     
             <!-- 处置时间 -->
             <el-form-item label="处置时间">
               <el-date-picker
@@ -67,26 +60,8 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <!-- 二级分类
-          <el-form-item label="二级分类">
-            <el-select
-              v-model="newdomainSimpleVo.classification"
-              placeholder="二级分类"
-              clearable
-              @clear="
-                sourceType_classification(newdomainSimpleVo.classification)
-              "
-            >
-              <el-option
-                v-for="item in selectData.classificationlist"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item> -->
-            <!-- 状态 -->
+        
+            <!-- 处置状态 -->
             <el-form-item label="处置状态">
               <el-select
                 v-model="newdomainSimpleVo.state"
@@ -103,41 +78,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <!-- <el-form-item label="协议">
-            <el-select
-              v-model="newdomainSimpleVo.protocol"
-              placeholder="协议"
-              clearable
-              @clear="protocol_clearFun(newdomainSimpleVo.protocol)"
-            >
-              <el-option
-                v-for="item in selectData.protocolData"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item> -->
-            <!-- <el-form-item label="是否授权">
-            <el-select
-              v-model="newdomainSimpleVo.authorize"
-              placeholder="是否授权"
-              clearable
-              @clear="protocol_authorize(newdomainSimpleVo.authorize)"
-            >
-              <el-option
-                v-for="item in selectData.authorize"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item> -->
-            <!-- <el-form-item label="今日处置量">
-<el-input v-model="dayliang"></el-input>
-          </el-form-item> -->
+       
             <el-form-item>
               <el-button
                 type="primary"
@@ -149,24 +90,7 @@
               <el-button type="primary" size="mini" @click.native="resetFun"
                 >重置</el-button
               >
-              <!-- :loading="isLoading" -->
-              <!-- <el-button
-                v-if="getRole1('downloadDomain')"
-                type="primary"
-                size="mini"
-                @click.native.stop="put"
-                :loading="loadingbut"
-              >
-                {{ loadingbuttext }}</el-button
-              > -->
-              <!-- <el-button
-                v-if="getRole1('authorize')"
-                type="primary"
-                size="mini"
-                @click.native.stop="newauthorization"
-                >一键授权</el-button
-              > -->
-              <!-- </template> -->
+           
             </el-form-item>
           </el-form>
         </template>
@@ -174,15 +98,15 @@
       <div class="zongliang">
         <span class="title_num1">
           <div class="tit">日拦截量</div>
-          <div class="tit1">{{ this.daylanjieliang }}</div>
+          <div class="tit1">{{ this.daylanjieliang1 }}</div>
         </span>
         <span class="title_num2">
           <div class="tit">月拦截量</div>
-          <div class="tit1">{{ this.yuelanjieliang }}</div>
+          <div class="tit1">{{ this.yuelanjieliang1 }}</div>
         </span>
         <span class="title_num3">
           <div class="tit">总拦截量</div>
-          <div class="tit1">{{ this.zongliangchuzhi }}</div>
+          <div class="tit1">{{ this.zongliangchuzhi1 }}</div>
         </span>
       </div>
     </div>
@@ -503,6 +427,9 @@ export default {
       restest: [],
       jieURL: "",
       kanjietutitle: "",
+      daylanjieliang1:8183,
+      yuelanjieliang1:252504,
+      zongliangchuzhi1:384299,
     };
   },
   computed: {},
