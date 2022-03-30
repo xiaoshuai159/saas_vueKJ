@@ -1148,7 +1148,7 @@ export default {
     },
     ly(val) {
       if (val == "CA") {
-        return "长安处置";
+        return "长安";
       } else if (val == "SY") {
         return "运营商";
       } else {

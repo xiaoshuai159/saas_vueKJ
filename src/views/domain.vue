@@ -1045,7 +1045,8 @@ export default {
           this.total = res.data.totalElements;
           this.totalPages = res.data.totalPages;
         } else {
-          this.$message("暂无数据");
+          // this.$message("暂无数据");
+          this.tableData =[]
         }
       } else {
         this.$message(res.message);

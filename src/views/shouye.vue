@@ -235,7 +235,7 @@ export default {
           {
             name: "数量",
             type: "bar",
-            // barWidth: "60%",
+            // barWidth: "30px",
             itemStyle: {
               normal:
                 this.typeList.sourceType == "长安通信"
