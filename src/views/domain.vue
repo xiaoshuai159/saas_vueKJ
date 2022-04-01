@@ -98,15 +98,15 @@
       <div class="zongliang">
         <span class="title_num1">
           <div class="tit">日拦截量</div>
-          <div class="tit1">{{ this.daylanjieliang1 }}</div>
+          <div class="tit1">{{ this.daylanjieliang }}</div>
         </span>
         <span class="title_num2">
           <div class="tit">月拦截量</div>
-          <div class="tit1">{{ this.yuelanjieliang1 }}</div>
+          <div class="tit1">{{ this.yuelanjieliang }}</div>
         </span>
         <span class="title_num3">
           <div class="tit">总拦截量</div>
-          <div class="tit1">{{ this.zongliangchuzhi1 }}</div>
+          <div class="tit1">{{ this.zongliangchuzhi }}</div>
         </span>
       </div>
     </div>
