@@ -31,16 +31,16 @@ export default {
       Newname3: [],
       items: [
     
-        {
-          // icon: "el-icon-pie-chart",
-          index: "shouye",
-          menuName: "首页",
-          name: "shouye",
-          children: null,
-          menuType: 1,
-          menuUrl: "/shouye",
+        // {
+        //   // icon: "el-icon-pie-chart",
+        //   index: "shouye",
+        //   menuName: "首页",
+        //   name: "shouye",
+        //   children: null,
+        //   menuType: 1,
+        //   menuUrl: "/shouye",
    
-        },
+        // },
         {
           // icon: "el-icon-pie-chart",
           index: "numhei",

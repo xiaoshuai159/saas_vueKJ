@@ -116,7 +116,7 @@ export default {
               window.sessionStorage.setItem('isLogin', 'true')
 
               // window.sessionStorage.setItem("role", role);
-              this.$router.push('/shouye')
+              this.$router.push('/getUploadDomain')
             } else {
               this.$message('账号或密码错误！')
             }
