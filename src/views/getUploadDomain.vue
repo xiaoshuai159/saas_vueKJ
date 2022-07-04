@@ -68,6 +68,22 @@
             <el-button type="primary" size="mini" @click.native="uploadwj"
               >上传</el-button
             >
+            <el-button
+              type="primary"
+              size="mini"
+              @click="daochu"
+              :loading="loadingbut"
+                   :disabled="this.daochutext1=='导出'?false:true"
+            >
+              {{ daochutext1 }}
+            </el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click.native="yumingcl"
+              :disabled="this.yuming == '...处理中' ? true : false"
+              >{{ yuming }}</el-button
+            >
             <!-- </template> -->
           </el-form-item>
         </el-form>
@@ -75,16 +91,22 @@
     </div>
 
     <!-- //列表 -->
-    <el-table
+
+      <el-table
       :row-class-name="tableRowClassName"
       :row-key="getRowKeys"
       ref="multipleTable"
       :data="tableData"
       style="width: 100%"
-      height="calc(100% - 18%)"
+ 
       size="mini"
       class="tableStyle"
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column type="selection" :reserve-selection="true" width="55">
+      </el-table-column>
+      <el-table-column label="id" prop="serial_number" v-if="listloadingnun">
+      </el-table-column>
       <el-table-column label="上传人" prop="uploader"> </el-table-column>
       <el-table-column
         label="上传来源"
@@ -93,9 +115,15 @@
       >
       </el-table-column>
 
-      <el-table-column label="上传时间" prop="upload_time"> </el-table-column>
+      <el-table-column label="上传时间" prop="upload_time" > </el-table-column>
       <el-table-column label="条数" prop="total"> </el-table-column>
+      <el-table-column label="状态" prop="status">
+        <template slot-scope="scope">
+          {{ scope.row.status == "1" ? "已验证" : "验证中" }}
+        </template>
+      </el-table-column>
     </el-table>
+
 
     <!-- //分页 -->
     <div class="bottom">
@@ -106,7 +134,7 @@
           :current-page="mypageable.pageNum"
           :page-sizes="[15, 30, 45]"
           :page-size="mypageable.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
+          layout="total, prev, pager, next, jumper"
           :total="total"
           class="pagePagination pageRight"
         >
@@ -199,6 +227,10 @@ export default {
 
   data() {
     return {
+      daochutext1: "导出",
+      loadingbut1:false,
+      listloadingnun: false,
+      yuming: "域名处理",
       loadingbuttext: "模板下载",
       loadingbut: false,
       shangchuan: false,
@@ -247,7 +279,7 @@ export default {
       },
       mypageable: {
         pageNum: 1,
-        pageSize: 15,
+        pageSize: 10,
       },
       total: 1,
       totalPages: "",
@@ -302,6 +334,10 @@ export default {
             value: "分局",
             label: "分局",
           },
+          {
+            value: "域名处理",
+            label: "域名处理",
+          },
         ],
         authorize: [
           { value: 0, label: "未授权" },
@@ -327,6 +363,10 @@ export default {
           {
             value: "qt",
             label: "分局",
+          },
+          {
+            value: "ym",
+            label: "域名处理",
           },
         ],
       },
@@ -356,13 +396,32 @@ export default {
 
   created() {
     this.getTabData();
+    //
   },
   mounted() {
     this.use = JSON.parse(window.sessionStorage.getItem("one"));
-
+    this.statuslist();
+    setInterval(() => {
+      this.statuslist();
+    }, 5000);
     // this.drawLine();
   },
   methods: {
+    clickHandler(evt) {
+      let target = evt.target;
+      if (target.nodeName == "SPAN") {
+        target = evt.target.parentNode;
+      }
+      target.blur();
+    },
+    //状态
+    async statuslist() {
+      const { data: res } = await this.$http.get("/black/getDoMainStatus");
+      if (res.code == 200) {
+        //  console.log(res.data);
+        this.yuming = res.data == 0 ? "...处理中" : "域名处理";
+      }
+    },
     // 文件上传
     successSendFile(res) {
       // this.loading=true
@@ -370,7 +429,7 @@ export default {
         // setTimeout(() => {
         this.$message.success("上传成功");
         this.getTabData();
-　     　this.$refs.upload.clearFiles();
+        this.$refs.upload.clearFiles();
         // }, 1000)
       } else {
         this.$message(res.message);
@@ -399,6 +458,116 @@ export default {
       // this.listTemplate.moban = null;
       this.file = [];
       this.shangchuan = true;
+    },
+    daochu() {
+      if (this.tableDatalist.length > 0) {
+        let flag = 1;
+        this.tableDatalist.forEach((elm) => {
+          if (elm.data_source != "域名处理") {
+            // this.$message("存在其它类型模板");
+            flag = 2;
+          }
+        });
+        if (flag == 2) {
+          this.$message("存在其它类型模板");
+          //  setTimeout(()=>{
+          //       this.$refs.multipleTable.clearSelection();
+          //  },500)
+        } else {
+      
+          this.daochulist();
+        }
+      } else {
+        this.$message("请勾选");
+      }
+    },
+
+    async daochulist() {
+      this.daochutext1 = "...加载中";
+
+      if (this.tableDatalist.length > 0) {
+        let arr = [];
+
+        this.tableDatalist.forEach((item) => {
+          // console.log(item.id);
+          arr.push(item.serial_number);
+        });
+        let list = {
+          numberList: arr,
+        };
+        const { data: res } = await this.$http.post(
+          "/black/downloadDoMainList",
+          list
+        );
+        if (res.code == 200) {
+          this.daochutext1 = "导出";
+          this.loadingbut = false;
+          let newurl = res.expandData.url;
+          let eleLink = document.createElement("a");
+          eleLink.download = name;
+          // const down = window.location.origin
+          // eleLink.href = "http://172.31.1.61:8080" + newurl;
+          // const down = window.location.origin
+          eleLink.href = newurl;
+          // console.log(eleLink);
+          eleLink.click();
+          eleLink.remove();
+          this.$refs.multipleTable.clearSelection();
+          this.clickHandler();
+          // this.openDialog()
+          // console.log(res.data);
+          //   this.$refs.multipleTable.clearSelection();
+          //   this.getTabData();
+          //   this.$message(res.message);
+          // } else {
+          //   this.$message(res.message);
+        }
+      }
+    },
+    async yumingclick() {
+      // this.yuming="处理中"
+
+      this.yuming = "...处理中";
+      let arr = [];
+
+      this.tableDatalist.forEach((item) => {
+        // console.log(item.id);
+        arr.push(item.serial_number);
+      });
+      let list = {
+        numberList: arr,
+      };
+      const { data: res } = await this.$http.post("/black/updateDomain", list);
+      if (res.code == 200) {
+        this.yuming = "域名处理";
+        // console.log(res.data);
+        this.$refs.multipleTable.clearSelection();
+        this.getTabData();
+        this.$message(res.message);
+      } else {
+        this.$message(res.message);
+      }
+    },
+    yumingcl() {
+      if (this.tableDatalist.length > 0) {
+        let flag1 = 1;
+        this.tableDatalist.forEach((elm) => {
+          if (elm.data_source != "域名处理") {
+            // this.$message("存在其它类型模板");
+            flag1 = 2;
+          }
+        });
+        if (flag1 == 2) {
+          this.$message("该模板数据无法处理，请使用域名模板！");
+          //  setTimeout(()=>{
+          //       this.$refs.multipleTable.clearSelection();
+          //  },500)
+        } else {
+          this.yumingclick();
+        }
+      } else {
+        this.$message("请勾选");
+      }
     },
     getRole1(data) {
       return getRole(data);
@@ -451,11 +620,13 @@ export default {
         endUploadTime: null,
       }),
         (this.mypageable.pageNum = 1);
+      this.$refs.multipleTable.clearSelection();
+
       this.getTabData();
     },
-    // handleSelectionChange(val) {
-    //   this.tableDatalist = val;
-    // },
+    handleSelectionChange(val) {
+      this.tableDatalist = val;
+    },
 
     //弹窗关闭
 
@@ -801,4 +972,5 @@ export default {
   width: 100% !important;
   background: transparent !important ;
 }
+
 </style>

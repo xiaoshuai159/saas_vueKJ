@@ -6,11 +6,12 @@ module.exports = {
       '': {
         // target:'http://10.8.0.16:8080',
         // target:'http://10.8.0.4:8080',
-        target: 'http://10.8.0.120:8022/',
+        // target: 'http://10.8.0.120:8022/',
+        // target: 'http://10.8.0.4:8080',
         // target:'http://10.8.0.101:8080',
         // target: 'http://10.8.0.13:8080/',
-        // target:'http://10.8.0.120:8022',  //sy
-        // target:"http://10.8.0.10:8080",
+        target:'http://10.8.0.120:8022',  //sy
+        // target:"http://10.8.0.17:8080",
         // target:"http://localhost:8080",
         // target:'http://172.31.0.72:8080',  //mfy 
         // target:'http://10.8.0.101:8080',

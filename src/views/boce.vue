@@ -7,6 +7,7 @@
             <el-input
               v-model="newdomainSimpleVo.url"
               placeholder="url"
+                  clearable
               @clear="state_clearurl(newdomainSimpleVo.url)"
             ></el-input>
           </el-form-item>
@@ -72,7 +73,7 @@
                <el-button type="primary" size="mini" @click.native="searchlist_search"
               >查询</el-button
             >
-            <el-button type="primary" size="mini" @click.native="resetFun"
+            <el-button type="primary" size="mini" @click.native="conerr1"
               >重置</el-button
             >
          
@@ -88,7 +89,7 @@
       ref="multipleTable"
       :data="tableData"
       style="width: 100%"
-      height="calc(100% - 18%)"
+    
       size="mini"
       class="tableStyle"
       @selection-change="handleSelectionChange"
@@ -106,7 +107,7 @@
         </template>
       </el-table-column>
       <el-table-column label="是否存活" prop="ifSurvival"> </el-table-column>
-      <el-table-column prop="handletime" label="拨测时间"> </el-table-column>
+      <el-table-column prop="dialingTime" label="拨测时间"> </el-table-column>
       <el-table-column prop="completeTotal" label="拨测次数"> </el-table-column>
       <el-table-column prop="successTotal" label="拨测成功次数">
       </el-table-column>
@@ -130,7 +131,7 @@
           :current-page="mypageable.pageNum"
           :page-sizes="[15, 30, 45]"
           :page-size="mypageable.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
+          layout="total, prev, pager, next, jumper"
           :total="total"
           class="pagePagination pageRight"
         >
@@ -219,7 +220,7 @@
           </div>
         </div>
         <el-button
-          class="el-button-daochu"
+       
           type="primary"
           size="mini"
           style="float: right; margin-bottom: 10px"
@@ -292,7 +293,7 @@ export default {
       dialog: false,
       mypageable: {
         pageNum: 1,
-        pageSize: 15,
+        pageSize: 10,
       },
       //弹窗拨测时间
       tcboctime: "",
@@ -923,6 +924,17 @@ export default {
     },
 
     //重置
+conerr1(){
+  this.newdomainSimpleVo.dateValue_find=null
+  this.newdomainSimpleVo.state=null
+  this.newdomainSimpleVo.form=null
+  this.whiteSearchList.startCreateTime=null
+   this.whiteSearchList.endCreateTime=null
+    this.newdomainSimpleVo.url=null
+   this.mypageable.pageNum=1
+   this.boceclist()
+},
+
      async conerr() {
       this.flagstates = true
       this.whiteSearchList1.startCreateTime1 = ''

@@ -9,7 +9,7 @@
           size="mini"
         >
           <!-- 发现日期 -->
-          <el-form-item label="日期">
+          <el-form-item label="上传时间">
             <el-date-picker
               v-model="newdomainSimpleVo.dateValue_find"
               type="daterange"
@@ -92,14 +92,14 @@
             ></el-input>
           
           </el-form-item> -->
-          <!-- 主域名 -->
-          <!-- <el-form-item label="网站名称">
+          <!-- URL -->
+         <el-form-item label="URL">
                 <el-input
-              v-model="newdomainSimpleVo.record"
-              placeholder="网站名称"
+              v-model="newdomainSimpleVo.url"
+              placeholder="URL"
             ></el-input>
           
-          </el-form-item> -->
+          </el-form-item> 
 
           <el-form-item>
             <el-button
@@ -132,7 +132,7 @@
       ref="multipleTable"
       :data="tableData"
       style="width: 100%"
-      height="calc(100% - 18%)"
+  
       size="mini"
       class="tableStyle"
     >
@@ -140,7 +140,7 @@
       <!-- <el-table-column type="selection" min-width="5%"> </el-table-column> -->
       <!-- <el-table-column label="序号" prop="id" >
       </el-table-column> -->
-      <el-table-column label="录入时间" prop="uploadTime"> </el-table-column>
+      <el-table-column label="上传时间" width="200" prop="uploadTime" show-overflow-tooltip> </el-table-column>
       <el-table-column
         label="域名/URL"
         prop="url"
@@ -154,9 +154,15 @@
 
       <!-- <el-table-column label="类型" prop=""> </el-table-column> -->
 
-      <el-table-column label="主域名" prop="domainName"> </el-table-column>
-      <el-table-column label="网站名称" prop="websiteName"> </el-table-column>
+      <el-table-column label="主域名" prop="domainName" show-overflow-tooltip> </el-table-column>
+      <el-table-column label="网站名称" prop="websiteName" show-overflow-tooltip> </el-table-column>
       <el-table-column label="级别" prop="level" show-overflow-tooltip>
+     
+      </el-table-column>
+          <el-table-column label="状态" prop="status" show-overflow-tooltip>     
+              <template slot-scope="scope">
+          {{scope.row.status=="1"?"已验证":"验证中"}}
+          </template>
       </el-table-column>
     </el-table>
     <!-- //分页 -->
@@ -168,7 +174,7 @@
           :current-page="mypageable.pageNum"
           :page-sizes="[15, 30, 45]"
           :page-size="mypageable.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
+          layout="total, prev, pager, next, jumper"
           :total="total"
           class="pagePagination pageRight"
         >
@@ -215,6 +221,7 @@ export default {
         jibie: null, //级别
         domain: null, //域名/URL
         dateValue_find: null, //日期
+        url:null //url
         // ip: null, //主域名
         // record: null, //网站名称
         // dateValue_find: null, //发现日期
@@ -229,7 +236,7 @@ export default {
 
       mypageable: {
         pageNum: 1,
-        pageSize: 15,
+        pageSize: 10,
       },
       mypageable1: {
         pageNum1: 1,
@@ -349,6 +356,7 @@ export default {
             value: "分局",
             label: "分局",
           },
+       
         ],
       },
       tableData: [
@@ -409,7 +417,7 @@ export default {
         mypageable: this.mypageable,
         startDate: this.whiteSearchList.startCreateTime,
         type: null,
-        url: null,
+        url: this.newdomainSimpleVo.url,
         // ————————————————————————————————————————————————
       };
       const { data: res } = await this.$http.post(

@@ -178,7 +178,7 @@ export default {
           { min: 8, max: 12, message: '密码长度为8到12位', trigger: 'blur' },
           {
             pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/,
-            message: '格式不正确，请输入数字与字母组合',
+            message: '请输入数字与字母组合',
             trigger: 'blur',
           },
         ],
@@ -361,7 +361,7 @@ export default {
 <style scoped lang='less'>
 @import '../common/font.css';
 .dialog-footer /deep/ .el-button-xitongerr{
-    background: url(../assets/img/shouye/确定按钮.png) no-repeat;
+    background: url(../assets/img/shouye/queding.png) no-repeat;
   background-size: cover;
   border: none;
   color: #25c0fd;
@@ -369,19 +369,19 @@ export default {
 
 .dialog-footer /deep/ .el-button-xitongerr:focus,
 .dialog-footer /deep/ .el-button-xitongerr:hover {
-  background: url(../assets/img/shouye/确定按钮.png) no-repeat;
+  background: url(../assets/img/shouye/queding.png) no-repeat;
   background-size: cover;
   border: none;
   color: #25c0fd;
 }
 .dialog-footer /deep/ .el-button-xitongup{
-    background: url(../assets/img/shouye/取消按钮.png) no-repeat;
+    background: url(../assets/img/shouye/quxiao.png) no-repeat;
   background-size: cover;
   border: none;
 }
 .dialog-footer /deep/ .el-button-xitongup:focus,
 .dialog-footer /deep/ .el-button-xitongup:hover {
-  background: url(../assets/img/shouye/取消按钮.png) no-repeat;
+  background: url(../assets/img/shouye/quxiao.png) no-repeat;
   background-size: cover;
   border: none;
 }
@@ -489,7 +489,7 @@ letter-spacing: 5px
 .dp_top {
   width: 100%;
   height: 60px;
-  background: url(../assets/newimg/newhome/顶部.png) no-repeat 100% 100%;
+  background: url(../assets/newimg/newhome/dingbu.png) no-repeat 100% 100%;
   // background-position: 0;
   background-size: cover;
   position: relative;
@@ -529,7 +529,7 @@ letter-spacing: 5px
   color: #ecf5ff;
   // background-color: #409eff80;
   // border-color: #1a5da0;
-  background: url(../assets/img/shouye/未选中.png) no-repeat;
+  background: url(../assets/img/shouye/wxz.png) no-repeat;
   background-size: 100% 100%;
   border:0px
 }
@@ -542,13 +542,13 @@ letter-spacing: 5px
   color: #ecf5ff;
   // background-color: #409eff80;
   // border-color: #1a5da0;
-  background: url(../assets/img/shouye/选中1.png) no-repeat;
+  background: url(../assets/img/shouye/xz1.png) no-repeat;
   background-size: 100% 100%;
   border:0px
 }
 //当前样式
 .yangshi{
- background: url(../assets/img/shouye/选中1.png) no-repeat;
+ background: url(../assets/img/shouye/xz1.png) no-repeat;
   background-size: 100% 100%;
 }
 .fanhui {
@@ -591,7 +591,7 @@ letter-spacing: 5px
   top: 0;
   width: 100%;
   height: 10px;
-  background: url('../assets/newimg/newhome/光.png') no-repeat;
+  background: url('../assets/newimg/newhome/guang.png') no-repeat;
   background-size: 100% 100%;
   animation: myfirst 5s linear normal;
   animation-iteration-count: infinite;

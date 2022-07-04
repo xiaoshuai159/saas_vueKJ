@@ -40,6 +40,14 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <!-- 域名 -->
+          <el-form-item label="域名">
+            <el-input
+              v-model.trim="list_num.yuming"
+              clearable
+              placeholder="域名"
+            ></el-input>
+          </el-form-item>
           <!-- 是否存活 -->
           <el-form-item label="是否存活">
             <el-select
@@ -139,7 +147,25 @@
             <el-button type="primary" size="mini" @click.native="resetFun"
               >重置</el-button
             >
-
+            <!-- <el-button type="primary" size="mini" @click.native="daochu"
+              >导出</el-button
+            > -->
+            <el-button
+              type="primary"
+              size="mini"
+              style="float: right; margin-bottom: 10px"
+              @click="daochu"
+              :loading="loadingbut"
+              :disabled="this.loadingbuttext == '导出' ? false : true"
+              >{{ loadingbuttext }}</el-button
+            >
+            <el-button
+              type="primary"
+              size="mini"
+              @click.native="cunhou"
+              :disabled="this.cunhoutitle == '存活验证' ? false : true"
+              >{{ this.cunhoutitle }}</el-button
+            >
             <!-- </template> -->
           </el-form-item>
         </el-form>
@@ -148,20 +174,38 @@
 
     <el-table
       :row-class-name="tableRowClassName"
+      :row-key="getRowKeys"
       ref="multipleTable"
       :data="tableData"
       style="width: 100%"
-      height="calc(100% - 18%)"
       size="mini"
       class="tableStyle"
+      @selection-change="handleSelectionChange"
     >
       <!-- <el-table-column type="selection" :reserve-selection="true" width="55">
       </el-table-column> -->
       <!-- <el-table-column label="id" prop="id" v-if="isLoading"> </el-table-column> -->
-
+      <el-table-column type="selection" :reserve-selection="true" width="55">
+      </el-table-column>
+      <el-table-column
+        label="id"
+        prop="id"
+        show-overflow-tooltip
+        v-if="loadinglist"
+      >
+      </el-table-column>
       <el-table-column label="域名" prop="url" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column label="录入时间" prop="creatTime" show-overflow-tooltip>
+      <el-table-column
+        label="上传时间"
+        prop="discoverDate"
+        show-overflow-tooltip
+      >
+      </el-table-column>
+      <el-table-column label="状态" prop="status" show-overflow-tooltip>
+        <template slot-scope="scope">
+          {{ scope.row.status == "1" ? "已验证" : "验证中" }}
+        </template>
       </el-table-column>
       <el-table-column label="来源" prop="dataSource"> </el-table-column>
       <el-table-column label="是否存活" prop="ifSurvival">
@@ -176,7 +220,7 @@
       </el-table-column>
       <el-table-column label="境内外识别" prop="ifForeign">
         <template slot-scope="scope">
-          {{ scope.row.ifJump == 0 ? "境内" : "境外" }}
+          {{ jnw(scope.row.ifForeign) }}
         </template>
       </el-table-column>
       <el-table-column label="是否跳转" prop="ifJump" show-overflow-tooltip>
@@ -185,16 +229,22 @@
         </template>
       </el-table-column>
       <el-table-column label="跳转后网址" prop="cdnUrl"> </el-table-column>
-      <!-- <el-table-column label="服务器IP同源标记" prop="ty"> </el-table-column> -->
+
       <el-table-column label="是否使用cdn" prop="ifCdn" show-overflow-tooltip>
         <template slot-scope="scope">
           {{ scope.row.ifCdn == 0 ? "否" : "是" }}
         </template>
       </el-table-column>
-      <!-- <el-table-column label="Cdn(IP)" prop="ip"> </el-table-column> -->
-      <!-- <el-table-column label="cdn公司" prop="gs"> </el-table-column> -->
     </el-table>
     <div class="bottom">
+      <!-- 全选所有 -->
+      <el-checkbox
+        v-model="allCheck"
+        @change="allCheckEvent"
+        style="padding-left: 20px"
+        ><span class="yijian">一键勾选</span></el-checkbox
+      >
+
       <div class="ss">
         <el-pagination
           @size-change="handleSizeChange"
@@ -202,7 +252,7 @@
           :current-page="mypageable.pageNum"
           :page-sizes="[15, 30, 45]"
           :page-size="mypageable.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
+          layout="total, prev, pager, next, jumper"
           :total="total"
           class="pagePagination pageRight"
         >
@@ -216,6 +266,10 @@
 export default {
   data() {
     return {
+      loadinglist: false,
+      cunhoutitle: "存活验证",
+      loadingbuttext: "导出",
+      loadingbut: false,
       list_num: {
         modelType1: null, //是否备案
         jinneiwai: null, //是否为境内外
@@ -225,6 +279,7 @@ export default {
         cunhou: null, //是否存活
         dateValue_find: null, //时间
         ly: null, //来源
+        yuming: null, //域名
       },
       whiteSearchList: {
         startUploadTime: null,
@@ -247,7 +302,7 @@ export default {
           { value: "GJF", label: "冒充公检法及政府机关类" },
           { value: "LC", label: "投资理财" },
           { value: "GW", label: "网络购物" },
-         
+
           { value: "KF", label: "冒充电商客服类" },
           { value: "JJGW", label: "冒充军警购物诈骗" },
           { value: "SZP", label: "杀猪盘" },
@@ -259,7 +314,7 @@ export default {
           { value: "APP_FF", label: "分发平台(APP签名分发)" },
           { value: "XZYM", label: "下载页面(带二维码的下载链接)" },
           { value: "OTHER", label: "其他类型诈骗" },
-           { value: "QT", label: "其他类型" },
+          { value: "QT", label: "其他类型" },
         ],
 
         authorize: [
@@ -271,8 +326,9 @@ export default {
           { value: 0, label: "否" },
         ],
         jinneiwailist: [
-          { value: 0, label: "境内" },
-          { value: 1, label: "境外" },
+          { value: 1, label: "境内" },
+          { value: 0, label: "境外" },
+          { value: 2, label: "未知" },
         ],
         tzlist: [
           { value: 1, label: "是" },
@@ -310,18 +366,61 @@ export default {
         ],
       },
       tableData: [],
+      tableDatalist: [],
       mypageable: {
         pageNum: 1,
-        pageSize: 15,
+        pageSize: 10,
       },
       total: 1,
       totalPages: "",
+      testList: [],
+      allCheck: false,
     };
   },
   created() {
     this.chuliList();
   },
+  watch: {
+    tableData: {
+      handler(value) {
+        if (this.allCheck) {
+          let that = this;
+          let len = that.tableDatalist.length;
+          value.forEach((row) => {
+            for (let i = 0; i < len; i++) {
+              if (row.id === that.tableDatalist[i].id) {
+                that.$refs.multipleTable.toggleRowSelection(row, false);
+                break;
+              } else {
+                that.$refs.multipleTable.toggleRowSelection(row, true);
+              }
+            }
+          });
+        }
+      },
+      deep: true,
+    },
+  },
   methods: {
+    getRowKeys(row) {
+      return row.id;
+    },
+
+    handleSelectionChange(val) {
+      this.tableDatalist = val;
+      // console.log(this.tableDatalist);
+    },
+
+    allCheckEvent() {
+      if (this.allCheck) {
+        this.tableData.forEach((row) => {
+          this.$refs.multipleTable.toggleRowSelection(row, true);
+        });
+        console.log(this.tableDatalist);
+      } else {
+        this.$refs.multipleTable.clearSelection();
+      }
+    },
     //初始化列表
     async chuliList() {
       // let discoverProcessDTO = {
@@ -335,6 +434,7 @@ export default {
         record: this.list_num.modelType1,
         startDate: this.whiteSearchList.startUploadTime,
         mypageable: this.mypageable,
+        url: this.list_num.yuming,
       };
 
       // };
@@ -362,12 +462,84 @@ export default {
       this.list_num.jinneiwai = null;
       this.list_num.modelType1 = null;
       this.list_num.dateValue_find = null;
+      this.list_num.yuming = null;
       this.whiteSearchList = {
         startUploadTime: null,
         endUploadTime: null,
       };
       this.mypageable.pageNum = 1;
+      this.$refs.multipleTable.clearSelection();
       this.chuliList();
+    },
+    async cunhou() {
+      // console.log(this.$refs.multipleTable);
+      if (this.tableDatalist.length > 0) {
+        this.cunhoutitle = "验证中";
+        let arr = [];
+
+        this.tableDatalist.forEach((item) => {
+          // console.log(item.id);
+          arr.push(item.id);
+        });
+        let list = {
+          idList: arr,
+        };
+        const { data: res } = await this.$http.post(
+          "/process/updateStatus",
+          list
+        );
+        if (res.code == 200) {
+          this.cunhoutitle = "存活验证";
+          // console.log(res.data);
+          this.$refs.multipleTable.clearSelection();
+          this.chuliList();
+          this.$message(res.message);
+        } else {
+          this.$message(res.message);
+        }
+      } else {
+        this.$message("请勾选");
+      }
+    },
+    async daochu() {
+      this.loadingbuttext = "...加载中";
+      let arr = [];
+
+      this.tableDatalist.forEach((item) => {
+        arr.push(item.id);
+      });
+      let discoverProcessDTO = {
+        alive: this.list_num.cunhou,
+        cdn: this.list_num.cdn,
+        dataSource: this.list_num.ly,
+        endDate: this.whiteSearchList.endUploadTime,
+        jump: this.list_num.tz,
+        outside: this.list_num.jinneiwai,
+        record: this.list_num.modelType1,
+        startDate: this.whiteSearchList.startUploadTime,
+        mypageable: this.mypageable,
+        url: this.list_num.yuming,
+        idList: arr,
+      };
+      const { data: res } = await this.$http.post(
+        "/process/downloadBlackList",
+        discoverProcessDTO
+      );
+      if (res.code == 200) {
+        this.loadingbuttext = "导出";
+        this.loadingbut = false;
+        let newurl = res.expandData.url;
+        let eleLink = document.createElement("a");
+        eleLink.download = name;
+        // const down = window.location.origin
+        // eleLink.href = "http://172.31.1.61:8080" + newurl;
+        // const down = window.location.origin
+        eleLink.href = newurl;
+        // console.log(eleLink);
+        eleLink.click();
+        eleLink.remove();
+        this.$refs.multipleTable.clearSelection();
+      }
     },
     handleSizeChange(val) {
       this.mypageable.pageSize = val;
@@ -428,6 +600,18 @@ export default {
       }
       return "";
     },
+    jnw(val) {
+      switch (val) {
+        case 0:
+          return "境外";
+        // //break;
+        case 1:
+          "境内";
+        // //break;
+        case 2:
+          return "未知";
+      }
+    },
   },
 };
 </script>
@@ -468,5 +652,8 @@ export default {
   .ss {
     float: right;
   }
+}
+.yijian {
+  color: #fff;
 }
 </style>

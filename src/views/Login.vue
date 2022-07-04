@@ -157,7 +157,7 @@ export default {
 .top1_title {
   height: 65px;
   width: 100%;
-  background: url('../assets/newimg/newhome/顶部.png') no-repeat 100% 100%;
+  background: url('../assets/newimg/newhome/dingbu.png') no-repeat 100% 100%;
   background-size: cover;
 }
 .top1_line {
@@ -178,7 +178,7 @@ export default {
   top: 0;
   width: 80%;
   height: 15px;
-  background: url('../assets/newimg/newhome/光.png') no-repeat;
+  background: url('../assets/newimg/newhome/guang.png') no-repeat;
   background-size: 100% 100%;
   animation: myfirst 5s linear normal;
   animation-iteration-count: infinite;
@@ -236,7 +236,7 @@ export default {
   width: 100%;
   height: 100%;
 
-  background: #ffffff00 url(../assets/Login/src/背景.png) no-repeat 100% 100%;
+  background: #ffffff00 url(../assets/Login/src/bg12.png) no-repeat 100% 100%;
 
   background-size: 100% 100%;
 }
@@ -264,7 +264,7 @@ export default {
   border-radius: 5px;
   background: rgba(255, 255, 255, 0.1);
   overflow: hidden;
-  background: url(../assets/Login/src/登陆框1.png) no-repeat 100% 100%;
+  background: url(../assets/Login/src/dl1.png) no-repeat 100% 100%;
   background-size: 100% 100%;
   box-sizing: border-box;
   // border: 5px solid #000;
@@ -296,7 +296,7 @@ export default {
   height: 15px;
   // transform: translate(-50%, -60%);
 
-  background: url(../assets/Login/src/光效1.png) no-repeat 100% 100%;
+  background: url(../assets/Login/src/gx1.png) no-repeat 100% 100%;
   background-size: 100% 100%;
   margin-top: 32px;
 }
@@ -308,11 +308,11 @@ export default {
   padding: 0 80px;
 }
 /deep/ .user {
-  background: url(../assets/Login/src/用户名.png) no-repeat 100% 100%;
+  background: url(../assets/Login/src/user.png) no-repeat 100% 100%;
   background-size: 100% 100%;
 }
 /deep/ .pwd {
-  background: url(../assets/Login/src/密码.png) no-repeat 100% 100%;
+  background: url(../assets/Login/src/pwd.png) no-repeat 100% 100%;
   background-size: 100% 100%;
 }
 /deep/ .el-input__inner {
@@ -331,7 +331,7 @@ export default {
 .denglu {
   cursor: pointer;
   height: 60px;
-  background: url(../assets/Login/src/登录按钮.png) no-repeat 100% 100%;
+  background: url(../assets/Login/src/dlbtn.png) no-repeat 100% 100%;
   background-size: 100% 100%;
 }
 /deep/ .el-input__inner::-webkit-input-placeholder {
@@ -345,7 +345,7 @@ export default {
   position: relative;
   top: -1%;
   left: 15%;
-    background: url(../assets/img/login/光效xx.png) no-repeat 100% 100%;
+    background: url(../assets/img/login/gxone.png) no-repeat 100% 100%;
   background-size: 100% 100%;
   width: 200px;
   height: 100px;

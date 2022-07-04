@@ -104,7 +104,7 @@
 }
 .right_main_under .tableStyle tr {
   background-color: #01162d;
-  height: 50px;
+  height: 60px;
   color: #fff;
 }
 .right_main_under .tableStyle td {
@@ -312,3 +312,4 @@
 .right_main_under .upload_demo .el-upload-list__item .el-icon-close {
   top: 0;
 }
+/*# sourceMappingURL=./public.css.map */

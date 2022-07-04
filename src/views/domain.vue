@@ -125,7 +125,7 @@
       ref="multipleTable"
       :data="tableData"
       style="width: 100%"
-      height="calc(100% - 20%)"
+ 
       size="mini"
       class="tableStyle"
       @selection-change="handleSelectionChange"
@@ -238,7 +238,7 @@
           :current-page="mypageable.pageNum"
           :page-sizes="[15, 30, 45]"
           :page-size="mypageable.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
+          layout="total, prev, pager, next, jumper"
           :total="total"
           class="pagePagination pageRight"
         >
@@ -315,7 +315,7 @@ export default {
 
       mypageable: {
         pageNum: 1,
-        pageSize: 15,
+        pageSize: 10,
       },
       total: 1,
       totalPages: "",
@@ -390,19 +390,19 @@ export default {
         ],
         model_typeData: [
        
-          { value: 'DK', label: '贷款' },
-          { value: 'SD', label: '刷单' },
-          { value: 'GJF', label: '仿冒公检法' },
+          { value: 'DK', label: '贷款代办信用卡类' },
+          { value: 'SD', label: '刷单返利类' },
+          { value: 'GJF', label: '冒充公检法类' },
 
           // { value: "GW", label: "网络购物" },
-          { value: 'QT', label: '其他类型诈骗' },
-          { value: 'GW', label: '冒充电商客服类' },
+          { value: 'OTHER', label: '其他类型诈骗' },
+          { value: 'KF', label: '冒充客服类' },
           { value: 'JJGW', label: '冒充军警购物诈骗' },
           { value: 'SZP', label: '杀猪盘' },
-          { value: 'DS', label: '虚假购物/服务类' },
-          { value: 'JY', label: '网络婚恋/交友类' },
+          { value: 'DS', label: '电商类诈骗' },
+          { value: 'JY', label: '网络婚恋、交友类' },
           { value: 'ZX', label: '虚假征信类' },
-          { value: 'MC', label: '冒充领导/熟人类' },
+          { value: 'MC', label: '冒充领导、熟人类' },
           { value: 'YX', label: '网络游戏产品虚假交易类' },
           { value: 'APP', label: '分发平台' },
           { value: 'XZYM', label: '下载页面' },
@@ -936,48 +936,50 @@ export default {
 
     //查询
     async searchTabData() {
-      let getTabDataList = {
-        // domainSimpleVo: this.newdomainSimpleVo,
-        // domainTimeVo: this.whiteSearchList,
-        // mypageable: this.mypageable,
-        domainSimpleVo: {
-          url: this.newdomainSimpleVo.url,
-          dataSource: this.newdomainSimpleVo.sourceType,
-          type: this.newdomainSimpleVo.modelType1,
-          status: this.newdomainSimpleVo.state,
-          protocol: this.newdomainSimpleVo.protocol,
-          authorize: this.newdomainSimpleVo.authorize,
-          category: this.newdomainSimpleVo.classification,
-        },
-        domainTimeVo: {
-          startTreatmentTime: this.whiteSearchList.startCreateTime,
-          endTreatmentTime: this.whiteSearchList.endCreateTime,
-        },
-        mypageable: {
-          // pageNum: this.mypageable.pageNum,
-          pageNum: 1,
-          pageSize: this.mypageable.pageSize,
-        },
-      };
+      this.mypageable.pageNum=1
+      this.getTabData()
+      // let getTabDataList = {
+      //   // domainSimpleVo: this.newdomainSimpleVo,
+      //   // domainTimeVo: this.whiteSearchList,
+      //   // mypageable: this.mypageable,
+      //   domainSimpleVo: {
+      //     url: this.newdomainSimpleVo.url,
+      //     dataSource: this.newdomainSimpleVo.sourceType,
+      //     type: this.newdomainSimpleVo.modelType1,
+      //     status: this.newdomainSimpleVo.state,
+      //     protocol: this.newdomainSimpleVo.protocol,
+      //     authorize: this.newdomainSimpleVo.authorize,
+      //     category: this.newdomainSimpleVo.classification,
+      //   },
+      //   domainTimeVo: {
+      //     startTreatmentTime: this.whiteSearchList.startCreateTime,
+      //     endTreatmentTime: this.whiteSearchList.endCreateTime,
+      //   },
+      //   mypageable: {
+      //     // pageNum: this.mypageable.pageNum,
+      //     pageNum: 1,
+      //     pageSize: this.mypageable.pageSize,
+      //   },
+      // };
 
-      const { data: res } = await this.$http.post(
-        "/treatment/getDomain",
-        getTabDataList
-      );
-      if (res.code == 200) {
-        if (res.data.content.length > 0) {
-          this.mypageable.pageNum = 1;
+      // const { data: res } = await this.$http.post(
+      //   "/treatment/getDomain",
+      //   getTabDataList
+      // );
+      // if (res.code == 200) {
+      //   if (res.data.content.length > 0) {
+      //     this.mypageable.pageNum = 1;
 
-          this.tableData = res.data.content;
-          this.total = res.data.totalElements;
-          this.totalPages = res.data.totalPages;
-        } else {
-          // this.$message("暂无数据");
-          this.tableData =[]
-        }
-      } else {
-        this.$message(res.message);
-      }
+      //     this.tableData = res.data.content;
+      //     this.total = res.data.totalElements;
+      //     this.totalPages = res.data.totalPages;
+      //   } else {
+      //     // this.$message("暂无数据");
+      //     this.tableData =[]
+      //   }
+      // } else {
+      //   this.$message(res.message);
+      // }
     },
     // if (res.code == 200) {
     //          this.mypageable.pageNum=1
@@ -1016,7 +1018,7 @@ export default {
 
       this.mypageable = {
         pageNum: 1,
-        pageSize: 15,
+        pageSize: 10,
       };
       this.getTabData();
       // this.dayzong();
