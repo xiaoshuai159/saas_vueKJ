@@ -1,29 +1,14 @@
 module.exports = {
-  publicPath: './',
-  // publicPath: '../static/',
+  publicPath: './',  // publicPath: '../static/',
   devServer: {
     proxy: {
       '': {
-        // target:'http://10.8.0.16:8080',
-        // target:'http://10.8.0.4:8080',
-        // target: 'http://10.8.0.120:8022/',
-        // target: 'http://10.8.0.4:8080',
-        // target:'http://10.8.0.101:8080',
-        // target: 'http://10.8.0.13:8080/',
-        target:'http://10.8.0.120:8022',  //sy
-        // target:"http://10.8.0.17:8080",
-        // target:"http://localhost:8080",
-        // target:'http://172.31.0.72:8080',  //mfy 
-        // target:'http://10.8.0.101:8080',
-        // target: 'https://10.8.0.1:8443/',  //cd\
-        // target:'http://10.8.0.120:8010/',
-      
-        // target:'https://10.8.0.105:8443/',   //jx
-        // target:'http://172.26.1.15:8080',
-        // target:'https://10.0.8.6:8443',   // fw  admin   123123
-        // target:'https://10.8.0.105:8443', 
-        // target:'http://10.8.0.5:8080',   //zx   admin   123446
-        // target: 'http://10.8.0.5:8080',
+        // target:'http://192.168.10.38:5000/', //在长安
+        // target:'http://172.31.0.229:5000/',  //五号楼
+        // target:'http://172.31.2.13:5000',    //在内网
+        target:'http://192.168.31.148:5000', //在家时
+        // target:'http://192.168.10.78:5000/',
+        // target:'http://192.168.0.112:5000',
         ws: true,
         changeOrigin: true,
         // secure: false, // 如果是https接口，需要配置这个参数
@@ -38,17 +23,6 @@ module.exports = {
     hotOnly: false,
     disableHostCheck: true,
   },
-  lintOnSave: true,
-  css: {
-    loaderOptions: {
-       
-        postcss: {
-            plugins: [
-              require('postcss-px2rem')({
-                remUnit: 37.5
-              })
-            ]
-          }
-    },
-},
+
+
 }

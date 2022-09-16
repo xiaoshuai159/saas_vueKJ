@@ -1,153 +1,113 @@
 import Vue from 'vue'
+import Router from 'vue-router'
 import VueRouter from 'vue-router'
-import Home from "../views/Home";
-
-
-
-
-Vue.use(VueRouter)
-const routes = [
-  // {
-  //   path: '/',name:'statisticAnalysis', meta:{ title:'大屏统计' }, component: ()=>import('../views/statisticAnalysis')
-  // },
-  {
-    path: '/', name: 'login', meta: { title: '登录页' }, component: () => import('../views/Login')
-  },
-  {
-    path: '/notPrivilege', name: 'notPrivilege', meta: { title: '无权限' }, component: () => import('../views/403')
-  },
-  {
-    path: '/notPage', name: 'notPage', meta: { title: '无页面' }, component: () => import('../views/404')
-  },
-  {
-    path: '*',
-    redirect: '/notPage'
-  },
-  {
-    path: '/home',
-    name: 'Home',
-    redirect: '/shouye',
-    children: [
-      {
-        path: '/shouye',
-        name: 'shouye',
-        meta: {
-          title: '首页'
-        },
-        component: () => import("../views/shouye")
-      },
-
-      {
-        path: '/domain',
-        name: 'domain',
-        meta: {
-          title: '黑样本应用-反制'
-        },
-        component: () => import('../views/domain')
-      },
-      {
-        path: '/getWarning',
-        name: 'getWarning',
-        meta: {
-          title: '黑样本应用-预警'
-        },
-        component: () => import('../views/getWarning')
-      },
-      {
-        path: '/getUploadDomain',
-        // name:'search_bak',
-        name: 'getUploadDomain',
-        meta: {
-          title: '黑样本展示'
-        },
-        component: () => import("../views/getUploadDomain")
-      },
-      {
-        path: '/finished',
-        // name:'search_bak',
-        name: 'finished',
-        meta: {
-          title: '黑样本处理'
-        },
-        component: () => import("../views/finished")
-      },
-      {
-        path: '/boce',
-        // name:'search_bak',
-        name: 'boce',
-        meta: {
-          title: '黑样本拨测'
-        },
-        component: () => import("../views/boce")
-      },
-      {
-        path: '/getDiscover',
-        // name:'search_bak',
-        name: 'getDiscover',
-        meta: {
-          title: '黑样本整合-展示'
-        },
-        component: () => import("../views/getDiscover")
-      },
-       
-      {
-        path: '/404',
-        name: '404',
-        meta: {
-          title: '404'
-        },
-        component: () => import('../views/404')
-      },
-    
-     
-      // {
-      //   path: '/findUser',
-      //   name: 'findUser',
-      //   meta: {
-      //     title: '用户管理'
-      //   },
-      //   component: () => import('../views/findUser')
-      // },
-     
-    ],
-    component: Home
-  },
-
-]
-// 前置守卫
-// router.beforeEach((to, from, next) => {
+import login1 from '@/components/login1.vue'
+import countryPage from '@/components/countryPage.vue'
+import provincePage from '@/components/provincePage.vue'
+import cityPage from '@/components/cityPage.vue'
+import areaPage from '@/components/areaPage.vue'
+import num from '@/components/num.vue'
+import shejidanwei from '@/components/shejidanwei.vue'
+import xiangqing from '@/components/xiangqing.vue'
+import xiangqing2 from '@/components/xiangqing2.vue'
+import xiangqing3 from '@/components/xiangqing3.vue'
+import xiangqing4 from '@/components/xiangqing4.vue'
+import num2 from '@/components/num2.vue'
+import num3 from '@/components/num3.vue'
+import shejidanwei2 from '@/components/shejidanwei2.vue'
+import shejidanwei3 from '@/components/shejidanwei3.vue'
+Vue.use(Router)
  
-//   if(to.path=='/'){
-//     next()
-//   }else{
-//     if (to.path != '/' && window.sessionStorage.getItem('one')){
-//       next()
-//  } else {
-//       next('/')
-//  }
-//   }
+const router = new Router({
+  routes: [
+    {
+      path: '/',
+      name: 'login',
+      component: login1
+    },
+    {
+        path: '/countryPage',
+        name: 'countryPage',
+        component: countryPage
+    },
+    {
+        path: '/provincePage',
+        name: 'provincePage',
+        component: provincePage,
+        children:[{
+          path: '/xiangqing2',
+          name: 'xiangqing2',
+          component: xiangqing2,
+        }]
+    },
+    {
+      path: '/cityPage',
+      name: 'cityPage',
+      component: cityPage,
+      meta: {
+        keepAlive: true
+      },
+      children:[{
+        path: '/xiangqing3',
+        name: 'xiangqing3',
+        component: xiangqing3,
+      }]
+  },
+    {
+      path: '/num',
+      name: 'num',
+      component: num
+    },
+    {
+    path: '/shejidanwei',
+    name: 'shejidanwei',
+    component: shejidanwei
+    },
+    {
+      path: '/xiangqing',
+      name: 'xiangqing',
+      component: xiangqing
+    },{
+      path: '/num2',
+      name: 'num2',
+      component: num2
+    },
+    {
+      path: '/num3',
+      name: 'num3',
+      component: num3
+    },
+    {
+    path: '/shejidanwei2',
+    name: 'shejidanwei2',
+    component: shejidanwei2
+    },
+    {
+      path: '/shejidanwei3',
+      name: 'shejidanwei3',
+      component: shejidanwei3
+      },
+    {
+      path: '/areaPage',
+      name: 'areaPage',
+      component: areaPage,
+      children:[{
+        path: '/xiangqing4',
+        name: 'xiangqing4',
+        component: xiangqing4,
+      }]
+    }
 
-const router = new VueRouter({
-  // mode: 'history',
-  mode:'hash',
-  routes
+
+  ]
 })
-
-
-
-// 解决ElementUI导航栏中的vue-router在3.0版本以上重复点菜单报错问题
-const originalPush = VueRouter.prototype.push
-VueRouter.prototype.push = function push(location) {
-  return originalPush.call(this, location).catch(err => err)
-}
-
-// 前置守卫
 router.beforeEach((to, from, next) => {
-  if (to.path === '/') return next()
-  const user = window.sessionStorage.getItem('isLogin')
-  if (user == 'true') return next()
-alert('请登录')
-next("/")
+  const token = localStorage.getItem('token')
+  const userLevel = sessionStorage.getItem('userLevel')
+  if (to.name!=='login'&&!token) next({name:'login'})
+  else if(to.name=='countryPage'&&userLevel!='1') next({name:'login'})
+  else if(to.name=='provincePage'&&userLevel!='1'&&userLevel!='2') next({name:'login'})
+  else if(to.name=='cityPage'&&userLevel!='1'&&userLevel!='2'&&userLevel!='3') next({name:'login'})
+  else next()
 })
-
 export default router

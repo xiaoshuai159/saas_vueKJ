@@ -1,0 +1,154 @@
+map_ip_data
+{
+  "size": 0,
+  "aggs": {
+    "group_by_province":{
+      "terms": {
+        "field": "province.keyword",
+        "size": 100
+      },
+      "aggs": {
+        "distinct_sip": {
+          "cardinality": {
+            "field": "sip.keyword"
+          }
+        }
+      }
+    }
+  }, 
+  "query": {
+    "bool": {
+      "must": [],
+      "filter": [
+        {
+          "range": {
+            "ntime": {
+              "gte": "20220707000000",
+              "lte": "20220707999999"
+            }
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "match_phrase": {
+            "adcode.keyword": ""
+          }
+        }
+      ]
+    }
+  }
+}
+
+获取去重后的所有源IP,must字段中可添加当前省份、城市 、地区筛选条件，按照ntime排序
+{
+  "_source": [
+    "sip.keyword"
+    ], 
+  "sort": [
+    {
+      "ntime.keyword": {
+        "order": "desc"
+      }
+    }
+  ], 
+  "collapse": {
+    "field": "sip.keyword"
+  },  
+  "query": {
+    "bool": {
+      "must": [
+        
+        ],
+      "filter": [
+        {
+          "range": {
+            "ntime": {
+              "gte": "20220701000000",
+              "lte": "20220707999999"
+            }
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "match_phrase": {
+            "adcode.keyword": ""
+          }
+        }
+      ]
+    }
+  }
+}
+
+详情表初始化的数据，返回最新的1000条数据
+{
+  "size": 1000,
+  "sort": [
+    {
+      "ntime.keyword": {
+        "order": "desc"
+      }
+    }
+  ], 
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match_phrase": {
+            "province": "北京"
+          }
+        }
+        ],
+      "filter": [
+        {
+          "range": {
+            "ntime": {
+              "gte": "20220713000000",
+              "lte": "20220713999999"
+            }
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "match_phrase": {
+            "adcode.keyword": ""
+          }
+        }
+      ]
+    }
+  }
+}
+
+
+http://10.127.208.203://
+
+
+# 查询功能
+GET apt_202207/_search
+{
+  "query": {
+    "bool": {
+      "should": [
+        {
+          "match": {
+            "province": "辽宁省"
+          }
+        },
+        {
+          "match": {
+            "sip.keyword": "60.205.205.107"
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "match_phrase": {
+            "payload.keyword": "NULL"
+          }
+        }
+      ]
+    }
+  }
+}

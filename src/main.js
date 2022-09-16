@@ -1,35 +1,34 @@
 import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import axios from '@/api/axios'
-import Element from 'element-ui'
-import 'jquery'
-import store from './store'
+import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-// import '@/styles/index.css'
-import preventClick from './utils/controlClickState'
-import formatDate from './utils/formatDate'
+// import * as echarts from "echarts"
+import App from './App.vue'
+import axios from '@/api/axios'
+import router from './router/index.js'
+import store from './store'
 import * as echarts from 'echarts'
-import dayjss from 'dayjs'
-import './lib/lib-flexible'
-
-
-Vue.prototype.$echarts = echarts
-// Vue.prototype.$=jquery
-
-Vue.prototype.$http = axios
-Vue.prototype.formatDate = formatDate
-Vue.prototype.dayjstime = dayjss
-Vue.use(Element)
-Vue.use(preventClick)
-// Vue.use(store)
+// import less from 'less'
+// Vue.use(less)
+// import {postRequest} from "./utils/api"
+// import {putRequest} from "./utils/api"
+// import {getRequest} from "./utils/api"
+// import {deleteRequest} from "./utils/api"
+Vue.use(ElementUI)
 Vue.config.productionTip = false
-
-
+Vue.prototype.$echarts = echarts
+// Vue.prototype.$bus = new Vue()
+// axios.defaults.baseURL = 'http://127.0.0.1:5000/'
+Vue.prototype.$http = axios
+// //插件形式使用请求
+// Vue.prototype.postRequest = postRequest;
+// Vue.prototype.putRequest = putRequest;
+// Vue.prototype.getRequest = getRequest;
+// Vue.prototype.deleteRequest = deleteRequest;
 new Vue({
+  render: h => h(App),
   router,
   store,
-  render: h => h(App)
+  beforeCreate(){
+    Vue.prototype.$bus = this
+  }
 }).$mount('#app')
-
-
