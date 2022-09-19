@@ -194,7 +194,7 @@ export default {
         input1: "",
         input2: "",
       },
-      currentTime: this.$store.state.currentTime,
+      // currentTime: this.$store.state.currentTime,
       options: [],
       options2: [],
       options3: [],
@@ -267,8 +267,8 @@ export default {
       this.exportid = [];
       this.multipleSelection.forEach((item) => {
         this.exportid.push({
-          s_time: this.currentTime[0],
-          e_time: this.currentTime[1],
+          s_time: this.$store.state.currentTime[0],
+          e_time: this.$store.state.currentTime[1],
           _id: item._id,
           unit_name: item.unit_name,
           event_type: item.event_type,

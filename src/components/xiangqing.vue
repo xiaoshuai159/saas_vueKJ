@@ -177,10 +177,6 @@
 <script>
 import { Message } from "element-ui";
 import axios from "axios";
-// import docxtemplater from 'docxtemplater'
-// import PizZip from 'pizzip'
-// import JSZipUtils from 'jszip-utils'
-// import {saveAs} from 'file-saver'
 export default {
   data() {
     return {
@@ -196,7 +192,7 @@ export default {
         input1: "",
         input2: "",
       },
-      currentTime: this.$store.state.currentTime,
+      // currentTime: this.$store.state.currentTime,
       options: [
         { value: "选项1", label: "北京" },
         { value: "选项2", label: "天津" },
@@ -236,31 +232,19 @@ export default {
       options2: [],
       options3: [],
       tableData: [
-        //   {
-        //   date:'2021-12-10',
-        //   event_type:'APT',
-        //   city:'北京市',
-        //   district:'昌平区',
-        //   unit_type:'医院',
-        //   unit_name:'大法师大噶山豆根是法国萨洒地方撒旦发射点'
-        // }
       ],
       multipleSelection: "",
       multipleSelection_id: [],
       exportid: [],
     };
   },
-
   methods: {
     filterOptions2() {
       let list1 = [];
       for (var i = 0; i < this.tableData.length; i++) {
         list1.push(this.tableData[i].event_type);
-        // console.log(this.tableData[i].event_type)
       }
-
       let list2 = [...new Set(list1)];
-      // console.log(list2)
       if (list2 == "") return;
       for (var i = 0; i < list2.length; i++) {
         if (list2[i] != "") {
@@ -269,8 +253,6 @@ export default {
             label2: list2[i],
           });
         }
-
-        //console.log(this.options2)
       }
     },
     filterOptions3() {
@@ -291,26 +273,19 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
-      // console.log(this.multipleSelection)
       for (var i = 0; i < this.multipleSelection.length; i++) {
-        // console.log(this.multipleSelection[i]._id)
         this.multipleSelection_id.push(this.multipleSelection[i]._id); //记得clear
       }
-
-      // console.log(this.multipleSelection_id)
       this.exportid = [];
       this.multipleSelection.forEach((item) => {
         this.exportid.push({
-          s_time: this.currentTime[0],
-          e_time: this.currentTime[1],
+          s_time: this.$store.state.currentTime[0],
+          e_time: this.$store.state.currentTime[1],
           _id: item._id,
           unit_name: item.unit_name,
           event_type: item.event_type,
-        }); //选中数据id给对账单ID
+        });
       });
-      // console.log(this.exportid)
-      // this.exportid = this.exportid.join(",");
-      // console.log(this.exportid)
       return this.multipleSelection;
     },
     handleSizeChange(val) {
@@ -323,7 +298,6 @@ export default {
     },
     changeTime(data1) {
       this.loading = true;
-      // this.$nextTick(()=>{})
       axios({
         method:"post",
         url:"/details",
@@ -353,22 +327,17 @@ export default {
         .then((rep) => {
           this.tableData = rep.data;
           // this.filterOptions1()
-          // this.filterOptions2()
-          // this.filterOptions3()
           this.loading = false;
         });
     },
     chaxun() {
       this.loading = true;
-      // if(this.$refs.selectLable1.selected.label==undefined){
-      //   this.$refs.selectLable1.selected.label=''
-      // }
       axios({
         method:"post",
         url:"/details",
         data:{
-            s_time: this.currentTime[0],
-            e_time: this.currentTime[1],
+            s_time: this.$store.state.currentTime[0],
+            e_time: this.$store.state.currentTime[1],
             data: {
               address: [
                 this.$store.state.userinfo.province || "",
@@ -418,20 +387,13 @@ export default {
             const blobUrl = window.URL.createObjectURL(new Blob(binaryData));
             const a = document.createElement("a");
             a.style.display = "none";
-            // console.log(rep.headers.content-disposition )
             const disposition = rep.headers["content-disposition"];
-            // console.log(disposition)
             let fileName = disposition.substring(
               disposition.indexOf("filename=") + 9,
               disposition.length
             );
-            // console.log(fileName)
-            // iso8859-1的字符转换成中文
             fileName = decodeURI(escape(fileName));
-            // console.log(fileName)
-            // 去掉双引号
             fileName = fileName.replace(/\"/g, "");
-            // console.log(fileName)
             a.download = fileName;
             a.href = blobUrl;
             a.click();
@@ -444,7 +406,6 @@ export default {
           }
         })
         .catch((err) => {
-          //console.log(err)
           this.isDisabled = false;
           Message({
             message: "导出失败，请稍后再试！",
@@ -453,7 +414,6 @@ export default {
         });
     },
     daochu() {
-      //console.log(this.exportid)
       if (this.exportid.length === 0) {
         Message({
           message: "请至少选择一条需要导出的数据",
@@ -484,9 +444,7 @@ export default {
             const blobUrl = window.URL.createObjectURL(new Blob(binaryData));
             const a = document.createElement("a");
             a.style.display = "none";
-            // console.log(rep.headers.content-disposition )
             const disposition = rep.headers["content-disposition"];
-            // console.log(disposition)
             let fileName = disposition.substring(
               disposition.indexOf("filename=") + 9,
               disposition.length
@@ -521,19 +479,6 @@ export default {
   },
   mounted() {
     this.loading = true;
-    // this.$nextTick(()=>{})
-    // axios.interceptors.request.use(
-    //   (config) => {
-    //     // 请求头携带sessionStorage里面的token
-    //     config.headers.Authorization = 'asdfasdf'
-    //     return config
-    //   },
-    //   function (err) {
-    //     // 对请求错误做些什么
-    //     console.log(err)
-    //   }
-    // )
-
     axios({
       method: "post",
       url: "/details",
@@ -561,7 +506,6 @@ export default {
       }
     }).then((rep) => {
       this.tableData = rep.data;
-      // this.filterOptions1()
       this.filterOptions2();
       this.filterOptions3();
       this.loading = false;
@@ -570,7 +514,6 @@ export default {
   watch: {
     "$store.state.currentTime": {
       handler(newValue) {
-        //console.log(newValue)
         this.changeTime(newValue);
       },
     },
