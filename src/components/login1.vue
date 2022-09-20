@@ -1,7 +1,8 @@
 <template>
   <div class="login-wrap">
     <!-- <div><img :src="imgurl" alt="imgurl" style="width:150px;height:120px;margin-left:10%"></div> -->
-    <div><img :src="imgurl" alt="imgurl" title="登录页面" style="width:60px;height:60px;margin-left:20%;cursor:pointer;"></div>
+    <!-- <div><img :src="imgurl" alt="imgurl" title="登录页面" style="width:60px;height:60px;margin-left:20%;cursor:pointer;"></div> -->
+    <div><img :src="imgurl" alt="imgurl" title="登录页面" style="width:550px;height:570px;margin-left:5%"></div>
     <div class="login1">
       <el-form :rules="rules" class="login-container" ref="loginForm" :model="loginForm">
       <h1 class="title">网络安全事件态势感知</h1>
@@ -32,7 +33,7 @@
     name: 'login',
     data: function() {
       return {
-        imgurl:require("@/assets/logo2.png"),
+        imgurl:require("@/assets/a7fba5c3346470712319616c9a7ddc33.png"),
         // imgurl:require("@/assets/changanlogo.png"),
         captchaUrl:'/verify_code?time'+new Date(),
         loginForm:{
@@ -162,19 +163,35 @@
     background-position: center right;
     background-size: 100%;
   }
+  // body {
+  //   /*弹性布局 让页面元素垂直+水平居中*/
+  //   display: flex;
+  //   justify-content: center;
+  //   align-items: center;
+  //   /*让页面始终占浏览器可视区域总高度*/
+  //   height: 100vh;
+  //   /*背景渐变色*/
+  //   background: linear-gradient(#141e30,#243b55);
+  //   /* background: white; */
+  // }
  .login1{
    position: absolute;
-    left:50%;
-    margin-left: -228px;
+    left:52%;
+    // margin-left: -228px;
     top:50%;
     margin-top:-190px;
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
+    // /*让页面始终占浏览器可视区域总高度*/
+    // height: 75vh;
  }
   .login-container {
     // position: relative;
     border-radius: 10px;
     /* margin: 50px auto; */
     width: 385px;
-    padding: 30px 35px 15px 35px;
+    padding: 30px 15px 15px 15px;
     background: #fff;
     border: 1px solid #eaeaea;
     text-align: center;
