@@ -30,6 +30,17 @@ USERS = [
         "district": "",
         "adcode": "210000"
     },
+{
+        "id": 3,
+        "login_user": "admin2",
+        "login_passwd": generate_password_hash("admin123"),
+        "user_level": 5,
+        "country": "",
+        "province": "",
+        "city": "",
+        "district": "",
+        "adcode": ""
+    },
 ]
 
 

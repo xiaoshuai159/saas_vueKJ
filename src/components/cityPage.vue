@@ -6,8 +6,8 @@
               
                 <div style="margin-top:-20px">
                   <!-- <img :src="imgurl" alt="imgurl" title="首页" @click="logolink()" style="cursor:pointer;width:90px;height:40px;margin-left:1%;margin-top:1px"> <div style="margin-top:-20px; margin-left:10%; font-family:'Helvetica Neue'">网络安全事件态势感知</div> -->
-                  <img :src="imgurl" alt="imgurl" title="首页" @click="logolink()" style="width:40px;height:40px;margin-left:1%;margin-top:1px;cursor:pointer;"> 
-                  <div style="margin-top:-20px; margin-left:6%; font-family:'Helvetica Neue'">网络安全事件态势感知</div>
+                  <img :src="imgurl" alt="imgurl" title="首页" @click="logolink()" style="width:130px;height:40px;margin-top:1px;cursor:pointer;"> 
+                  <div style="margin-top:-20px; margin-left: 140px; font-family:'Helvetica Neue'">网络安全事件态势感知</div>
                 </div>
               </el-col>
               <el-col :span="1" style="margin-top:20px;">
@@ -79,7 +79,7 @@ import Xiangqing4 from './xiangqing4.vue';
 export default {
     data(){
       return {
-        imgurl:require("@/assets/logo2.png"),
+        imgurl:require("@/assets/zhongxinlogo3.png"),
         imgurl2:require("@/assets/exit2.png")
       }
     },
@@ -93,7 +93,7 @@ export default {
     methods:{
       logolink(){
       if (
-            this.$store.state.userLevel == 1
+            this.$store.state.userLevel == 1||this.$store.state.userLevel == 5
           ) {
             this.$router.push({
               name: "countryPage",

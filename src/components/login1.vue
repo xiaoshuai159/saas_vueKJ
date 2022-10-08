@@ -2,7 +2,7 @@
   <div class="login-wrap">
     <!-- <div><img :src="imgurl" alt="imgurl" style="width:150px;height:120px;margin-left:10%"></div> -->
     <!-- <div><img :src="imgurl" alt="imgurl" title="登录页面" style="width:60px;height:60px;margin-left:20%;cursor:pointer;"></div> -->
-    <div><img :src="imgurl" alt="imgurl" title="登录页面" style="width:550px;height:570px;margin-left:5%"></div>
+    <div class="img_div"><img :src="imgurl" alt="imgurl" title="登录页面" style="width:550px;height:570px;margin-left:5%"></div>
     <div class="login1">
       <el-form :rules="rules" class="login-container" ref="loginForm" :model="loginForm">
       <h1 class="title">网络安全事件态势感知</h1>
@@ -87,14 +87,14 @@
                 this.$store.dispatch('updateuserlevel',rep.data.user_level)
                 this.$store.dispatch('updateuserinfo',rep.data)
                 this.$store.dispatch('updatetoken',rep.data.csrf_token)
-                if(rep.data.user_level===1){
+                if(rep.data.user_level===1||rep.data.user_level===5){
                   //中国地图跳转
                   this.$router.replace('/countryPage')
                 }
                 else if(rep.data.user_level===2){
                   //省份地图跳转
                   this.$store.dispatch('updateprovince',rep.data.province)
-                  this.$router.push({
+                  this.$router.replace({
                     name:'provincePage',
                     params:{
                         province_name:rep.data.province,
@@ -106,7 +106,7 @@
                   //市级地图跳转
                   this.$store.dispatch('updateprovince',rep.data.province)
                   this.$store.dispatch('updatecity',rep.data.city)
-                  this.$router.push({
+                  this.$router.replace({
                     name:'cityPage',
                     params:{
                         city_name:rep.data.city,
@@ -119,7 +119,7 @@
                   this.$store.dispatch('updateprovince',rep.data.province)
                   this.$store.dispatch('updatecity',rep.data.city)
                   this.$store.dispatch('updatearea',rep.data.area)
-                  this.$router.push({
+                  this.$router.replace({
                     name:'areaPage',
                     params:{
                         area_name:rep.data.area,
@@ -152,7 +152,11 @@
  
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
-
+  .img_div{
+      position: absolute;
+      top:50%;
+      margin-top:-285px;
+    }
   .login-wrap {
     box-sizing: border-box;
     width: 100%;

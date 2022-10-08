@@ -109,7 +109,10 @@
                 <el-table-column type="selection" width="50" fixed>
                 </el-table-column>
                 <el-table-column label="IP" prop="_id" min-width="130" sortable>
-                  <!-- v-if="false" -->
+                  <template slot-scope="scope">     
+                    <span v-if="scope.row._id != ''&&$store.state.userinfo.user_level==5"> {{ numberMask(scope.row._id) }}</span>
+                    <span v-else>{{ scope.row._id }}</span>
+                  </template>
                 </el-table-column>
                 <el-table-column label="日期" width="110" sortable>
                   <template slot-scope="scope">{{ scope.row.date }}</template>
@@ -155,6 +158,10 @@
                   min-width="200"
                   show-overflow-tooltip
                 >
+                <template slot-scope="scope">     
+                    <span v-if="scope.row.unit_name != ''&&$store.state.userinfo.user_level==5"> {{ companyMask(scope.row.unit_name) }}</span>
+                    <span v-else>{{ scope.row.unit_name }}</span>
+                  </template>
                 </el-table-column>
               </el-table>
               <el-pagination
@@ -177,14 +184,19 @@
 <script>
 import { Message } from "element-ui";
 import axios from "axios";
+import {numberMask,companyMask} from '@/utils/mask'
+import store from "../store";
 export default {
   data() {
+    this.numberMask = numberMask
+    this.companyMask = companyMask  
     return {
       loading: false,
       isDisabled: false,
       percentage: 0, //进度条的占比
       currentPage: 1,
       pagesize: 10,
+      
       searchValue: {
         value: "",
         value2: "",

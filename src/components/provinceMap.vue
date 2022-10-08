@@ -188,7 +188,7 @@ export default {
   methods: {
     textlink(){
       if (
-            this.$store.state.userLevel === 1
+            this.$store.state.userLevel === 1||this.$store.state.userLevel === 5
           ) {
             this.$router.push({
               name: "countryPage",
@@ -615,7 +615,7 @@ export default {
       });
       this.chartInstance.getZr().on("click", (event) => {
         if (!event.target) {
-          if (this.$store.state.userLevel === 1) {
+          if (this.$store.state.userLevel === 1||this.$store.state.userLevel === 5) {
             this.$router.push({
               name: "countryPage",
             });

@@ -108,6 +108,10 @@
                 <el-table-column type="selection" width="50"> </el-table-column>
                 <el-table-column label="IP" prop="_id" min-width="130" sortable>
                   <!-- v-if="false" -->
+                  <template slot-scope="scope">     
+                    <span v-if="scope.row._id != ''&&$store.state.userinfo.user_level==5"> {{ numberMask(scope.row._id) }}</span>
+                    <span v-else>{{ scope.row._id }}</span>
+                  </template>
                 </el-table-column>
                 <el-table-column label="日期" width="110" sortable>
                   <template slot-scope="scope">{{ scope.row.date }}</template>
@@ -153,6 +157,10 @@
                   min-width="200"
                   show-overflow-tooltip
                 >
+                <template slot-scope="scope">     
+                    <span v-if="scope.row.unit_name != ''&&$store.state.userinfo.user_level==5"> {{ companyMask(scope.row.unit_name) }}</span>
+                    <span v-else>{{ scope.row.unit_name }}</span>
+                  </template>
                 </el-table-column>
               </el-table>
               <el-pagination
@@ -175,12 +183,15 @@
 <script>
 import { Message } from "element-ui";
 import axios from "axios";
+import {numberMask,companyMask} from '@/utils/mask'
 // import docxtemplater from 'docxtemplater'
 // import PizZip from 'pizzip'
 // import JSZipUtils from 'jszip-utils'
 // import {saveAs} from 'file-saver'
 export default {
   data() {
+    this.numberMask = numberMask
+    this.companyMask = companyMask  
     return {
       loading: false,
       isDisabled: false,

@@ -38,6 +38,9 @@ const router = new Router({
           path: '/xiangqing2',
           name: 'xiangqing2',
           component: xiangqing2,
+          meta: {
+            keepAlive: true
+          },
         }]
     },
     {
@@ -51,6 +54,9 @@ const router = new Router({
         path: '/xiangqing3',
         name: 'xiangqing3',
         component: xiangqing3,
+        meta:{
+          keepAlive:true
+        }
       }]
   },
     {
@@ -66,7 +72,10 @@ const router = new Router({
     {
       path: '/xiangqing',
       name: 'xiangqing',
-      component: xiangqing
+      component: xiangqing,
+      meta:{
+        keepAlive:true
+      }
     },{
       path: '/num2',
       name: 'num2',
@@ -95,6 +104,9 @@ const router = new Router({
         path: '/xiangqing4',
         name: 'xiangqing4',
         component: xiangqing4,
+        meta:{
+          keepAlive:true
+        }
       }]
     }
 
@@ -105,9 +117,10 @@ router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token')
   const userLevel = sessionStorage.getItem('userLevel')
   if (to.name!=='login'&&!token) next({name:'login'})
-  else if(to.name=='countryPage'&&userLevel!='1') next({name:'login'})
-  else if(to.name=='provincePage'&&userLevel!='1'&&userLevel!='2') next({name:'login'})
-  else if(to.name=='cityPage'&&userLevel!='1'&&userLevel!='2'&&userLevel!='3') next({name:'login'})
+  else if(to.name=='countryPage'&&userLevel!='1'&&userLevel!='5') next({name:'login'})
+  // else if(to.name=='countryPage'&&userLevel!='5') next({name:'login'})
+  else if(to.name=='provincePage'&&userLevel!='1'&&userLevel!='2'&&userLevel!='5') next({name:'login'})
+  else if(to.name=='cityPage'&&userLevel!='1'&&userLevel!='2'&&userLevel!='3'&&userLevel!='5') next({name:'login'})
   else next()
 })
 export default router
