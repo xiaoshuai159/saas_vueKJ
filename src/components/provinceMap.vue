@@ -237,6 +237,7 @@ export default {
               this.mapData_length = this.$store.state.provinceMapData.length;
               this.chooseMap();
             }).catch(()=>{
+             // console.log(error);
           this.$message.error("用户信息异常，请重新登录")
             window.sessionStorage.clear();
             this.$store.dispatch("updateuserinfo", []);
@@ -323,6 +324,7 @@ export default {
               this.mapData_length = this.$store.state.provinceMapData.length;
               this.chooseMap();
             }).catch(()=>{
+            //  console.log(error);
           this.$message.error("用户信息异常，请重新登录")
             window.sessionStorage.clear();
             this.$store.dispatch("updateuserinfo", []);
@@ -385,7 +387,7 @@ export default {
         ){
           axios({
             method:"post",
-            url:"/",
+            url:"/map_info",
             data:{
               s_time: this.currentTime[0],
               e_time: this.currentTime[1],

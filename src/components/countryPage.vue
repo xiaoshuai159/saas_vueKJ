@@ -1,5 +1,5 @@
 <template>
-  <el-container style="border: 1px solid #eee">
+    <el-container style="border: 1px solid #eee">
     <el-header>
       <el-row>
         <el-col :span="23" style="margin-top: 30px;font-size: 23px; font-weight: bold">
@@ -79,6 +79,7 @@
       </el-row>
     </el-main>
   </el-container>
+  
 </template>
 
 <script>
@@ -220,4 +221,12 @@ export default {
   height: 2em;
   margin-left: 20px;
 }
+/* #building{
+  background:url("../assets/beijing1.jpg");
+  width:100%;
+  height:100%;
+  position:fixed;
+  background-size:100% 100%;
+} */
+
 </style>

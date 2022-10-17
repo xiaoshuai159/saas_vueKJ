@@ -13,7 +13,7 @@
         <el-input  v-model="loginForm.login_passwd" placeholder="请输入密码" auto-complete="false" prefix-icon="el-icon-lock" minlength="5" maxlength="30" show-password></el-input>
       </el-form-item>
        <el-form-item prop="code" class='codebox'>
-        <el-input type="text" class='code' v-model="loginForm.code" placeholder="请输入验证码" auto-complete="false" prefix-icon="el-icon-key" style="vertical-align:middle;margin-right:5px;">
+        <el-input type="text" class='code' v-model="loginForm.code" placeholder="请输入验证码" auto-complete="false" prefix-icon="el-icon-key" maxlength="6" style="vertical-align:middle;margin-right:5px;">
          
         </el-input>
          <span><img :src="captchaUrl"  @click="updateCaptcha" style="vertical-align:middle; height:37px"  align='right'></span>
