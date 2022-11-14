@@ -184,6 +184,7 @@
 import axios from "axios";
 import { Message } from "element-ui";
 import {numberMask,companyMask} from '@/utils/mask'
+import {encryptRsa,encryptAes,decryptAes,randomCode} from '@/utils/aes-rsa.js'
 export default {
   data() {
     this.numberMask = numberMask
@@ -297,10 +298,9 @@ export default {
     changeTime(data1) {
       this.loading = true;
       // this.$nextTick(()=>{})
-      axios({
-        method:"post",
-        url:"/details",
-        data:{
+      let ranCode = randomCode()   //AES-key
+      let encryptedAES=encryptRsa(this.$store.state.RSApubkey, ranCode)
+      let encryptedData = encryptAes(ranCode,JSON.stringify({
             s_time: data1[0],
             e_time: data1[1],
             data: {
@@ -320,13 +320,19 @@ export default {
                 this.searchValue.input2,
               ],
             },
-          },
+          }))
+      axios({
+        method:"post",
+        url:"/details",
+        data:{"data": encryptedData},
         headers:{
-          'X-CSRFToken':this.$store.state.token
+          'X-CSRFToken':this.$store.state.token,
+          'encryptedAES':encryptedAES,
         }
       })
         .then((rep) => {
-          this.tableData = rep.data;
+          let decryptedData = decryptAes(ranCode,rep.data).replace(/\0/g,"")   
+          this.tableData= JSON.parse(decryptedData)
           this.loading = false;
         });
     },
@@ -335,10 +341,9 @@ export default {
       // if(this.$refs.selectLable1.selected.label==undefined){
       //   this.$refs.selectLable1.selected.label=''
       // }
-      axios({
-        method:"post",
-        url:"/details",
-        data:{
+      let ranCode = randomCode()   //AES-key
+      let encryptedAES=encryptRsa(this.$store.state.RSApubkey, ranCode)
+      let encryptedData = encryptAes(ranCode,JSON.stringify( {
             s_time: this.$store.state.currentTime[0],
             e_time: this.$store.state.currentTime[1],
             data: {
@@ -358,13 +363,19 @@ export default {
                 this.searchValue.input2,
               ],
             },
-          },
+          }))
+      axios({
+        method:"post",
+        url:"/details",
+        data:{"data": encryptedData},
         headers:{
-          'X-CSRFToken':this.$store.state.token
+          'X-CSRFToken':this.$store.state.token,
+          'encryptedAES':encryptedAES,
         }
       })
         .then((rep) => {
-          this.tableData = rep.data;
+          let decryptedData = decryptAes(ranCode,rep.data).replace(/\0/g,"")   
+          this.tableData= JSON.parse(decryptedData)
           // this.filterOptions1()
           // this.filterOptions2()
           // this.filterOptions3()
@@ -498,10 +509,9 @@ export default {
   mounted() {
     //console.log("xiangqing2运行了")
     this.loading = true;
-    axios({
-        method:"post",
-        url:"/details",
-        data:{
+    let ranCode = randomCode()   //AES-key
+    let encryptedAES=encryptRsa(this.$store.state.RSApubkey, ranCode)
+    let encryptedData = encryptAes(ranCode, JSON.stringify({
           s_time: this.$store.state.currentTime[0],
           e_time: this.$store.state.currentTime[1],
           data: {
@@ -521,13 +531,21 @@ export default {
               this.searchValue.input2,
             ],
           },
-        },
+        }))
+    axios({
+        method:"post",
+        url:"/details",
+        data:{"data": encryptedData},
         headers:{
-          'X-CSRFToken':this.$store.state.token
+          'X-CSRFToken':this.$store.state.token,
+          'encryptedAES':encryptedAES,
         }
       })
       .then((rep) => {
-        this.tableData = rep.data;
+        let decryptedData = decryptAes(ranCode,rep.data).replace(/\0/g,"")  
+        // debugger 
+        this.tableData= JSON.parse(decryptedData)
+        
         this.filterOptions1();
         this.filterOptions2();
         this.filterOptions3();

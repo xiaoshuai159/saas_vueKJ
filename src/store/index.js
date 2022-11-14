@@ -68,11 +68,17 @@ const actions = {
     },
     updateiporunit(context,value){
         context.commit('updateIPorUnit',value)
+    },
+    updatersapublickey(context,value){
+        context.commit('updateRSApubkey',value)
     }
 
 }
 //mutations——用于操作数据(state)
 const mutations = {
+    updateRSApubkey(state,value){
+        state.RSApubkey = value
+    },
     updateToken(state,value){
         localStorage.setItem(`token`,JSON.stringify(value))
         state.token = value
@@ -152,6 +158,7 @@ const mutations = {
 }
 //准备state——用于存储数据
 const state = {
+    RSApubkey:'',
     token:''||localStorage.getItem(`token`),
     // token:''||JSON.parse(localStorage.getItem(`token`)),
     IPorUnit:''||JSON.parse(sessionStorage.getItem(`IPorUnit`)),

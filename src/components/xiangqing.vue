@@ -185,7 +185,7 @@
 import { Message } from "element-ui";
 import axios from "axios";
 import {numberMask,companyMask} from '@/utils/mask'
-import store from "../store";
+import {encryptRsa,encryptAes,decryptAes,randomCode} from '@/utils/aes-rsa.js'
 export default {
   data() {
     this.numberMask = numberMask
@@ -196,7 +196,6 @@ export default {
       percentage: 0, //进度条的占比
       currentPage: 1,
       pagesize: 10,
-      
       searchValue: {
         value: "",
         value2: "",
@@ -310,10 +309,9 @@ export default {
     },
     changeTime(data1) {
       this.loading = true;
-      axios({
-        method:"post",
-        url:"/details",
-        data:{
+      let ranCode = randomCode()   //AES-key
+      let encryptedAES=encryptRsa(this.$store.state.RSApubkey, ranCode)
+      let encryptedData = encryptAes(ranCode, {
           s_time: data1[0],
           e_time: data1[1],
           data: {
@@ -331,23 +329,30 @@ export default {
               this.searchValue.input2,
             ],
           },
-        },
+        })
+      axios({
+        method:"post",
+        url:"/details",
+        data:{"data": encryptedData},
         headers:{
-          'X-CSRFToken':this.$store.state.token
+          'X-CSRFToken':this.$store.state.token,
+          'encryptedAES':encryptedAES,
         }
       })
         .then((rep) => {
-          this.tableData = rep.data;
+          let decryptedData = decryptAes(ranCode,rep.data).replace(/\0/g,"")   
+          this.tableData= JSON.parse(decryptedData)
+          //this.tableData = Array.from(decryptAes(ranCode,rep.data));
           // this.filterOptions1()
           this.loading = false;
         });
     },
     chaxun() {
       this.loading = true;
-      axios({
-        method:"post",
-        url:"/details",
-        data:{
+      let ranCode = randomCode()   //AES-key
+      let encryptedAES=encryptRsa(this.$store.state.RSApubkey, ranCode)
+      // console.log(encryptedAES);
+      let encryptedData = encryptAes(ranCode,JSON.stringify({
             s_time: this.$store.state.currentTime[0],
             e_time: this.$store.state.currentTime[1],
             data: {
@@ -365,13 +370,21 @@ export default {
                 this.searchValue.input2,
               ],
             },
-          },
+          }))
+      axios({
+        method:"post",
+        url:"/details",
+        data:{"data": encryptedData},
         headers:{
-          'X-CSRFToken':this.$store.state.token
+          'X-CSRFToken':this.$store.state.token,
+          'encryptedAES':encryptedAES,
         }
       })
         .then((rep) => {
-          this.tableData = rep.data;
+          // console.log(rep.data);
+          // console.log(decryptAes(ranCode,rep.data));
+          let decryptedData = decryptAes(ranCode,rep.data).replace(/\0/g,"")   
+          this.tableData= JSON.parse(decryptedData)
           this.loading = false;
         });
     },
@@ -488,36 +501,45 @@ export default {
           });
         });
     },
+    
   },
   mounted() {
     this.loading = true;
+    let ranCode = randomCode()   //AES-key  
+    let encryptedAES=encryptRsa(this.$store.state.RSApubkey, ranCode)
+    // console.log('AESkey:'+ranCode);
+    // console.log('RSApubkey:'+this.$store.state.RSApubkey);
+    // console.log('encryptedAES:'+encryptedAES);
+    let encryptedData = encryptAes(ranCode,JSON.stringify({
+      s_time: this.$store.state.currentTime[0],
+      e_time: this.$store.state.currentTime[1],
+      data: {
+        address: [
+          this.$store.state.userinfo.province || "",
+          this.$store.state.userinfo.city || "",
+          this.$store.state.userinfo.district || "",
+          this.$store.state.userinfo.adcode || "",
+        ],
+        search: [
+          this.$refs.selectLable1.selected.label || "",
+          this.$refs.selectLable2.selected.label || "",
+          this.$refs.selectLable3.selected.label || "",
+          this.searchValue.input1,
+          this.searchValue.input2,
+        ]
+      },
+    }))
     axios({
       method: "post",
       url: "/details",
-      data: {
-        s_time: this.$store.state.currentTime[0],
-        e_time: this.$store.state.currentTime[1],
-        data: {
-          address: [
-            this.$store.state.userinfo.province || "",
-            this.$store.state.userinfo.city || "",
-            this.$store.state.userinfo.district || "",
-            this.$store.state.userinfo.adcode || "",
-          ],
-          search: [
-            this.$refs.selectLable1.selected.label || "",
-            this.$refs.selectLable2.selected.label || "",
-            this.$refs.selectLable3.selected.label || "",
-            this.searchValue.input1,
-            this.searchValue.input2,
-          ],
-        },
-      },
+      data: {"data": encryptedData},
       headers:{
-        'X-CSRFToken':this.$store.state.token
+        'X-CSRFToken':this.$store.state.token,
+        'encryptedAES':encryptedAES,
       }
     }).then((rep) => {
-      this.tableData = rep.data;
+      let decryptedData = decryptAes(ranCode,rep.data).replace(/\0/g,"")   
+      this.tableData= JSON.parse(decryptedData)
       this.filterOptions2();
       this.filterOptions3();
       this.loading = false;

@@ -148,7 +148,7 @@ export default {
             });
             // console.log(typeof(user_info)) //string
             // window.sessionStorage.removeItem("user_info")
-            console.log("执行了then");
+            // console.log("执行了then");
             window.sessionStorage.clear();
             this.$store.dispatch("updateuserinfo", []);
             this.$router.replace("/");
@@ -209,7 +209,8 @@ export default {
   color: rgb(195, 198, 211);
   text-align: center;
   line-height: 130px;
-  padding: 20px 150px 0 150px;
+  /* padding: 20px 150px 0 150px; */
+  padding: 20px 12% 0 12%;
 }
 
 .el-row {

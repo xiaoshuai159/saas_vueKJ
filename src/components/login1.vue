@@ -2,7 +2,7 @@
   <div class="login-wrap">
     <!-- <div><img :src="imgurl" alt="imgurl" style="width:150px;height:120px;margin-left:10%"></div> -->
     <!-- <div><img :src="imgurl" alt="imgurl" title="登录页面" style="width:60px;height:60px;margin-left:20%;cursor:pointer;"></div> -->
-    <div class="img_div"><img :src="imgurl" alt="imgurl" title="登录页面" style="width:550px;height:570px;margin-left:5%"></div>
+    <div class="img_div"><img :src="imgurl" alt="imgurl" title="登录页面" style="width:550px;height:570px;"></div>
     <div class="login1">
       <el-form :rules="rules" class="login-container" ref="loginForm" :model="loginForm">
       <h1 class="title">网络安全事件态势感知</h1>
@@ -84,6 +84,7 @@
                   message: '登陆成功！',
                   type: 'success'
                 });
+                this.$store.dispatch('updatersapublickey',rep.data.RSApubkey)
                 this.$store.dispatch('updateuserlevel',rep.data.user_level)
                 this.$store.dispatch('updateuserinfo',rep.data)
                 this.$store.dispatch('updatetoken',rep.data.csrf_token)
@@ -155,7 +156,9 @@
   .img_div{
       position: absolute;
       top:50%;
+      left:50%;
       margin-top:-285px;
+      margin-left:-550px
     }
   .login-wrap {
     box-sizing: border-box;

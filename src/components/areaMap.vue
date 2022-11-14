@@ -392,7 +392,7 @@ export default {
       //console.log(this.value1.key)
       if (!this.mapData[this.value1.key]) {
         if(this.$store.state.area=='铁东区'&&this.$store.state.city=='鞍山市'){
-          console.log('执行的是if')
+          //console.log('执行的是if')
            const ret = await axios.get(`../../map/省级/市级/县级/${this.$store.state.area}-${this.$store.state.city}.json`);
           // const ret = await axios.get(`http://10.127.208.203:8080/map/省级/市级/县级/${this.$store.state.area||this.$route.params.area_name}.json`)
           this.mapData[this.value1.key] = ret.data;
@@ -543,7 +543,7 @@ export default {
           this.$echarts.registerMap(this.value1.key, ret.data);
         }
         else{
-          console.log("执行的是else")
+          //console.log("执行的是else")
           const ret = await axios.get(`../../map/省级/市级/县级/${this.$store.state.area || this.$route.params.area_name}.json`);
           // const ret = await axios.get(`http://10.127.208.203:8080/map/省级/市级/县级/${this.$store.state.area||this.$route.params.area_name}.json`)
           this.mapData[this.value1.key] = ret.data;
