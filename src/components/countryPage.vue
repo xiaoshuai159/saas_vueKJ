@@ -3,8 +3,6 @@
     <el-header>
       <el-row>
         <el-col :span="23" style="margin-top: 30px;font-size: 23px; font-weight: bold">
-          <!--   -->
-          <!--  -->
           <div style="margin-top: -20px">
             <!-- <img :src="imgurl" alt="imgurl" title="首页" @click="logolink()" style="width:90px;height:40px;margin-left:1%;margin-top:1px;cursor:pointer;">  
                   <div style="margin-top:-20px; margin-left:10%; font-family:'Helvetica Neue'">网络安全事件态势感知</div>-->
@@ -55,6 +53,21 @@
             height: 52px;
             margin-top: -5px;
           ">全国网络安全事件概览</el-header>
+          <el-collapse v-model="activeNames" @change="handleChange" style="margin:0 10px;">
+            <el-collapse-item name="1">
+              <template slot="title">
+                <span style="width:10px"></span> 恶意攻击统计
+              </template>
+              <div><AttackStatistics></AttackStatistics></div>
+            </el-collapse-item>
+            <el-collapse-item name="2">
+              <template slot="title">
+                <span style="width:10px"></span> 受害情况统计
+              </template>
+              <div><HarmStatistics></HarmStatistics></div>
+            </el-collapse-item>
+          </el-collapse>
+          <div style="height: 18px"></div>
         <div id="two">
           <el-col :span="12">
             <div class="grid-content bg-purple" id="left">
@@ -88,12 +101,15 @@ import CountryMap from "./countryMap.vue";
 import Num from "./num.vue";
 import Shejidanwei from "./shejidanwei.vue";
 import Xiangqing from "./xiangqing.vue";
+import AttackStatistics from "./attackStatistics.vue"
+import HarmStatistics from "./harmStatistics.vue"
 export default {
   data() {
     return {
       // imgurl: require("@/assets/logo2.png"),
       imgurl: require("@/assets/zhongxinlogo3.png"),
       imgurl2: require("@/assets/exit2.png"),
+      activeNames: ['1']
     };
   },
   components: {
@@ -101,6 +117,8 @@ export default {
     Num,
     Shejidanwei,
     Xiangqing,
+    AttackStatistics,
+    HarmStatistics
   },
   methods: {
     logolink() {
@@ -186,11 +204,24 @@ export default {
           });
         });
     },
+    handleChange(val) {
+        console.log(val);
+      }
   },
 };
 </script>
         
-
+<style scoped lang="less">
+/deep/.el-collapse-item__header{
+  font-size: 16px;
+  border-left: 1px solid #EBEEF5;
+  border-right: 1px solid #EBEEF5;
+}
+/deep/.el-collapse-item__content{
+  border-left: 1px solid #EBEEF5;
+  border-right: 1px solid #EBEEF5;
+}
+</style>
 <style>
 .el-container>.el-header {
   /* position: fixed;

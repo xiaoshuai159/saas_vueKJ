@@ -59,43 +59,43 @@ const router = new Router({
         }
       }]
   },
-    {
-      path: '/num',
-      name: 'num',
-      component: num
-    },
-    {
-    path: '/shejidanwei',
-    name: 'shejidanwei',
-    component: shejidanwei
-    },
-    {
-      path: '/xiangqing',
-      name: 'xiangqing',
-      component: xiangqing,
-      meta:{
-        keepAlive:true
-      }
-    },{
-      path: '/num2',
-      name: 'num2',
-      component: num2
-    },
-    {
-      path: '/num3',
-      name: 'num3',
-      component: num3
-    },
-    {
-    path: '/shejidanwei2',
-    name: 'shejidanwei2',
-    component: shejidanwei2
-    },
-    {
-      path: '/shejidanwei3',
-      name: 'shejidanwei3',
-      component: shejidanwei3
-      },
+    // {
+    //   path: '/num',
+    //   name: 'num',
+    //   component: num
+    // },
+    // {
+    // path: '/shejidanwei',
+    // name: 'shejidanwei',
+    // component: shejidanwei
+    // },
+    // {
+    //   path: '/xiangqing',
+    //   name: 'xiangqing',
+    //   component: xiangqing,
+    //   meta:{
+    //     keepAlive:true
+    //   }
+    // },{
+    //   path: '/num2',
+    //   name: 'num2',
+    //   component: num2
+    // },
+    // {
+    //   path: '/num3',
+    //   name: 'num3',
+    //   component: num3
+    // },
+    // {
+    // path: '/shejidanwei2',
+    // name: 'shejidanwei2',
+    // component: shejidanwei2
+    // },
+    // {
+    //   path: '/shejidanwei3',
+    //   name: 'shejidanwei3',
+    //   component: shejidanwei3
+    //   },
     {
       path: '/areaPage',
       name: 'areaPage',

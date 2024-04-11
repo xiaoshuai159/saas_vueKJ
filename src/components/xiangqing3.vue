@@ -1,6 +1,6 @@
 <template>
   <div class="content" ref="xiangqing_ref">
-    <el-card style="border-radius: 15px" shadow="hover">
+    <el-card  style="border-radius: 0px" shadow="never">
       <el-main style="background-color: white">
         <el-row :gutter="20" style="margin-bottom: 25px; margin-top: -12px">
           <el-col :span="4">
@@ -523,103 +523,103 @@ export default {
         });
     },
   },
-  mounted() {
-    //console.log("xiangqing3运行了")
-    this.loading = true;
-    // this.$nextTick(()=>{})
-    if (
-      this.$store.state.province == "重庆市" ||
-      this.$store.state.province == "上海市" ||
-      this.$store.state.province == "北京市" ||
-      this.$store.state.province == "天津市" ||
-      this.$store.state.city == "中山市"
-    ) {
-      let ranCode = randomCode()   //AES-key
-      let encryptedAES=encryptRsa(this.$store.state.RSApubkey, ranCode)
-      let encryptedData = encryptAes(ranCode,JSON.stringify({
-          s_time: this.$store.state.currentTime[0],
-          e_time: this.$store.state.currentTime[1],
-          data: {
-            address: [
-              this.$store.state.province ||
-              this.$store.state.userinfo.province ||
-              "",
-              this.$store.state.province ||
-              this.$store.state.userinfo.city ||
-              "",
-              this.$store.state.city ||
-              this.$store.state.userinfo.district ||
-              "",
-              this.$store.state.userinfo.adcode || "",
-            ],
-            search: [
-              this.$refs.selectLable1.selected.label || "",
-              this.$refs.selectLable2.selected.label || "",
-              this.$refs.selectLable3.selected.label || "",
-              this.searchValue.input1,
-              this.searchValue.input2,
-            ],
-          },
-        }))
-      axios({
-        method: "post",
-        url: "/details",
-        data:{"data": encryptedData},
-        headers: {
-          'X-CSRFToken': this.$store.state.token,
-          'encryptedAES':encryptedAES,
-        }
-      })
-        .then((rep) => {
-          let decryptedData = decryptAes(ranCode,rep.data).replace(/\0/g,"")   
-          this.tableData= JSON.parse(decryptedData)
-          this.filterOptions1();
-          this.filterOptions2();
-          this.filterOptions3();
-          this.loading = false;
-        });
-    } else {
-      let ranCode = randomCode()   //AES-key
-      let encryptedAES=encryptRsa(this.$store.state.RSApubkey, ranCode)
-      let encryptedData = encryptAes(ranCode,JSON.stringify({
-          s_time: this.$store.state.currentTime[0],
-          e_time: this.$store.state.currentTime[1],
-          data: {
-            address: [
-              this.$store.state.province ||
-              this.$store.state.userinfo.province ||
-              "",
-              this.$store.state.city || this.$store.state.userinfo.city || "",
-              this.$store.state.userinfo.district || "",
-              this.$store.state.userinfo.adcode || "",
-            ],
-            search: [
-              this.$refs.selectLable1.selected.label || "",
-              this.$refs.selectLable2.selected.label || "",
-              this.$refs.selectLable3.selected.label || "",
-              this.searchValue.input1,
-              this.searchValue.input2,
-            ],
-          },
-        }))
-      axios({
-        method: "post",
-        url: "/details",
-        data:{"data": encryptedData},
-        headers: {
-          'X-CSRFToken': this.$store.state.token,
-          'encryptedAES':encryptedAES,
-        }
-      }).then((rep) => {
-        let decryptedData = decryptAes(ranCode,rep.data).replace(/\0/g,"")   
-        this.tableData= JSON.parse(decryptedData)
-        this.filterOptions1();
-        this.filterOptions2();
-        this.filterOptions3();
-        this.loading = false;
-      });
-    }
-  },
+  // mounted() {
+  //   //console.log("xiangqing3运行了")
+  //   this.loading = true;
+  //   // this.$nextTick(()=>{})
+  //   if (
+  //     this.$store.state.province == "重庆市" ||
+  //     this.$store.state.province == "上海市" ||
+  //     this.$store.state.province == "北京市" ||
+  //     this.$store.state.province == "天津市" ||
+  //     this.$store.state.city == "中山市"
+  //   ) {
+  //     let ranCode = randomCode()   //AES-key
+  //     let encryptedAES=encryptRsa(this.$store.state.RSApubkey, ranCode)
+  //     let encryptedData = encryptAes(ranCode,JSON.stringify({
+  //         s_time: this.$store.state.currentTime[0],
+  //         e_time: this.$store.state.currentTime[1],
+  //         data: {
+  //           address: [
+  //             this.$store.state.province ||
+  //             this.$store.state.userinfo.province ||
+  //             "",
+  //             this.$store.state.province ||
+  //             this.$store.state.userinfo.city ||
+  //             "",
+  //             this.$store.state.city ||
+  //             this.$store.state.userinfo.district ||
+  //             "",
+  //             this.$store.state.userinfo.adcode || "",
+  //           ],
+  //           search: [
+  //             this.$refs.selectLable1.selected.label || "",
+  //             this.$refs.selectLable2.selected.label || "",
+  //             this.$refs.selectLable3.selected.label || "",
+  //             this.searchValue.input1,
+  //             this.searchValue.input2,
+  //           ],
+  //         },
+  //       }))
+  //     axios({
+  //       method: "post",
+  //       url: "/details",
+  //       data:{"data": encryptedData},
+  //       headers: {
+  //         'X-CSRFToken': this.$store.state.token,
+  //         'encryptedAES':encryptedAES,
+  //       }
+  //     })
+  //       .then((rep) => {
+  //         let decryptedData = decryptAes(ranCode,rep.data).replace(/\0/g,"")   
+  //         this.tableData= JSON.parse(decryptedData)
+  //         this.filterOptions1();
+  //         this.filterOptions2();
+  //         this.filterOptions3();
+  //         this.loading = false;
+  //       });
+  //   } else {
+  //     let ranCode = randomCode()   //AES-key
+  //     let encryptedAES=encryptRsa(this.$store.state.RSApubkey, ranCode)
+  //     let encryptedData = encryptAes(ranCode,JSON.stringify({
+  //         s_time: this.$store.state.currentTime[0],
+  //         e_time: this.$store.state.currentTime[1],
+  //         data: {
+  //           address: [
+  //             this.$store.state.province ||
+  //             this.$store.state.userinfo.province ||
+  //             "",
+  //             this.$store.state.city || this.$store.state.userinfo.city || "",
+  //             this.$store.state.userinfo.district || "",
+  //             this.$store.state.userinfo.adcode || "",
+  //           ],
+  //           search: [
+  //             this.$refs.selectLable1.selected.label || "",
+  //             this.$refs.selectLable2.selected.label || "",
+  //             this.$refs.selectLable3.selected.label || "",
+  //             this.searchValue.input1,
+  //             this.searchValue.input2,
+  //           ],
+  //         },
+  //       }))
+  //     axios({
+  //       method: "post",
+  //       url: "/details",
+  //       data:{"data": encryptedData},
+  //       headers: {
+  //         'X-CSRFToken': this.$store.state.token,
+  //         'encryptedAES':encryptedAES,
+  //       }
+  //     }).then((rep) => {
+  //       let decryptedData = decryptAes(ranCode,rep.data).replace(/\0/g,"")   
+  //       this.tableData= JSON.parse(decryptedData)
+  //       this.filterOptions1();
+  //       this.filterOptions2();
+  //       this.filterOptions3();
+  //       this.loading = false;
+  //     });
+  //   }
+  // },
   watch: {
     "$store.state.currentTime": {
       handler(newValue) {

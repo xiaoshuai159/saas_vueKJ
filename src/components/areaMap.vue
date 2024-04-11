@@ -30,6 +30,7 @@
           :picker-options="pickerOptions"
           style="height: 40px"
           value-format="yyyy-MM-dd"
+          :clearable="false"
         >
         </el-date-picker>
       </div>

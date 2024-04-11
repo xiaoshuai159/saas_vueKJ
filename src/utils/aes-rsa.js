@@ -82,18 +82,11 @@ export function verify (publicKey, word, signature, method = 'sha256') {
 // 使用AES秘钥加密
 export function encryptAes (secretKey, word) {
   secretKey = CryptoJS.enc.Utf8.parse(secretKey)
-  // console.log(word);
-  // while((word.length)%16!=0){
-  //   word += '\0'
-  // }
   word = CryptoJS.enc.Utf8.parse(word) 
-  // console.log(word);
   let encrypted = CryptoJS.AES.encrypt(word, secretKey, {
     mode: CryptoJS.mode.ECB,
     padding: CryptoJS.pad.Pkcs7
   })
-  // console.log(encrypted)
-  // debugger
   return encrypted.toString()
 }
 // 使用AES秘钥解密
@@ -103,8 +96,6 @@ export function decryptAes (secretKey, word) {
     mode: CryptoJS.mode.ECB,
     padding: CryptoJS.pad.Pkcs7
   })
-  // return decryptedStr.toString();
-  // return CryptoJS.enc.Utf8.stringify(decrypted)
   return decrypted.toString(CryptoJS.enc.Utf8);
 }
 

@@ -1,6 +1,6 @@
 <template>
   <div class="content" ref="num_ref">
-    <el-card shadow="hover" style="border-radius: 15px">
+    <el-card shadow="never" style="border-radius: 0px" >
       <el-header
         style="
           text-align: left;

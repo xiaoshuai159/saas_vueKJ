@@ -115,10 +115,11 @@ def login_in():
         user = User.queryUser(username)
         user_info = user.get(user.get_id())
         if user is not None and user.verifyPasswd(passwd):
-            login_in_rep_data = {'code': 200, 'msg': 'success'}
+            login_in_rep_data = {'code': 200, 'msg': 'success','token':'123'}
             login_in_rep_data.update(user_info)
             session['user_id'] = user.get_id()
             session['user_level'] = user.user_level
+            session['csrf_token'] = '1234'
             return json.dumps(login_in_rep_data), 200
         else:
             login_in_rep_data = {'code': 402, 'msg': 'failure', 'data': 'user or passwd wrong'}
